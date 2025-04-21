@@ -54,22 +54,23 @@ nav ul li a:hover {
 
 main {
   margin: 40px 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  /* セクションを縦に並べるレイアウトに変更 */
 }
 
 section {
   background: #fff;
   padding: 20px;
+  margin-bottom: 40px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 section h2 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: 1.5rem;
   color: #2575fc;
+  border-bottom: 2px solid #2575fc;
+  padding-bottom: 5px;
 }
 
 section p {
@@ -88,6 +89,16 @@ section p {
 
 .button:hover {
   background: #6a11cb;
+}
+/* リスト内の項目を見やすく調整 */
+section ul {
+  list-style-position: inside;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+section ul li {
+  margin-bottom: 8px;
 }
 
 footer {

@@ -1,0 +1,138 @@
+[
+  {
+    "id": "I6L1viedpQE",
+    "title": "自作MEMSマイクへの道　イコライザーボードの検討を開始　おまけ動画あり",
+    "description": "おまけ動画は昨年（１０ヶ月前）に作った動画ですが、ゲイン設定がおかしく左右のバランスも変なのでお蔵入りにした動画です。\n\n所謂セクシーuncle江南スタイルの実験動画です。\nhttps://www.youtube.com/watch?v=DeGDwP3dnD4\nこの動画のスグ後に作っていました。\n\n録音おかしいですが、アップしてみました。\nこの録音に使ったバージョンは、stv1-usmの５番ですが、シールドが甘く（銅）ノイズ混入しています。\nさらに、IK iRig Pro DUOを使っているので左右のボリュームも合わせるのが難しくずれております。\n実は32bitフロート機を買った原因はこの動画にありました。\n\n#diy \n#自作マイク\n#MEMS\n#イコライザー \n#opamp",
+    "publishedAt": "2023-09-30T08:56:30Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/I6L1viedpQE/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/I6L1viedpQE/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/I6L1viedpQE/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/I6L1viedpQE/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/I6L1viedpQE/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=I6L1viedpQE"
+  },
+  {
+    "id": "HXrNXpMIlqo",
+    "title": "自作MEMSマイクへの道　イコライザー回路のシミュレーションをやってみた",
+    "description": "今回製作したLTspiceのシミュレーションファイル\nhttps://storage.googleapis.com/vach/PUB_Unofficial_TDK_AN000172.asc\n実験用です。LTspiceで読み込んだら回路のシミュレーションが出来ます。\n\nなかなか進んでいなかった、ICS-40800を使った新マイクプロジェクト\n難しいことにも挑戦したいですが、まずは簡単なところからやってみようと\n結局教えて頂いたTDKのメーカーイコライザー回路から試作してみることにしました。\nそこでまずはシミュレーションをやってみました。\nよく見ていなかったんですが、この回路単電源で3.3Vから動作するみたいなので、旧型のMEMS電源がそのまま使えることに最近気づきました。ｗ\n\n#diy \n#tdk \n#mems \n#自作マイク \n#イコライザー",
+    "publishedAt": "2023-09-26T03:48:04Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/HXrNXpMIlqo/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/HXrNXpMIlqo/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/HXrNXpMIlqo/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/HXrNXpMIlqo/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/HXrNXpMIlqo/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=HXrNXpMIlqo"
+  },
+  {
+    "id": "_Eklwbagcms",
+    "title": "自作MEMSマイクへの道　新マイクに向けて現状の問題点と新構造を考える　【ウェーバー・フェヒナーの法則】",
+    "description": "現状の範囲を超えるために改善できそうな点を調べてきました。\n実際の工作をとりやめて、いろいろ準備していた半年間のまとめになります。\n\n同じ様なところをぐるぐるまわっているようで少しずつ進めていると信じています（であってほしい）\n\nもはや未確認謎情報満載動画になってきています。（笑）\n\n自作MEMSマイクへの道　今後の目標　大事なことは何かを考える\nhttps://youtu.be/4DQODE8Cr60\nポイント：新マイクの目標設定\n\n【ジャンク】ヒューズが切れた周波数カウンターの修理に挑戦 HP 5328A\nhttps://youtu.be/rJtMhoioJ-w\nポイント：モジュラー構造の利点を発見！\n\n\n【ジャンク】画面が見えないオシロスコープを直す HP 54520A\nhttps://youtu.be/Ko4wleGnswk\n\nマイクアンプ回路のコーナ周波数を測定する\nhttps://youtu.be/PU4OHBg15aA\nポイント：プリアンプの可聴域外側のカットオフ周波数を測定\n\n\n自作MEMSマイクへの道　４０万の法則の謎が解けた⁉️\nhttps://youtu.be/bHi3i3-ELHs\nポイント：可聴域の中心周波数の意味が判明する\n\n自作MEMSマイクへの道　環境音の音圧レベルを測定しよう\nhttps://youtu.be/jEcmZn_heUc\nポイント：実際の環境音の音圧レベルの精密測定結果\n\n自作MEMSマイクへの道　周波数特性と歪率の簡易測定をしてみてビックリ\nhttps://youtu.be/q-q8AHeyLtQ\nポイント：マイクプリアンプの周波数特性と入力電圧と歪率の関係が判明！\n\n\n自作MEMSマイクへの道　RIAAイコライザーでICS-40800のEQカーブを補正\nhttps://youtu.be/BZK-Er5XH30\nポイント：新マイク製作へむけての初めての動画\n\n自作MEMSマイクへの道　Rycoteをつけた自作バイノーラルマイクで再検証\nhttps://youtu.be/FJnURwLqY-A\nポイント：昨年製作マイクの性能実験まとめ\n\nウェーバー・フェヒナーの法則\nhttps://ja.wikipedia.org/wiki/%E3%83%B4%E3%82%A7%E3%83%BC%E3%83%90%E3%83%BC%E2%80%90%E3%83%95%E3%82%A7%E3%83%92%E3%83%8A%E3%83%BC%E3%81%AE%E6%B3%95%E5%89%87\n\nWeber–Fechner law\nhttps://en.wikipedia.org/wiki/Weber%E2%80%93Fechner_law\n\n#DIY\n#自作マイク\n#イコライザー\n#バイノーラルマイク\n#mems",
+    "publishedAt": "2023-09-20T06:23:02Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/_Eklwbagcms/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/_Eklwbagcms/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/_Eklwbagcms/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/_Eklwbagcms/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/_Eklwbagcms/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=_Eklwbagcms"
+  },
+  {
+    "id": "o7GNt6rF7lY",
+    "title": "自作MEMSマイクへの道　謎のマシンを手に入れる　ネットワークアナライザーHP 3577A",
+    "description": "詳しい方はこのチャンネルが如何に意味不明なことをやっているかよく解ると思います。\nわたしにもわかりません（泣）\n従来と違う方向からオーディオや部品の性能を評価できるのではと思い、入手してしまいました。\nこの装置は、高周波用の回路の信号伝搬特性を測定する装置になります。\nフィルター回路の製作に使えるのではと狙っています。（すでにある小野測器で十分な気もする。）\nまだ使える状態でもなく、正常に動くかチェックも出来てないので、何も説明できないのが申し訳ないです。\n\nいろいろ途中止めになっている話（過去動画）もありますが、後でいろいろと集合できると思っています。\n電子工作とオーディオの世界は奥が深すぎです。\n立体音響の実現をするため、いろいろやってみようということの一環になります！\n\nリアルタイム度復活です！\n\n#diy \n#mems \n#自作 \n#hp \n#microphone",
+    "publishedAt": "2023-09-14T06:58:41Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/o7GNt6rF7lY/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/o7GNt6rF7lY/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/o7GNt6rF7lY/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/o7GNt6rF7lY/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/o7GNt6rF7lY/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=o7GNt6rF7lY"
+  }
+]

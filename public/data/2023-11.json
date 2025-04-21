@@ -1,0 +1,104 @@
+[
+  {
+    "id": "Pm8uBq8OcIU",
+    "title": "自作MEMSマイクへの道　精密騒音計で超静かな場所を探そう",
+    "description": "22dBまで測れる高感度の精密騒音計を持って、身近な超静かな場所を探してみました。\n\n追伸：DIGIKEYから荷物届きました！\n現在新マイクのプリアンプ兼EQ回路の詳細なシミュレーションをやっていました。いくつか面白いことがわかってきています。この動画の内容は、並行してフィールドレコーディング用のマイクの問題点として、ノイズフロアを極限まで下げたほうが良いということがわかったので、ノイズを検証するための予備調査になります。\n\nこの検証で見つけた場所は実は海流の影響で海洋ゴミが集まってくる浜でして、かなり汚れています。日中はほぼ日陰になっており、実際は薄暗い陰険な場所です。それで、生物も少ないのでしょうか、鳥の鳴き声くらいしか聞こえない想像を絶する静かさでした。現地は寂しい感じがする場所で、音が少なすぎるのも困りものですね。\n\n森と風がない場所がキーポイントかと思いました。動画内では説明できてないですが、鳥の声は35dBくらいですね。今回の測定で、フィールドレコーディングにおいてはマイクに超低ノイズ性能（20dB(A)以下）が要求されているということがわかってしまいました。今後の改善点かと思っています。\n音波の反射がなくとても静かな場所にいくと、廉価なマイクであるRODE Videomicroでも、結構綺麗に録音できているというのがわかるかと思います。背景音が消えるとクッキリ聞こえます。\n\n録音撮影機材：\nマイク：RODE Videomicro（旧型）\nカメラ：iPhone11\nジンバル:DJI osmo mobile 3\nカメラアプリ:Mavis\n測定機材：\n騒音計：ONO SOKKI LA-5120（バイアス方式のコンデンサーカプセルタイプ）",
+    "publishedAt": "2023-11-23T11:00:31Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/Pm8uBq8OcIU/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/Pm8uBq8OcIU/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/Pm8uBq8OcIU/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/Pm8uBq8OcIU/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/Pm8uBq8OcIU/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=Pm8uBq8OcIU"
+  },
+  {
+    "id": "doq7gJMDbbM",
+    "title": "【定点観察】ひたすら海",
+    "description": "眼の前に見えている大きな島は小豆島です。\n\n00:10:25 真上を小型航空機が前方より通過\n\n動画では音の大きさをかなり小さくしていますが\nせっかくですので飛行機の部分だけ-3dBFSにノーマライズしたものをアップロードしました！\nよりリアルに聞こえると思います。\nhttps://storage.googleapis.com/vach/hikouki_session.wav\nPCM音源 192kHz 32bit float(33MB)\n\n撮影場所：瀬戸内海\n撮影機材：\nカメラ：iPhone 11\nカメラアプリ：Mavis\n録音機材：\nマイク：TDK ICS-40730使用DIY MEMS Mic STV-1 USM(v5)\nレコーダー：ZOOM M4 MicTrak\nサンプリングレート：192kHz\nビット深度：32bit(float)\n編集：\nタイムコード同期・ゲイン調整・切り出し：Ardour(Linux)\nMux(映像と音の結合）:ffmpeg\nアップロードされたオリジナルフォーマット:\nビデオ：HD1080p(29.97fps) h264\nオーディオ:PCM 32bit float\nコンテナー：mkv(waveフォーマットを使うために選択）\n（アップロードファイルは192kHz32bit(float)でアップロードしていますが、YouTube側で20kHzまでしか収録されていない配信形式に再エンコードされて配信されています。将来ハイレゾ対応するかもしれないので音については最大限の解像度でアップロードしています。そのため、元データーは音が2.5GB、映像が３.3GB程度の音優先のありえない分率になっています。）\n\n#自作マイク\n#定点観察 \n#自然 \n#海\n#岩場",
+    "publishedAt": "2023-11-12T15:00:28Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/doq7gJMDbbM/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/doq7gJMDbbM/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/doq7gJMDbbM/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/doq7gJMDbbM/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/doq7gJMDbbM/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=doq7gJMDbbM"
+  },
+  {
+    "id": "a_Rto_rcj8w",
+    "title": "自作MEMSマイクへの道　EQ回路付きプリアンプの回路定数の推定　【シミュレーション録音】",
+    "description": "動画最後のシミュレーション録音の結果を教えてください。\nコメントで過渡応答を重点的に聴き比べたほうが良いということで、シミュレーションですが、音源をアタック音中心のものに変えてみました！\n\n動画途中で出てきた一次遅れ系というものについては下記のサイトで詳しく説明されています。\n\n周波数の変化によりゲインを求める - CQ connect\nhttps://cc.cqpub.co.jp/system/contents/1929/\n\n#自作マイク \n#mems \n#diy \n#equalizer \n#simulator",
+    "publishedAt": "2023-11-02T11:00:01Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/a_Rto_rcj8w/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/a_Rto_rcj8w/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/a_Rto_rcj8w/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/a_Rto_rcj8w/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/a_Rto_rcj8w/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=a_Rto_rcj8w"
+  }
+]

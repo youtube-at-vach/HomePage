@@ -1,0 +1,70 @@
+[
+  {
+    "id": "LhcPZzKHE8Y",
+    "title": "自作MEMSマイクへの道　STV2ProtoType完成　【ICS-40800簡易テスト】",
+    "description": "ICS-40800の音は、少し変に聞こえるかも知れませんが、これは調整で驚くほどの音に変貌します。特性を活かすために、高域を残した状態で設定してみたので少し高い音がきつく感じるかも知れません。もっとRODE NT-2Aのような優しい感じにも出来ます。コンデンサーの静電容量で音の感じを調整できるので、自作マイクとしても、個人の好みに合った色が出せるのでかなり面白いです。もちろん、単一指向性もあり、使いやすく、しっかりと調整すれば、現状最強のMEMSマイクセルではないのかと思っています。\n\n今後調整して、楽器の音を録音してみたいです。おそらく、かなりの性能が出るものと確信しています。\n今回のテストでは1500pFのスチコンが浮いていて高域が妙にでてしまっていますｗ、実際にはもう少しまともな音になります。\n\nIM７３A135V01の性能が低く見えるのはその影響かもしれないです。今後バイアス電流を変えて、さらに初段のJFETも変えてテストたいと思います。\n\nJFETを選択するに当たって比較シートを作ってみました。（新しいJFETが見つかったら随時更新）\nhttps://storage.googleapis.com/vach/PUB_JFET_TABLE.xlsx\n比較データーが間違っている可能性十分ありますので参考程度にして、気になったらデーターシートを当たってください。\n\n今回2SK3557を注文するに至った、JFETの低ノイズ性能の比較記事\nhttps://audioxpress.com/article/measurements-rate-new-smt-low-voltage-jfets-under-consistent-conditions-an-update-using-modern-jfets\n\nhttps://www.electronicdesign.com/technologies/power/article/21796240/measurements-rate-smt-low-voltage-n-jfets-under-consistent-conditions\n\nマルツーオンラインでdigikeyの商品が買えます。3000円以上買って、送料無料にしなくてもネコポス385円で送ってくれるみたいです。（コレは超使える裏技だと思いました。）\nhttps://www.marutsu.co.jp/\n\nMEMSマイクセルを購入する場合はMouserというところを利用すれば品種によりますが、なんと送料無料で買える場合があります。これは先駆者の方に教えて頂きました。MEMSマイクセルを買うならMouserで一度見積もってみることをおすすめします・\nhttps://www.mouser.jp/\n\nSTV2プロトタイプ回路シミューレーションファイル LTSpice用\nhttps://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_ORIGINAL.asc",
+    "publishedAt": "2024-02-18T06:26:49Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/LhcPZzKHE8Y/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/LhcPZzKHE8Y/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/LhcPZzKHE8Y/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/LhcPZzKHE8Y/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/LhcPZzKHE8Y/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=LhcPZzKHE8Y"
+  },
+  {
+    "id": "egpsUx9G9NU",
+    "title": "自作MEMSマイクへの道　新型MEMSマイクICS-40800は異次元の性能の可能性あり【フェライトビーズ音質低下確認】",
+    "description": "昨年製作するという話をしてから１年間じっくり検討を重ねてやっと形になってきました。\nそしてこの度、ICS-40800の音を聞いてみて、その性能に驚きました。やはり賞を受賞しているだけは有るようです。鳴り方が今までのMEMSマイクセルと違います。\n\nBest of Sensors Awards 2020 winners announced\nICS-40800が２０２０年のベストセンサーアワードを受賞しているようです。\nhttps://www.fierceelectronics.com/sensors/best-sensors-awards-2020-winners-announced\n\n従来にはない地平が開けていると感じました。指向性MEMSのICS-40800を使った自作マイクは今後大注目だと感じています。（これを使ったワイヤレスマイクとかでたら、音質が超向上する気がします。）\n\nSTV2プロトタイプ回路シミューレーションファイル LTSpice用\nhttps://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_ORIGINAL.asc\n(公開後追記：ICS-40800仕様のEQ付きプリアンプの場合、シミュレーションでは400Ωでしたが、実験の結果と部品の入手性よりベストマッチは１００Ω程度ということで変更しました。）\n\nEQの定数はシミュレーション上の最適値になります。環境と好みに合わせて調節してください。\n完成型では少し変わる可能性がありますが、現状これで驚きの結果が出てきました。完成後はアンプ回路の調整を進めようと思っています。",
+    "publishedAt": "2024-02-06T05:53:55Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/egpsUx9G9NU/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/egpsUx9G9NU/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/egpsUx9G9NU/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/egpsUx9G9NU/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/egpsUx9G9NU/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=egpsUx9G9NU"
+  }
+]

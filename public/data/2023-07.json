@@ -1,0 +1,70 @@
+[
+  {
+    "id": "Ko4wleGnswk",
+    "title": "【ジャンク】画面が見えないオシロスコープを直す HP 54520A",
+    "description": "訂正とその後の動画を上げました。\nhttps://youtu.be/rJtMhoioJ-w\n\n動画内に現在のところ数点（G1、G2の役割等）誤りがあります。G1は電子を引き出すというよりは、待機時（電子ビームを出さない時）は輝点消去電圧というカソードに対して-５０V程度の負の電位になっており、電子ビームを止める為の負の電位がかかっているという見方が正解のようです。つまり\n（カソードK）電子を出す 。\n（グリッドG1）電子が出ないように止める。 \n（グリッドG2）電子を引き出して加速する。 \nのような表現が適切のようです。コメントで教えていただきました。詳しくは固定コメントをご覧ください。\n\nCRTの分解は高電圧が充電されたコンデンサー（数百ボルト）やCRT自身に残留した高電圧(数万ボルトレベル）があるため、大変危険です。動画内で放電方法の説明はしていませんが、それは機種によっても違うため、誤った方法を伝えてしまうことを防ぐためです。必ず、分解前に正規のマニュアルでご確認ください。プライマリーカソード（フライバックトランスから伸びる赤いケーブル先）の放電、つまりCRTのGNDへの接地は、たとえ放置時間が長くても必須になります。どうやって放電するかわからない場合は、作業前に徹底的に調べてみることをおすすめします。\n\n今回の機種では、アノード以外の部分には充電が残らない安全な設計になっていたようです。同じCRTでもそうした設計になってないものもあると思うので、そういった機種については非常に注意してください。回路が故障している場合、どこに高電圧が残っているかは不明なので、さらに危険です。充電箇所が不明で、作業に危険が伴う場合、修理を断念することも大事です。\n\n当チャンネルは資金難のため、自作マイクを改良するために、中古のデジタルオシロスコープまで直してから使わないといけないことになっています。（笑）\n\n\n\n#crt \n#hewlettpackard \n#scope \n#diy \n#repair",
+    "publishedAt": "2023-07-20T04:56:19Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/Ko4wleGnswk/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/Ko4wleGnswk/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/Ko4wleGnswk/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/Ko4wleGnswk/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/Ko4wleGnswk/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=Ko4wleGnswk"
+  },
+  {
+    "id": "xWAKhmWs-Js",
+    "title": "自動音声を使った詐欺電話に注意⚠️☎️ #詐欺",
+    "description": "",
+    "publishedAt": "2023-07-13T03:55:20Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/xWAKhmWs-Js/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/xWAKhmWs-Js/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/xWAKhmWs-Js/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/xWAKhmWs-Js/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/xWAKhmWs-Js/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=xWAKhmWs-Js"
+  }
+]

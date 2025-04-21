@@ -1,0 +1,206 @@
+[
+  {
+    "id": "QwkaSIjPdgQ",
+    "title": "DCアンプに自動オフセット回路を組み込もう",
+    "description": "現在シンプルに歪が少ないAC結合のアンプ回路と\n今回の動画の挑戦的なDCアンプを作れないか思案中です。\n\n動画内でどんな電圧のオフセットにも対応できると言っていますが\n実際はPNPの電圧があるのでこの回路だと調整可能な電圧は0.6V〜になりますが\nMEMSマイクセルの出力電圧は今の所すべて0.6V以上なので対応できます。\n\n回路図を見たら最早謎だと思いますが、ひとまず現状は動画のとおりです。\n想像で出来るかもと思っていた自動オフセット回路が動いたので嬉しいです。\nこれでDCオフセットを抵抗で合わせる必要が無くなるかもと思っています。\n\nコモン電圧をガードにするというアイディアは以下の素晴らしい記事から着想しました。\n記事の内容は動画の回路とは違うものですが、差動回路のガードのとり方として参考にしました。\n是非読んでみてださい。この記事はとても役に立つ内容です。\n（そのままオーディオに使えるシールドドライブ方式の、ゲイン１０倍のアンプ回路例がでてます。）\n\nOPアンプと整合した抵抗で作る差動入力差動出力アンプ\nhttps://cc.cqpub.co.jp/system/contents/4112\n\nオープンソースとして動画内で使った\nオリジナル音源データーのWAVファイルを公開します。\n変な曲ばっかりですが自由に使って下さい。\n\nハイパーウルトラスーパーやばいモード\nhttps://storage.googleapis.com/vach/channel_theme/%E3%83%8F%E3%82%A4%E3%83%91%E3%83%BC%E3%82%A6%E3%83%AB%E3%83%88%E3%83%A9%E3%82%B9%E3%83%BC%E3%83%91%E3%83%BC%E3%82%84%E3%81%B0%E3%81%84%E3%83%A2%E3%83%BC%E3%83%89.wav\n\nリズミカル電子回路\nhttps://storage.googleapis.com/vach/channel_theme/%E3%83%AA%E3%82%BA%E3%83%9F%E3%82%AB%E3%83%AB%E9%9B%BB%E5%AD%90%E5%9B%9E%E8%B7%AF.wav",
+    "publishedAt": "2025-02-24T13:09:46Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/QwkaSIjPdgQ/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/QwkaSIjPdgQ/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/QwkaSIjPdgQ/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/QwkaSIjPdgQ/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/QwkaSIjPdgQ/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=QwkaSIjPdgQ"
+  },
+  {
+    "id": "UwHqRxUqaa0",
+    "title": "コンデンサーのリーク電流を測定すると音質との関係が見えたかも？",
+    "description": "MKTはメタライズド・ポリエステルコンデンサーの間違いでした。お詫びして訂正します。\nhttps://www.monotaro.com/g/06449073/?t.q=MKT1822\nERO（Roederstein）現Vishay\n\nコンデンサーの充電について、半年前にコメントで教えていただいて調べた所\nびっくりするほど知らないことがありました。\nそこでこのリーク電流を測定することにしたわけですが、ここまでやっときました。\n\n気になるコンデンサーがありましたら、コメントを頂ければ助かります。\n手に入る中で、最もリークが少ないコンデンサーを探したいと思います！\n\n\n今回測定したもの内、秋月で買えるものは以下です\n\nオーディオ用無極性電解コンデンサー10μF50V85℃ ニチコンMUSE・ES（実験のやつは25V耐圧品です）\n価格：¥２０\nhttps://akizukidenshi.com/catalog/g/g104638/\n\nオーディオ用電解コンデンサー10μF50V85℃ ニチコンFG\n価格：¥１０\nhttps://akizukidenshi.com/catalog/g/g104621/\n\nメタライズド積層フィルムコンデンサー 0.1μF16V パナソニックECHU\n価格：¥４０\nhttps://akizukidenshi.com/catalog/g/g114342/\n\nチップ積層セラミックコンデンサー 0.22μF50V C0G 3216\n価格：1パック5個入¥200\nhttps://akizukidenshi.com/catalog/g/g115773/\n\nスチロールコンデンサー 0.01μF50V PSR\n価格：¥２０\nhttps://akizukidenshi.com/catalog/g/g114432/\n\nマイカコンデンサー 470pF50V\n価格：¥１２０\nhttps://akizukidenshi.com/catalog/g/g116006/",
+    "publishedAt": "2025-02-15T17:26:53Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/UwHqRxUqaa0/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/UwHqRxUqaa0/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/UwHqRxUqaa0/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/UwHqRxUqaa0/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/UwHqRxUqaa0/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=UwHqRxUqaa0"
+  },
+  {
+    "id": "G7asLPqioK0",
+    "title": "ガードリングをマイク回路に使いたい",
+    "description": "メーリングリスト恐ろしいほど濃い情報がガンガンくるので追いつけてません。\nオーディオアンプとかに興味ある人は絶対購読したほうがいいと思います。\nちなみに問題は簡単そうに見えて、超難しいですｗ\n\nOPアンプと整合した抵抗で作る差動入力差動出力アンプ\nhttps://cc.cqpub.co.jp/system/contents/4112\n\n音源データーは自由に使って下さい。\nWAVファイルをアップロードしています。\n\nオリジナル曲ーマイクを作れ\nhttps://storage.googleapis.com/vach/channel_theme/%E3%83%9E%E3%82%A4%E3%82%AF%E3%82%92%E4%BD%9C%E3%82%8C.wav",
+    "publishedAt": "2025-02-15T09:02:04Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/G7asLPqioK0/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/G7asLPqioK0/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/G7asLPqioK0/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/G7asLPqioK0/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/G7asLPqioK0/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=G7asLPqioK0"
+  },
+  {
+    "id": "aXOPbHPGSvE",
+    "title": "古いBASIC言語を読み取って測定用プログラムを移植する #HP85",
+    "description": "ひょんなことから遭遇したHP-85ですが、歴史的にみても凄いマシンだったようで愛好家が居るみたいです。実際エミュレーターをGoogle翻訳で日本語にしたマニュアル見ながら使ってみると本当に面白いマシンだと思いました。\n\nこの一台でGPIBの制御、カセットテープの保存、読み込み、感熱紙への出力が使えるなど当時(1980年）ではかなり画期的だったようです。\n\nどっかで入手できたら持ってても良いかも知れませんよ。\n\nちなみに今回AIが出力したコードを実行すると、エミュレーターで動かした表示とほぼ同じプロンプトが出てきて、テスト用のデーターを使って２つの特性グラフが表示されます。\nグラフの描画を移植元に近づけようとして少し変な画面表示になっていますが\nあとはGPIBの部分などを書けばそのまま使えるレベルで実装できています。\nこれだけの仕事量を１分で出来るというのはやはり４５年前ではありえないことです。\n参考までに読み取ったBASICのコードとAIが一発目で出したコードを置いておきます。\n\nBASICのコード(拡張子は.txtに変えて下さい)\nhttps://storage.googleapis.com/vach/4140B_Gm-Vgs.hp85\nChatGPTが一発で出したコード（Pythonにして下さいとしか書いてません。）\nhttps://storage.googleapis.com/vach/gm-vgs.py\n\n\n\nKaser氏のエミュレーター\nhttps://www.kaser.com/hp85.html\n\nオンラインマニュアル\nhttps://archived.hpcalc.org/greendyk/hp85/index.html\n\n上の英語のマニュアルをGoogle翻訳で開いたもの\n日本語になると結構読めますし意外と操作簡単だということに驚きました。\nhttps://archived-hpcalc-org.translate.goog/greendyk/hp85/index.html?_x_tr_sl=en&_x_tr_tl=ja&_x_tr_hl=ja&_x_tr_pto=wapp\n\nHP-85について気になる方は次のASCIIの記事もご覧になってください。\nあの有名なIBM 5100と似たようなコンセプトで作られた機械のようです。\nhttps://ascii.jp/elem/000/001/904/1904922/2/",
+    "publishedAt": "2025-02-11T04:33:13Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/aXOPbHPGSvE/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/aXOPbHPGSvE/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/aXOPbHPGSvE/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/aXOPbHPGSvE/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/aXOPbHPGSvE/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=aXOPbHPGSvE"
+  },
+  {
+    "id": "je9Dc2YuEXY",
+    "title": "トライアキシャルケーブルを入手",
+    "description": "トライアキシャルケーブルを入手してピコアンペアメーターを使ってみました。\n途中でVa、Vbのスイッチを上げるという話をしています。\nこのスイッチをGNDの位置にしてVaとHighの間にDUTを入れて測定すれば、電流がHIGH-LOWの順で流れるので、正の値で測定できることが動画を編集してから分かりましたｗ\nただしLOWスイッチを、GNDの位置するとガード(LOW)はGND側の電位になるようです。\n疑問点はそれでケーブルのリーク電流を防ぐ用途としての、ガードの意味があるのかということですが、この接続の場合は、厳密にはHIGHとGNDの間のリーク電流はやはり存在するらしいです。\nですからLOWスイッチをVaに設定し、測定するほうが超高抵抗の測定には理想的みたいですが、単純に1nAレベル以上の電流を測定する場合はどちらでも良いみたいです。\nこの辺は測定の種類によって使い分けするみたいです。\nガードの電位をどうするかによって、二種類の接続方法があるようで、そこら辺混乱しました。\nこの辺、すごくややこしいのでまだよくわかっていません。（すみません）",
+    "publishedAt": "2025-02-07T12:58:41Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/je9Dc2YuEXY/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/je9Dc2YuEXY/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/je9Dc2YuEXY/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/je9Dc2YuEXY/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/je9Dc2YuEXY/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=je9Dc2YuEXY"
+  },
+  {
+    "id": "KKhQY_e7PNQ",
+    "title": "ホワイトチョコレートとブラックチョコレートどっちが電流を流すのか？",
+    "description": "コンデンサーの話をしようとしていつの間にかチョコレートを調べていました。\nもちろん自作マイク製作の一環です。",
+    "publishedAt": "2025-02-02T05:46:18Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/KKhQY_e7PNQ/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/KKhQY_e7PNQ/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/KKhQY_e7PNQ/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/KKhQY_e7PNQ/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/KKhQY_e7PNQ/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=KKhQY_e7PNQ"
+  }
+]

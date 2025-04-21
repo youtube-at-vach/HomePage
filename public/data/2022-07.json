@@ -1,0 +1,308 @@
+[
+  {
+    "id": "dCgWhiNtdN0",
+    "title": "バイノーラルマイクを作ろう　MEMS版　完",
+    "description": "動画の音声の質を上げるために上げ直しました。\n\n今回のマイクの回路図はこちらです。\n私もネットに公開されている多くの方の製作例を参考に作りました。\nLTspiceファイル Analog Devices LTspice（無料）で開けます。\nhttps://storage.googleapis.com/vach/PUB_STV1SMD.asc\nご自由にお使い下さい。\n\n使用した機材\nカメラ：iPhone11 標準カメラアプリ\nサウンドデバイス：iRigPro DUO lightning経由で接続\nマイク：ICS-40730を使用した自作のバイノーラルマイクSTV-1SMD\nマイクの製作については過去の動画をご参照ください。\n\nマイクアンプの話\n当初10kΩの回路を製作したのですが、電圧降下によりバッテリー残量警告がでるので\nモバイルで使用できませんでした。\nそこで省電力版を作り直しています。アンプ回路の周波数特性は変わらないはずなので\n音が違うのはおそらく、MEMSのVDD電圧の問題だと考えています。\n10kΩ:10mA(使用限界レベルの消費電力)、MEMS電圧3.5V\n50kΩ:4mA(通常のマイクと同じレベル）、MEMS電圧2.0V程度\n\n番外編：\n10kΩの撮影： Ulanzi U Rig Pro (プラスチック製で安く(1000円程度）で買えましたが地味に使えます。）\n50kΩの撮影：DJI osmo mobile 3 (なんだかカクつく不具合もありますがやはり便利ですこれ。）\n\n#ICS-40730\n#バイノーラルマイク\n#自作マイク\n\n00:00 はじめ\n00:42 バイノーラルマイクのアンプ\n01:01 バイノーラル録音\n04:28 さらに先の浜辺へ\n07:24 マイクの製作編開始\n08:07 アンプ回路の製作\n10:00 感想\n10:59 MEMSのVDDが音に影響するかも\n12:20 おわりに",
+    "publishedAt": "2022-07-22T05:13:41Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/dCgWhiNtdN0/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/dCgWhiNtdN0/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/dCgWhiNtdN0/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/dCgWhiNtdN0/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/dCgWhiNtdN0/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=dCgWhiNtdN0"
+  },
+  {
+    "id": "7kmIlvbUccY",
+    "title": "アンプ回路の消費電力削減作戦",
+    "description": "誰か必要とする方に向けて",
+    "publishedAt": "2022-07-20T03:22:10Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/7kmIlvbUccY/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/7kmIlvbUccY/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/7kmIlvbUccY/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/7kmIlvbUccY/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/7kmIlvbUccY/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=7kmIlvbUccY"
+  },
+  {
+    "id": "s0xJkKEiwCg",
+    "title": "ニッケル水素電池について調べたらわかった話",
+    "description": "噂です。\n\nニッケル水素充電池の一番安くて高性能な製品はどれ？【ぱ～と1】\nhttps://www.audiostyle.net/archives/ni-mh2018-1.html#2\n\n第10回：ニッケル水素電池はどれを買えば良い? 国内メーカーガチンコ対決!【前編】\nhttps://kaden.watch.impress.co.jp/docs/column/fujilabo/515456.html",
+    "publishedAt": "2022-07-19T07:39:42Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/s0xJkKEiwCg/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/s0xJkKEiwCg/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/s0xJkKEiwCg/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/s0xJkKEiwCg/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/s0xJkKEiwCg/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=s0xJkKEiwCg"
+  },
+  {
+    "id": "9yWtrINOdig",
+    "title": "MEMSバイノーラルマイクの進捗状況",
+    "description": "アンプ回路がおかしいと\nあれこれやりましたが、アンプ回路ではなく\n基板が短絡してただけでした。(かなりの時間を無駄に)\n何とかステレオペアが1組取れて現在硬化中です。\n\n#エポキシ樹脂\n#mems \n#自作マイク \n#ICS-40730",
+    "publishedAt": "2022-07-17T08:30:33Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=9yWtrINOdig"
+  },
+  {
+    "id": "V9CQLnSnEik",
+    "title": "iRig Pro Duoを使って自作MEMSマイク実地検証",
+    "description": "新しく作ったPCB基板を使った自作マイクの野外の録音テスト成功しました。\n改良点もいくつか出てるので少しずつ改良したいと思います。\n\n動画の検証音声音量小さめです、すみません。\n音量を上げると、それなりの解像度で録れてる気がしています。\n毎度のことですがDJI MIMOで編集すると書き出し時に音の劣化があり\n音のキラキラ感がなくなっています。\n元ファイルはそれなりの音で録音できているので少し残念です。\n\n#MEMS\n#ICS40730\n#irig\n#mogami\n#PCB",
+    "publishedAt": "2022-07-13T11:08:00Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/V9CQLnSnEik/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/V9CQLnSnEik/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/V9CQLnSnEik/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/V9CQLnSnEik/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/V9CQLnSnEik/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=V9CQLnSnEik"
+  },
+  {
+    "id": "duF5qi1s6fs",
+    "title": "MEMSマイクの延長ケーブルをMogami2534を使って作成",
+    "description": "MOGAMIのカタログを目を皿にして読み込んだら\nMogami2534がおすすめされている気がしましたが\nやはりこのケーブルは良いです。\nスタンダードと書いてあるますが、実際にはハイレベルスタンダードではないかと。\n値段も実に安いです。210円/m(サウンドハウスにて）\n\nハンダはオヤイデ電気のSS-47を使っています\nかなり気に入りました\nケーブル作りには最適ですね\n\nこちらのマイクはこれで一応完成です。\n表面実装版は現在進行中です。",
+    "publishedAt": "2022-07-11T06:07:32Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/duF5qi1s6fs/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/duF5qi1s6fs/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/duF5qi1s6fs/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/duF5qi1s6fs/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/duF5qi1s6fs/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=duF5qi1s6fs"
+  },
+  {
+    "id": "HqVU1cRJcYg",
+    "title": "このチャンネルについて",
+    "description": "ノイマンの動画\nNeumann Home Studio Academy\nGeorg Neumann GmbH\nhttps://www.youtube.com/watch?v=o9JzrRl5aYA&list=PLXo2VCZ_cSFci7LYuTmdBOFF8Om_L952W\n\nゼンハイザージャパンによる翻訳版\nhttps://www.youtube.com/watch?v=Ei5ocIf29Jg&list=PL2QD7ECBFJAFEgHKoMFsgbh_4jqBKUmDg\n\n訂正：MEGWIN TVより古いではなくチャンネル開設は２週間後でした。ｗ\n（初投稿は早かったはずです。）",
+    "publishedAt": "2022-07-05T22:28:33Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/HqVU1cRJcYg/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/HqVU1cRJcYg/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/HqVU1cRJcYg/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/HqVU1cRJcYg/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/HqVU1cRJcYg/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=HqVU1cRJcYg"
+  },
+  {
+    "id": "cnsaOASRLac",
+    "title": "表面実装化したアンプ基板のリフローが完了",
+    "description": "ノイトリックのコネクタにオリジナル謎回路を格納するために\n超小さいSMD部品の実装に挑戦します。\n⚠️動作チェックはまだなんですが・・・\n\n#mems \n#SMD\n#自作マイク\n#高音質\n\nリフロー方法を参考にした動画\nhttps://www.youtube.com/watch?v=prjB_myCwSY\nかなりわかりやすかったです。（この動画ではなく、こちらの動画をぜひご覧ください！）\n\nPCB基板の製作はFusionPCBを利用しました\nhttps://www.fusionpcb.jp/",
+    "publishedAt": "2022-07-04T07:59:34Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/cnsaOASRLac/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/cnsaOASRLac/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/cnsaOASRLac/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/cnsaOASRLac/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/cnsaOASRLac/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=cnsaOASRLac"
+  },
+  {
+    "id": "m-1JyIn3kPM",
+    "title": "チップJFETの選別作業",
+    "description": "2sk117-BLのチップ版であり現行製造品の2sk209-BLは異常なほど特性の揃っていました。\nこれは技術の進歩で改良されたのでしょうか？\nこれだったら、選別必要なさそうです。",
+    "publishedAt": "2022-07-01T23:24:03Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/m-1JyIn3kPM/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/m-1JyIn3kPM/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/m-1JyIn3kPM/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/m-1JyIn3kPM/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/m-1JyIn3kPM/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=m-1JyIn3kPM"
+  }
+]

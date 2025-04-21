@@ -1,0 +1,70 @@
+[
+  {
+    "id": "YAKByDKOEdU",
+    "title": "[保存版】自作MEMSマイクへの道　最新のMEMSマイクセル７種のスペックを比較してみる【MEMS THD比較】",
+    "description": "最新のMEMSのだけ抜粋して比較してみました。他にも面白そうなものがあったら比較してみたいと思います。\nどんどん新しいの出てくるので、それを追いかけるだけでも面白いです。\n各社物凄い開発競争しています。\n\nSNRとダイナミックレンジの比較\n図\nhttps://storage.googleapis.com/vach/MEMSspec7.png\n\nTHDの比較\n\n図\nhttps://storage.googleapis.com/vach/MEMSTHD7.png\n\ncsvファイル\nhttps://storage.cloud.google.com/vach/PUB_MEMS7THD.csv\n（それぞれ品種別に２列ずつデーターがあります。）",
+    "publishedAt": "2024-04-15T23:00:34Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/YAKByDKOEdU/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/YAKByDKOEdU/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/YAKByDKOEdU/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/YAKByDKOEdU/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/YAKByDKOEdU/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=YAKByDKOEdU"
+  },
+  {
+    "id": "QaIRJDxbrXQ",
+    "title": "自作MEMSマイクへの道　マイクプリアンプ用の小信号の歪率を測る　【アッテネータHP 355D】",
+    "description": "益々わけのわからないチャンネルになっていますが\nひとまずこれでマイクプリアンプの歪を可視化することに成功できました。\n\n動画の中で画像をお借りしたHP 355Dのサイトはこちらです。\nhttps://www.hpmemoryproject.org/timeline/art_fong/hp355_01.htm\n\nもう半世紀前に設計されたもののようですが、まさに普遍的な価値があるものと思いました。\n別々のギアでスイッチをコントロールするというのは、思いつかない構造で、本当に驚きました。\nこのサイトを見たおかげで、入手してしまったわけです。（笑）\n\n追伸：動画冒頭の話が余分だと思いましたので、カットしておきました。",
+    "publishedAt": "2024-04-10T10:03:28Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/QaIRJDxbrXQ/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/QaIRJDxbrXQ/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/QaIRJDxbrXQ/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/QaIRJDxbrXQ/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/QaIRJDxbrXQ/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=QaIRJDxbrXQ"
+  }
+]

@@ -1,0 +1,172 @@
+[
+  {
+    "id": "4DQODE8Cr60",
+    "title": "自作MEMSマイクへの道　今後の目標　大事なことは何かを考える",
+    "description": "SUNNYのinstagram\nhttps://www.instagram.com/rainysfantasy/\n\nRODE M3の開発者のプリアンプ解説動画\nhttps://www.youtube.com/watch?v=niZizzHBanA\nこんなの無料で見えて良いんだろうか？（笑）\n\nすみませんジッターの比較が出来るサイトは閉鎖されていました。\n同様のサイトを見つけ次第貼ります。\n\n#自作マイク\n#MEMS\n#HOWTO\n#Microphone\n#DIY",
+    "publishedAt": "2023-06-27T01:08:11Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/4DQODE8Cr60/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/4DQODE8Cr60/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/4DQODE8Cr60/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/4DQODE8Cr60/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/4DQODE8Cr60/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=4DQODE8Cr60"
+  },
+  {
+    "id": "_SO2EI4qVmA",
+    "title": "HP 3325Bファンクションジェネレーターのアッテネーターモジュールを交換する",
+    "description": "モジュラー構造は素晴らしい！\n今後作る自作マイクもモジュラー方式を採用したいと思います！\n\n#hp\n#hewlettpackard \n#device",
+    "publishedAt": "2023-06-24T21:41:17Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/_SO2EI4qVmA/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/_SO2EI4qVmA/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/_SO2EI4qVmA/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/_SO2EI4qVmA/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/_SO2EI4qVmA/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=_SO2EI4qVmA"
+  },
+  {
+    "id": "bHi3i3-ELHs",
+    "title": "自作MEMSマイクへの道　４０万の法則の謎が解けた⁉️LPFとHPFの遮断周波数の最適値を決定する",
+    "description": "動画の中で440ヘルツを「ド」と言っていますが「ラ」の間違いでしたお詫びします。\nコメントで頂いた人間の聴覚などについて考えていたところ思いつきました。\n\n動画では謎の考察をしていますが、\n\n４０万の法則について\n参考にしたサイトは以下です。\n\n４０万の法則とスピーカー　EZなブログ\nhttp://www.ezto.info/stpress/2016/01/563.html\n\n４０万の法則という話題についてわかりやすい動画がありました。\n11.オーディオで音を楽しむ秘訣「40万の法則」\nhttps://www.youtube.com/watch?v=__1DTu8VJ8U\n\n検索すると色々出てきますので興味のある方は検索してみてください。",
+    "publishedAt": "2023-06-16T22:56:44Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/bHi3i3-ELHs/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/bHi3i3-ELHs/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/bHi3i3-ELHs/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/bHi3i3-ELHs/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/bHi3i3-ELHs/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=bHi3i3-ELHs"
+  },
+  {
+    "id": "Z1zkBxT-d0A",
+    "title": "自作MEMSマイクへの道　新しい謎回路の実証実験をやってみた",
+    "description": "まだいろいろ確認している段階です。先駆者の方々を参考にして作ったSTV1では無く、外道レベルの謎の回路が正しく動くかどうかを確認してみました。\n低歪みな差動信号を出せる機械が無いので実際に歪みが抑えられているか、真偽の程は不明です。\n\nその他の回路も少しずつ実験して確認して、回路を決定したいと思っています。\n\n追記：翌朝\n\n少し回路間違って組んでました。\n実際にはもう少し音良いみたいです。\nやはりただもんでは無さそうな回路です。\n\n回路図は以下です。\nhttps://storage.googleapis.com/vach/PUB_TV2_PRE.asc\n\n#自作マイク \n#mems \n#diy",
+    "publishedAt": "2023-06-15T07:24:31Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=Z1zkBxT-d0A"
+  },
+  {
+    "id": "jEcmZn_heUc",
+    "title": "自作MEMSマイクへの道　環境音の音圧レベルを測定しよう（比較的静かな場所編）",
+    "description": "精密騒音計を手に入れたので早速測定してみました。小川の音はちょろちょろ流れているようですが結構大きな音が出てるんですね。\n実際に測定すると不思議でした。\n\n映像は最後に出てくるRode VideoMicroをつけたスマホで撮影しています。\n\n#自作マイク \n#騒音計\n#diy",
+    "publishedAt": "2023-06-05T07:06:33Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=jEcmZn_heUc"
+  }
+]

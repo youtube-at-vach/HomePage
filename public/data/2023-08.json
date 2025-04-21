@@ -1,0 +1,104 @@
+[
+  {
+    "id": "rJtMhoioJ-w",
+    "title": "【ジャンク】画面が見えないオシロスコープを直すの訂正とファームウェア更新　HP 54520A",
+    "description": "前の修理動画では、抵抗値が不明でしたが、実際に動作品を入手しましたので、不明だった抵抗値を調査しました。\nコメントでブラウン管のグリッドの説明が間違っているご指摘を受けましたので訂正しました。\n\n恥ずかしい訂正：\n便利図ではなく、ベン図です。ベンは人物名らしい。しかもベン図でもないです。（笑）失礼しました。\n早いではなく、速いです。\n\nK（カソード）の電圧を基準に説明していますが、実際にはG1、G2ではなくKの電圧を制御して画面を描画しています。\nというわけで実際の映像信号はカソードへ入力されておりますが、そこから説明するとグリッドの役割が見えにくいので、G1、G2の説明にはカソードの電圧を基準０Vにして説明しています。\nコメントで誤りを指摘していただいた方に感謝いたします。\nこれでブラウン管の加速電圧と仕組みについてはほぼわかりました。\n詳しい方によると、ブラウン管の画面が映る映らないはG4の電圧にはあんまり関係ないらしいので、G1とG2だけをチェックすれば良いらしいです。\n\n修理の詳細については以前の動画をご覧ください。\nhttps://www.youtube.com/watch?v=Ko4wleGnsw\n\nUnreleased Software for 54520A, 54522A, 54540A, and 54542A Oscilloscopes (Version T3.33)\nhttps://www.keysight.com/us/en/lib/software-detail/instrument-firmware-software/unreleased-software-for-54520a-54522a-54540a-and-54542a-oscilloscopes-version-t333-1186031.html\n\n#hp \n#diy \n#オシロスコープ\n#firmwareupdate \n#hewlettpackard",
+    "publishedAt": "2023-08-30T06:45:04Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/rJtMhoioJ-w/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/rJtMhoioJ-w/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/rJtMhoioJ-w/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/rJtMhoioJ-w/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/rJtMhoioJ-w/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=rJtMhoioJ-w"
+  },
+  {
+    "id": "Jx39_M1MHGI",
+    "title": "【ジャンク】ヒューズが切れた周波数カウンターの修理に挑戦 HP 5328A",
+    "description": "今回は破壊しながら直してしまったのでドローです。\nヒューズ切れの問題解決はかなり大変でした。\n古いタンタルコンデンサーは本当に注意したほうが良さそうですね。（実感）\nどうも経年劣化の結果、少しずつ抵抗が下がり、最後にショートになるようで\n古い機器は温度計などで温度が正常か検査したほうが良いかも知れないです。\n調整、校正が必要ですが、今の所、動作確認までです。\n\n#hp \n#diy \n#hewlettpackard \n#howto \n#transistor\n\n00:00:00 修理\n00:37:30 トランジスターの故障の見分け方",
+    "publishedAt": "2023-08-09T04:01:59Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/Jx39_M1MHGI/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/Jx39_M1MHGI/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/Jx39_M1MHGI/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/Jx39_M1MHGI/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/Jx39_M1MHGI/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=Jx39_M1MHGI"
+  },
+  {
+    "id": "PU4OHBg15aA",
+    "title": "マイクアンプ回路のコーナ周波数を測定する",
+    "description": "先日修理できたHP54520Aを使って２つの方法を使って\nコーナ（カットオフ）周波数を測定してみました。\n\n周波数応答と時間応答の関係【CQ Connect】\nhttps://cc.cqpub.co.jp/system/contents/3767/\n\nメールマガジン登録すれば、怒涛の速度で驚異的に深いオーディオ情報が送られてきます。\n問題形式なので正答できればよいですが、マジでガチなので大分難しいです（笑）\n\nファンタム電源をUAC-232から取らない場合もやってみましたが\nSTV1USMv5アンプの上側のコーナ周波数（-3dB点）は150kHzでした。\nこれが良いのかどうなのか、なぜここまで低速になるのかは現在のところ謎です。\n昨年作ったマイクのいろんな問題点が見えてきてます。\n\n\n#hewlettpackard \n#howto \n#pulse \n#diy \n#microphone",
+    "publishedAt": "2023-08-02T15:00:18Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/PU4OHBg15aA/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/PU4OHBg15aA/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/PU4OHBg15aA/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/PU4OHBg15aA/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/PU4OHBg15aA/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=PU4OHBg15aA"
+  }
+]

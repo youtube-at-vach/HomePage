@@ -1,0 +1,36 @@
+[
+  {
+    "id": "d1S4WAG8VtA",
+    "title": "自作MEMSマイクへの道　簡単な方法でMEMSマイクの低ノイズ化を目指す　【ノイズフィルター】【光ノイズ検証】",
+    "description": "非常にシンプルなフィルターですが、十分機能するようです。\n\n2次以上の高周波フィルター（バターワース）等も検討しましたが、低周波すぎて適合するインダクタンスLを十分確保できる小型のインダクターがないという問題がありそっち方面の実装は難しそうです。\n\n基板も部品も到着してこれから実際に組み上げになります。\n\n誤りがないよう努めておりますが、ノイズ関連は理解が追いついておらず、訂正有るかもしません。\nより正確な情報については、CQ Connectの以下の素晴らしい記事を是非ご参照頂ければと思います。\n\n雑音が少ない1次ロー・パス・フィルタはどっち？\nhttps://cc.cqpub.co.jp/system/contents/1188/\n\nSTV2の回路図については、現在定数を検討中でして、決まり次第アップしたいと思っています。\n\nSTV2プロトタイプ回路シミューレーションファイル LTSpice用\nhttps://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_ORIGINAL.asc\n\n追記：上記のファイルのICS-40800のEQはシミューレーション上の定数になります。ICS-40800の実機でノイズフィルターの定数調整したところ、最適値が違うようなので、ノイズフィルターの定数調整は今後の動画で修正したいと思います。",
+    "publishedAt": "2024-01-14T03:30:18Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/d1S4WAG8VtA/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/d1S4WAG8VtA/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/d1S4WAG8VtA/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/d1S4WAG8VtA/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/d1S4WAG8VtA/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=d1S4WAG8VtA"
+  }
+]

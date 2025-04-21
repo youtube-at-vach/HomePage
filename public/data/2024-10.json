@@ -1,0 +1,201 @@
+[
+  {
+    "id": "s_8rhd0_tQE",
+    "title": "二次元の歪マップを使って回路の歪特性を検証してみた",
+    "description": "今回測定したのはマイク用のディスクリートプリアンプ回路です。\nゲインや位相の周波数特性ではなくTHDの測定から回路が作り出す歪の可視化をしてみました。\n回路によってかなり等高線の形が変わってくるので、これは回路の特性を表現していると考えています。\n今回はマイク回路でやってみていますが、オーディオ機器やスピーカーでもやってみたら面白いかも知れません。\n\nTHD換算表\n-20dBr = 10% MEMSマイクの最大音圧を規定するための歪率\n-40dBr = 1% 一般的なスタジオ用マイクの最大音圧としての歪率\n-60dBr = 0.1% この辺りからかなり聞こえてくる\n-80dBr = 0.01% ヘッドフォン出力とかは普通このくらい歪んでる模様\n-100dBr = 0.001%  市販品最高レベルくらい\n-120dBr = 0.0001% ハイエンドレベル？市販の歪率計の限界レベル\n-140dBr = 0.00001% アナログユーチューバーの世界（想像を絶する）\n-160dBr = 0.000001% おそらく未踏領域\n\n測定に使用したサウンドデバイスはZOOM UAC-232です。\n\n実験に使用した回路のシミュレーションファイルはこちらです\nhttps://storage.googleapis.com/vach/MIC_CIRCUITS.zip\n\n測定プログラムは現在のところ下のものです。\nhttps://storage.googleapis.com/vach/audio_analyzer145.zip\n動画内で使っている画像もひとまずこちらで作っています。",
+    "publishedAt": "2024-10-29T15:01:06Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/s_8rhd0_tQE/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/s_8rhd0_tQE/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/s_8rhd0_tQE/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/s_8rhd0_tQE/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/s_8rhd0_tQE/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=s_8rhd0_tQE"
+  },
+  {
+    "id": "0ZZJT4dkWbk",
+    "title": "秋葉原の夢",
+    "description": "買い物はネットでやってますｗ\nsuno.aiで作りました。",
+    "publishedAt": "2024-10-27T02:36:31Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/0ZZJT4dkWbk/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/0ZZJT4dkWbk/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/0ZZJT4dkWbk/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/0ZZJT4dkWbk/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=0ZZJT4dkWbk"
+  },
+  {
+    "id": "DerEGknpEiw",
+    "title": "知能爆発 文明の未来",
+    "description": "これからどんな世界になっていくでしょうか？\n曲はsuno.aiで作りました。",
+    "publishedAt": "2024-10-26T10:39:33Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/DerEGknpEiw/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/DerEGknpEiw/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/DerEGknpEiw/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/DerEGknpEiw/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/DerEGknpEiw/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=DerEGknpEiw"
+  },
+  {
+    "id": "VRprwYMcrAk",
+    "title": "AIパワーが炸裂して高調波測定プログラムが製作出来ました",
+    "description": "高調波の位相測定が改善できたので、それなりに使えるプログラムが作れた気がします。\nもちろんプログラムはフリーとしてすべて公開します。\n時間的に余裕がないので、ひとまず動画を出しています。\nプログラムのアップロードは動画公開後、数日以内に行います。\nしばらくお待ち下さい。\n\nおまたせしました。動画内で製作したプログラムの暫定版をアップロードしました。\nLinuxのPython 3.8環境で動作します。Window等で使う場合は\n出たエラーをそのまままAIに丸投げしたら原因究明してくれて直るかも知れないです。（マジです\nhttps://storage.googleapis.com/vach/audio_analyzer145.zip\n\n\n補足：レイテンシーの説明で出てくる波形の図は２００Hzの波形が表示されています。\n\n#openai #audio #プログラム\n\nちなみに冒頭の音楽も生成AIが作ったものです。\nMerry Christmas Mister Internet（未アップロード）",
+    "publishedAt": "2024-10-21T12:24:15Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/VRprwYMcrAk/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/VRprwYMcrAk/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/VRprwYMcrAk/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/VRprwYMcrAk/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/VRprwYMcrAk/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=VRprwYMcrAk"
+  },
+  {
+    "id": "S8C0cgIifG8",
+    "title": "オーディオデバイスから綺麗な矩形波が出ないので調査してみたら意外な事実を発見？",
+    "description": "Pythonの実行環境がない方でもテスト出来るようにテスト音源をアップロードしました。\nオシロスコープなどをお持ちの方はチェックしてみたら面白いかも知れません。\n\nサンプリングレート44.1kHzから1536kHzの矩形波PCM音源（各３０秒)\nhttps://storage.googleapis.com/vach/square_wave_44k1-1536kHz.zip\nZipファイルは700kBくらいですが、解凍すると260MBくらいに巨大化します。\n中身が単純なので、物凄い圧縮できてるようです。\n\n途中でマッチングのために使ったπ型減衰器の計算機はこちらを使わせてもらいました。\nhttp://gate.ruru.ne.jp/rfdn/Tools/ImpAttForm.asp#\n\nオーディオシグナルジェネレーター(ChatGPTで作ったもの）\nhttps://storage.googleapis.com/vach/audio_signal_generator_v112.zip\nサンプリングレート1536kHzのPCMファイルも作れます",
+    "publishedAt": "2024-10-06T03:36:12Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/S8C0cgIifG8/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/S8C0cgIifG8/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/S8C0cgIifG8/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/S8C0cgIifG8/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/S8C0cgIifG8/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=S8C0cgIifG8"
+  },
+  {
+    "id": "xnud6j2tk4k",
+    "title": "JFETで低歪を実現できる差動入力回路を発見！？",
+    "description": "P型のBJTを言ってますが、FETと間違っています。正しくはPNPです。2SA970を２つ使った差動ペアの入力回路で、超低出力インピーダンスと低歪の有名な回路です。\n\nSNRとTHDの両立がTHD+Nを下げるわけですが実際に測定してみると、正直かなり難しいです。マイク回路の場合は扱う電圧がそもそも小さいので、特にNを下げるのはかなり難しいですね。\nオーディオデバイスももっと凄いのがあったらいろいろ測定できそうですね。\nUAC-432とか出る場合は、もっとTHD＋Nを下げてほしいです（切実）。\n\nちなみに新回路は、負帰還？が入っていてほとんど増幅しないので、2sk30aとか2sk117、2sk2881などgmによらず、だいたいなんでも使えるようです。テストした中で2sk2881が一番性能が出たので測定はイセハヤ電子の2sk2881を使っています。\n\nTHD、THD+N、SNR測定ソフト（SNRの計算修正版）\nhttps://storage.googleapis.com/vach/realtime_analyzer_v112.zip\n動画投稿した時のコードはSNRの測定結果に、\n高調波の振幅も含まれていて測定に誤りがありましたので修正しました。\n動画内でSNRについても話していますが、すこし間違いがありました。\nSNRの測定結果の訂正\nSTV2 AC 84dB (初段に2SK3557という低ノイズJFETを使っています。）\n差動一段 74dB（2sk2881）\n\nちなみに、コードは自由に勝手に是非使って下さい。\n\nシグナル生成ソフト改良しました。ブラウンノイズなどカラードノイズ作れます。\nhttps://storage.googleapis.com/vach/audio_signal_generator_v112.zip\n\nプログラムの依存関係はscipyやnumpy、sounddeviceなどですので、実行前にpipなどでインストールして下さい。いまのところWindowsで動くことは確認できていません。申し訳ないです。\n\n新回路のLTSpiceシミュレーションファイル\nhttps://storage.googleapis.com/vach/PUB_STV2_SIMPLE2.asc\n\nSTV2 AC版のLTSpiceファイル\nhttps://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_ORIGINAL.asc\n\n従来の回路のシミュレーション\nhttps://storage.googleapis.com/vach/PUB_STV1_S_THD.asc\n\n\n\n#chatgpt \n#mems \n#プリアンプ回路\n#jfet",
+    "publishedAt": "2024-10-05T15:00:59Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/xnud6j2tk4k/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/xnud6j2tk4k/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/xnud6j2tk4k/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/xnud6j2tk4k/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/xnud6j2tk4k/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=xnud6j2tk4k"
+  }
+]

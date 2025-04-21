@@ -1,0 +1,648 @@
+[
+  {
+    "id": "o36kUn4h7oc",
+    "title": "ICS-40730のファンタム電源とプラグイン（コイン）パワーの違いを検証",
+    "description": "やはりXLR接続のファンタム電源（４８V）で増幅する方がいい音が出ます。\nアンバランス接続の方も低圧で使えるようにかなり工夫しましたが勝てないようです。\n誰かが次に何かを作る時の参考になれば幸いです。\n\n回路の詳細については過去の動画をご参照ください。\n\n#ICS40730\n#MEMS\n\nXLR接続の方の回路\nhttps://youtu.be/_SkRNIdv0xg\n回路の参考にさせていただいたサイト\nSHINさんのPA工作室 \n\nアンバランス接続の方の回路、プラグインパワーで使える増幅回路\nhttps://youtu.be/0-ShZfLExC8\nhttps://youtu.be/EgJ1z8lIJTY\n当ちゃんねるオリジナル謎回路",
+    "publishedAt": "2022-04-27T08:09:29Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/o36kUn4h7oc/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/o36kUn4h7oc/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/o36kUn4h7oc/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/o36kUn4h7oc/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/o36kUn4h7oc/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=o36kUn4h7oc"
+  },
+  {
+    "id": "Xy8uUjIGxdg",
+    "title": "禁断の検証ICS-40730と激安ECMの音質比較",
+    "description": "この動画は不正確な調査です。\n追記：申し訳ありません。こちらの調査はサウンドプロセッサー古く不正確ということが後でわかりました。\nICS-40730の音は非常に良い音ですが、その真価を発揮させるのはなかなか難しいです。2022年７月26日\n\n#ICS-40730\n#C9767",
+    "publishedAt": "2022-04-26T23:55:30Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/Xy8uUjIGxdg/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/Xy8uUjIGxdg/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/Xy8uUjIGxdg/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/Xy8uUjIGxdg/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/Xy8uUjIGxdg/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=Xy8uUjIGxdg"
+  },
+  {
+    "id": "iM3T3s6gYEM",
+    "title": "ECMを分解してみた Panasonic WM-62PC",
+    "description": "バックエレクトレットコンデンサー型のECMです\n思ったより単純な構造です",
+    "publishedAt": "2022-04-23T07:03:06Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/iM3T3s6gYEM/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/iM3T3s6gYEM/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/iM3T3s6gYEM/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/iM3T3s6gYEM/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/iM3T3s6gYEM/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=iM3T3s6gYEM"
+  },
+  {
+    "id": "_SkRNIdv0xg",
+    "title": "秋月電気通商で売っている１個２５円のECMって意外と良いのではなかろうか！？",
+    "description": "無指向性と言う割には指向性が有るような・・・？\n音も結構無難な音で、とても一個２５円とは思えません。\nカップリングコンデンサーはニチコンMUSE ES 10uFを使っています。\nこれが意外にマッチしてるのかも。\n\n参考にさせていただいたサイト\n・SHINさんのPA工作室\n\n定数は手持ちの部品に合わせて変えております。\n膜エレクトレット型や位相の話など基本的でとても大切な知識をたくさん勉強させてもらいました。\n\n#自作マイク\n#膜エレクトレット",
+    "publishedAt": "2022-04-20T15:00:33Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/_SkRNIdv0xg/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/_SkRNIdv0xg/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/_SkRNIdv0xg/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/_SkRNIdv0xg/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/_SkRNIdv0xg/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=_SkRNIdv0xg"
+  },
+  {
+    "id": "wXFl3Pnultk",
+    "title": "秋月に売っているC9767はやはり膜エレクトレットコンデンサー型でした",
+    "description": "",
+    "publishedAt": "2022-04-20T08:04:51Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/wXFl3Pnultk/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/wXFl3Pnultk/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/wXFl3Pnultk/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/wXFl3Pnultk/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/wXFl3Pnultk/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=wXFl3Pnultk"
+  },
+  {
+    "id": "CpuI2sd2Bek",
+    "title": "ファンタム電源で使えるラベリアマイク（ロックマン風）を作って検証【修正版】",
+    "description": "あまりにも間違いが多すぎたので修正版を上げました。\n正相、逆相問題は結構大変です。この動画のテスト音声は正相に直しており、\n二線式はXLRの二番三番ピンの接続を逆にすることで正相に戻しております。\n回路図はC9767（膜エレクトレットコンデンサーマイク？）用に修正しております。\nWM-61Aとは逆相の関係になっているようなのでご注意下さい。\n\n何かの参考になれば幸いです。\n\n参考させてもらったサイト\nSHINさんのPA工作室\n\n回路の定数は手持ちの部品にあわせて変えております。\n\n#C9767\n#自作マイク\n#ファンタム電源",
+    "publishedAt": "2022-04-19T13:09:15Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/CpuI2sd2Bek/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/CpuI2sd2Bek/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/CpuI2sd2Bek/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/CpuI2sd2Bek/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/CpuI2sd2Bek/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=CpuI2sd2Bek"
+  },
+  {
+    "id": "017sj9aQ4v4",
+    "title": "まさかあの有名なプラグインパワーマイクも逆相？身近に溢れる逆相マイク、やっと正解を判別できるようになりました",
+    "description": "誤　バックエレクトリック　→　正　バックエレクトレット\n動画のタイトルそのままです。\nバスターマイクは見事に逆相でした。",
+    "publishedAt": "2022-04-19T08:32:28Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/017sj9aQ4v4/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/017sj9aQ4v4/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/017sj9aQ4v4/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/017sj9aQ4v4/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/017sj9aQ4v4/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=017sj9aQ4v4"
+  },
+  {
+    "id": "TBKfgnAsIE0",
+    "title": "エポキシパテとエポキシ接着剤",
+    "description": "謎の動画です",
+    "publishedAt": "2022-04-17T06:30:55Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/TBKfgnAsIE0/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/TBKfgnAsIE0/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/TBKfgnAsIE0/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/TBKfgnAsIE0/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/TBKfgnAsIE0/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=TBKfgnAsIE0"
+  },
+  {
+    "id": "inGsXoUcQUI",
+    "title": "【再エンコード無し版】立体音響実験　海辺",
+    "description": "違いがおわかりでしょうか。良いヘッドフォンを持っている方は是非違いをご確認ください。内容は「バイノーラルマイク(仮)を作ろう　海辺で実験」と同じものです。\n\nビットレートが２倍以上の再エンコード処理を行ってもやり方が悪いのか、再エンコードによって波の音が濁るので、そのまま無編集を上げております。波音は劣化がわかりやすいのかも知れません。\nわずかに、こちらのほうが音が綺麗に聞こえるはずです。左右のバランス微妙に違うかも知れません。",
+    "publishedAt": "2022-04-12T22:55:25Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/inGsXoUcQUI/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/inGsXoUcQUI/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/inGsXoUcQUI/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/inGsXoUcQUI/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/inGsXoUcQUI/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=inGsXoUcQUI"
+  },
+  {
+    "id": "eqjHm-7vYpc",
+    "title": "【再エンコード無し版】立体音響実験　海辺の鳥の声",
+    "description": "「バイノーラルマイク(仮)を作ろう　海辺で実験」の再エンコード無し版です。こちらも参考程度にアップロードしています。砂浜の波音と違ってこちらは再エンコードによる劣化がわかりにくいです。音量小さめで申し訳ないです。\n\n撮影カメラ DJI Pocket2\nマイク プラグインパワー（コインパワー）方式アンプ内蔵型MEMSマイク\n\nマイクの製作については過去の「バイノーラルマイクを作ろう」の動画をご参照ください。\n\n#ics40730\n#2sk2881",
+    "publishedAt": "2022-04-12T22:46:23Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/eqjHm-7vYpc/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/eqjHm-7vYpc/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/eqjHm-7vYpc/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/eqjHm-7vYpc/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/eqjHm-7vYpc/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=eqjHm-7vYpc"
+  },
+  {
+    "id": "svpS7pwV8SE",
+    "title": "バイノーラルマイク(仮)を作ろう　海辺で実験",
+    "description": "これはバイノーラルマイクを作ろうとして出来たヘルメット付きの謎マイクを使った立体音響の実験映像です。\nマイクの詳細については過去の動画をご覧下さい。\nDJI純正アプリで編集してアップロードすると音質がエンコードの段階で劣化しますので、PCで作業してアップロードしております。音声はほぼ無編集ですが書き出しのために再エンコードがかかっております。\n\nカメラ DJI Pocket2 \nマイク プラグインパワー専用回路(過去の動画を参照)を搭載したMEMSマイク\n\nDJI Pocket2のゲイン設定は+10dBです。\n\n#mems \n#ics40730",
+    "publishedAt": "2022-04-12T22:24:40Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/svpS7pwV8SE/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/svpS7pwV8SE/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/svpS7pwV8SE/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/svpS7pwV8SE/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/svpS7pwV8SE/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=svpS7pwV8SE"
+  },
+  {
+    "id": "OQgDsPLRWZc",
+    "title": "【4K】バイノーラルマイク（仮）を作ろう　パルグリーン近く道路沿いでテスト",
+    "description": "パルグリーンというゴルフの練習場の近くの土手を歩きました。\n録音を間違ってLRを反転作業しているので5:42秒あたりで右左が逆転する瞬間があるかも知れません。そこで動画をカットして反転しています。\n\n0:00 ICS-40730ステレオヘルメットマイク\n5:42 DJI Pocket2 内蔵マイク\n\n#MEMS\n#ステレオマイク\n#ICS-40730\n#TDK",
+    "publishedAt": "2022-04-10T15:00:09Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/OQgDsPLRWZc/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/OQgDsPLRWZc/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/OQgDsPLRWZc/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/OQgDsPLRWZc/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/OQgDsPLRWZc/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=OQgDsPLRWZc"
+  },
+  {
+    "id": "GRfEMft_XPQ",
+    "title": "バイノーラルマイク（仮）を作ろう　実機で検証！春の静円寺と鳥の声",
+    "description": "ご注意下さい、これはバイノーラルマイクを作ろうとした結果、できた謎マイクの実験映像です。\n鳥がたくさん居たので助けられました。\n\n撮影機材：DJI Pocket2\n接続形式：Do-It-AllハンドルのΦ3.5mmステレオジャック端子より入力\n外部マイク：コインパワー自作バイノーラル風ステレオ（アバンギャルド）マイク（20dB程度のアンプ付き）\n使用されているマイクカプセル：InvenSense（現TDK） ICS-40730 \n\nマイクの製作過程は紆余曲折しながら上げている\nバイノーラルマイクを作ろうシリーズの方を見てみてください。\n\n#TDK\n#バイノーラルマイク\n#MEMS",
+    "publishedAt": "2022-04-10T09:08:58Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/GRfEMft_XPQ/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/GRfEMft_XPQ/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/GRfEMft_XPQ/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/GRfEMft_XPQ/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/GRfEMft_XPQ/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=GRfEMft_XPQ"
+  },
+  {
+    "id": "UKc6TJ4RGYM",
+    "title": "バイノーラルマイクを作ろうとした結果",
+    "description": "",
+    "publishedAt": "2022-04-10T07:14:55Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/UKc6TJ4RGYM/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/UKc6TJ4RGYM/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/UKc6TJ4RGYM/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/UKc6TJ4RGYM/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/UKc6TJ4RGYM/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=UKc6TJ4RGYM"
+  },
+  {
+    "id": "EgJ1z8lIJTY",
+    "title": "バイノーラルマイクを作ろう　完成しました",
+    "description": "ハンダの動画\nhttps://www.youtube.com/watch?v=yOil-LTPxI0\n\n#バイノーラルマイク \n#mems \n#ica40730",
+    "publishedAt": "2022-04-10T01:44:39Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/EgJ1z8lIJTY/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/EgJ1z8lIJTY/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/EgJ1z8lIJTY/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/EgJ1z8lIJTY/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/EgJ1z8lIJTY/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=EgJ1z8lIJTY"
+  },
+  {
+    "id": "7Fxl5Yeqn9M",
+    "title": "バイノーラルマイクを作ろう　後少しになって気づいたこと",
+    "description": "",
+    "publishedAt": "2022-04-07T22:41:21Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/7Fxl5Yeqn9M/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/7Fxl5Yeqn9M/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/7Fxl5Yeqn9M/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/7Fxl5Yeqn9M/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/7Fxl5Yeqn9M/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=7Fxl5Yeqn9M"
+  },
+  {
+    "id": "givOgOotejw",
+    "title": "バイノーラルマイクを作ろう　プラグインパワー機器専用アンプ回路",
+    "description": "#バイノーラルマイク \n#mems \n#2sk2881",
+    "publishedAt": "2022-04-07T02:31:44Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/givOgOotejw/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/givOgOotejw/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/givOgOotejw/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/givOgOotejw/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/givOgOotejw/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=givOgOotejw"
+  },
+  {
+    "id": "ptU_VjOuUZw",
+    "title": "バイノーラルマイクを作ろう　2SK117BLと2SK2881Eの音質の違い【電源電圧2.6V】",
+    "description": "回路はほぼ同じものを使用しています。電源電圧が２．６Vという低圧電源の場合の増幅実験です。\n2SK2881のほうはバイアス抵抗を1kから1.5kに変えておりますため、それでゲインの違いから背景の音の聞こえ方が変わっているかも知れません。同じ車も通らないためなかなか比較しにくい検証方法となっています。\nノイズ多い録音で申し訳ございません。\n\n#バイノーラルマイク\n#東芝\n#イセハヤ電子",
+    "publishedAt": "2022-04-05T05:16:51Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=ptU_VjOuUZw"
+  },
+  {
+    "id": "PKk8VD2rdNM",
+    "title": "バイノーラルマイクを作ろう　秋月電気通商でコンデンサを買う",
+    "description": "",
+    "publishedAt": "2022-04-02T07:07:24Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=PKk8VD2rdNM"
+  }
+]

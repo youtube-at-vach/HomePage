@@ -1,0 +1,206 @@
+[
+  {
+    "id": "DeGDwP3dnD4",
+    "title": "自作MEMSマイクへの道　XLRコネクターマイクの改良とステレオ撮影用の謎システムを製作",
+    "description": "謎の工作物を製作しております\n最強仕様というのは、現時点での当チャンネル比です\n\nMEMSセル： InvenSense ICS-40730\n自作アンプ基板： STV1-USM（深セン Elecrow製造第５版）\nバイアス電流：3mA(進電子 RG1608N 50kΩ)\nMEMS電源電圧：3V(YAGEO RT0603 2.2kΩ)\nMEMS電源デカップリングコンデンサー：Panasonic ECPU 16V 0.1uF + Panasonic(SANYO) OSCON 35V 22uF\n（SANYOは素晴らしい遺産がたくさんありますね）\nカップリングコンデンサー：ルビコン PMLCAP 25V 2.2uF + Panasonic ECHU 16V 0.1uFFET: Toshiba 2SK880\nDual FET: Toshiba 2SK3320\n\n「シールドケースのシールド効果について」こだま製作所のHPよりhttps://www.kodama-tec.com/case/landing/003447.html\n\n開発コードネーム：セクシーuncle江南スタイル\n\n#自作マイク \n#mems \n#elecrow",
+    "publishedAt": "2022-11-24T09:19:27Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/DeGDwP3dnD4/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/DeGDwP3dnD4/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/DeGDwP3dnD4/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/DeGDwP3dnD4/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/DeGDwP3dnD4/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=DeGDwP3dnD4"
+  },
+  {
+    "id": "tMGlu02bEU0",
+    "title": "自作MEMSマイクへの道　MEMSの電源を安定化する方法を考える",
+    "description": "当方勉強中でありまして\n大きな間違い誤り等ありましたら、ご指摘よろしくお願いいたします。\n\nとても参考になる\nコンデンサーのインピーダンスの実測データを公開されているサイトがありました\nhttp://uenv.blog.fc2.com/blog-entry-263.html?sp\n一見の価値は十分にございます、是非参考にしてみてください。\n\n画像をお借りしたサイト\nコンデンサの特徴解説\nhttp://sudoteck.way-nifty.com/blog/2010/05/post-760f.html\n\nOS-CONの説明資料\nhttp://www.op316.com/pdf/capacitor/os-con-basic.pdf\n\nパナソニックによるSP-CAPの説明資料\nhttps://industrial.panasonic.com/cdbs/www-data/pdf/ABE0000/ast-ind-176394.pdf\n\nルビコンによるPMLCAPの説明資料\nhttps://www.rubycon.co.jp/wp-content/uploads/products-pmlcap/pml-technical-note.pdf\n\n\n今回のシミュレーションに使用した回路図LTSPICE\nhttps://storage.googleapis.com/vach/PUB_STV1REAL.asc\n\n追記：\n抵抗の向きなどがおかしかったので少し修正しました。\n今回のファイルは裏方でチェックしていた項目も盛り込んでいます。\nWHITEノイズ入力などのチェックも出来るようになっています。\nテストラベルIN+、IN-を付け替えれば信号の入力元を変えられます。 \n\n#mems\n#自作マイク",
+    "publishedAt": "2022-11-16T08:50:13Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/tMGlu02bEU0/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/tMGlu02bEU0/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/tMGlu02bEU0/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/tMGlu02bEU0/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/tMGlu02bEU0/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=tMGlu02bEU0"
+  },
+  {
+    "id": "oXAnGs5Fzoc",
+    "title": "自作MEMSマイクへの道　超小型アンプを搭載したXLRコネクターマイクを製作",
+    "description": "新アンプ搭載マイク第一弾です\n\n短気者様のLED電源化マイクの録音動画\nhttps://www.youtube.com/watch?v=mtMZI9dpYYc\nアイディアを参考にさせていただきました。\n\nShinさんのPA工作室\nMEMSマイク、角型無指向性極小カプセル実装方向(第1編)\nhttps://ameblo.jp/shin-aiai/entry-12763792918.html\n非常に素晴らしい情報ですので、前回MEMSの向きがわからないという\n動画を出していた手前、実証された回答として紹介させていただきました。（ご容赦ください）\n\n私もネットに公開されている多くの方の製作例を参考に作りました。\nLTspiceファイル Analog Devices LTspice（無料）で開けます。\nhttps://storage.googleapis.com/vach/PUB_STV1SMD.asc\nご自由にお使い下さい。\nUSM版は暫くお待ちください。\n\n#mems\n#自作マイク",
+    "publishedAt": "2022-11-09T08:46:44Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/oXAnGs5Fzoc/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/oXAnGs5Fzoc/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/oXAnGs5Fzoc/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/oXAnGs5Fzoc/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/oXAnGs5Fzoc/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=oXAnGs5Fzoc"
+  },
+  {
+    "id": "zhOYF42Mvno",
+    "title": "自作MEMSマイクへの道　重大なパターンミスを発見してしまった",
+    "description": "失敗は成功の元だと信じたい",
+    "publishedAt": "2022-11-07T08:37:13Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/zhOYF42Mvno/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/zhOYF42Mvno/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/zhOYF42Mvno/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/zhOYF42Mvno/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/zhOYF42Mvno/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=zhOYF42Mvno"
+  },
+  {
+    "id": "SgI8VuWJZ7c",
+    "title": "自作MEMSマイクへの道　新マイクのリフローはんだ付け",
+    "description": "ちゃんと出来てたらいいんですが不安です\n\n#自作マイク\n#mems \n#elecrow \n#infineon \n#tdk",
+    "publishedAt": "2022-11-06T22:39:07Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/SgI8VuWJZ7c/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/SgI8VuWJZ7c/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/SgI8VuWJZ7c/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/SgI8VuWJZ7c/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/SgI8VuWJZ7c/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=SgI8VuWJZ7c"
+  },
+  {
+    "id": "W4P50JsN37U",
+    "title": "自作MEMSマイクへの道　西脇海水浴場にて過去のバイノーラルマイクをテスト",
+    "description": "使用したマイクはこちらの動画で製作したものです。\nバイノーラルマイクを作ろう　MEMS版　完\n https://youtu.be/dCgWhiNtdN0 \n\n使用した機材\nカメラ：iPhone11\nサウンドデバイス：iRigPro DUO lightning経由で接続\nマイク：ICS-40730を使用した自作のバイノーラルマイクSTV-1SMD（第３版）\n今後作る予定の第４・５版の超ミニアンプ版と比較したいと思います。\n\nマイクアンプの話\n24kΩ版です。消費電力と音質のバランスを狙ったのですが、やはり\n１０分しか録音できないです。今後改良する予定です。\n\n私もネットに公開されている多くの方の製作例を参考に作りました。\nLTspiceファイル Analog Devices LTspice（無料）で開けます。\nhttps://storage.googleapis.com/vach/PUB_STV1SMD.asc\nご自由にお使い下さい。\n\n#自作マイク \n#mems",
+    "publishedAt": "2022-11-04T08:50:44Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/W4P50JsN37U/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/W4P50JsN37U/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/W4P50JsN37U/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/W4P50JsN37U/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/W4P50JsN37U/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=W4P50JsN37U"
+  }
+]

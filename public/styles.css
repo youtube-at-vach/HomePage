@@ -101,6 +101,20 @@ section ul li {
   margin-bottom: 8px;
 }
 
+/* ヒーローイメージのスタイル */
+.hero-container {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.hero-image {
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: inline-block;
+}
+
 footer {
   background: #333;
   color: #fff;

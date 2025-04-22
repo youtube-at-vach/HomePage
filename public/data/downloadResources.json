@@ -1,0 +1,56 @@
+[
+  {
+    "category": "LTspice 回路図ファイル (.asc)",
+    "items": [
+      {
+        "title": "STV2 プロトタイプ回路シミュレーションファイル (.asc)",
+        "url": "https://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_ORIGINAL.asc"
+      },
+      {
+        "title": "ステートバリアブル発振器シミュレーションファイル (.asc)",
+        "url": "https://storage.googleapis.com/vach/PUB_Tragi_State_Variable_Sine_Wave_Oscillator.asc"
+      },
+      {
+        "title": "STV2 DC プロトタイプシミュレーションファイル (.asc)",
+        "url": "https://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_DC2.asc"
+      },
+      {
+        "title": "リップルフィルタ実験ファイル (.asc)",
+        "url": "https://storage.googleapis.com/vach/PUB_RIPPLE.asc"
+      },
+      {
+        "title": "STV2 DC オリジナルシミュレーションファイル (.asc)",
+        "url": "https://storage.googleapis.com/vach/PUB_STV2_DC_ORIGINAL.asc"
+      }
+    ]
+  },
+  {
+    "category": "その他のリソース",
+    "items": [
+      {
+        "title": "JFET 比較表 (.xlsx)",
+        "url": "https://storage.googleapis.com/vach/PUB_JFET_TABLE.xlsx"
+      },
+      {
+        "title": "UAC-232 入力換算ノイズ測定レポート (.pdf)",
+        "url": "https://storage.googleapis.com/vach/PUB_UAC232_Input_Voltage_Test.pdf"
+      },
+      {
+        "title": "MEMSマイクセル SNR/Dynamic Range 比較図 (.png)",
+        "url": "https://storage.googleapis.com/vach/MEMSspec7.png"
+      },
+      {
+        "title": "MEMSマイクセル THD 比較図 (.png)",
+        "url": "https://storage.googleapis.com/vach/MEMSTHD7.png"
+      },
+      {
+        "title": "MEMSマイクセル THD データ (.csv)",
+        "url": "https://storage.cloud.google.com/vach/PUB_MEMS7THD.csv"
+      },
+      {
+        "title": "ICS-40730 DC プリアンプ回路図 (.png)",
+        "url": "https://storage.googleapis.com/vach/PUB_DC2_ICS-40730.png"
+      }
+    ]
+  }
+]

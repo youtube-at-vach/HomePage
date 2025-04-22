@@ -22,43 +22,17 @@
 
     <!-- メインコンテンツ -->
     <main class="container">
-        <section>
+        <section id="download-resources">
             <h2>ダウンロード可能なリソース</h2>
-            <!-- LTspice 回路図ファイル (.asc) -->
-            <h3>LTspice 回路図ファイル (.asc)</h3>
-            <ul>
-                <li><a href="https://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_ORIGINAL.asc" download>STV2 プロトタイプ回路シミュレーションファイル (.asc)</a></li>
-                <li><a href="https://storage.googleapis.com/vach/PUB_Tragi_State_Variable_Sine_Wave_Oscillator.asc" download>ステートバリアブル発振器シミュレーションファイル (.asc)</a></li>
-                <li><a href="https://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_DC2.asc" download>STV2 DC プロトタイプシミュレーションファイル (.asc)</a></li>
-                <li><a href="https://storage.googleapis.com/vach/PUB_RIPPLE.asc" download>リップルフィルタ実験ファイル (.asc)</a></li>
-                <li><a href="https://storage.googleapis.com/vach/PUB_STV2_DC_ORIGINAL.asc" download>STV2 DC オリジナルシミュレーションファイル (.asc)</a></li>
-            </ul>
-            <!-- その他のリソース -->
-            <h3>その他のリソース</h3>
-            <ul>
-                <li><a href="https://storage.googleapis.com/vach/PUB_JFET_TABLE.xlsx" download>JFET 比較表 (.xlsx)</a></li>
-                <li><a href="https://storage.googleapis.com/vach/PUB_UAC232_Input_Voltage_Test.pdf" download>UAC-232 入力換算ノイズ測定レポート (.pdf)</a></li>
-                <li><a href="https://storage.googleapis.com/vach/MEMSspec7.png" download>MEMSマイクセル SNR/Dynamic Range 比較図 (.png)</a></li>
-                <li><a href="https://storage.googleapis.com/vach/MEMSTHD7.png" download>MEMSマイクセル THD 比較図 (.png)</a></li>
-                <li><a href="https://storage.cloud.google.com/vach/PUB_MEMS7THD.csv" download>MEMSマイクセル THD データ (.csv)</a></li>
-                <li><a href="https://storage.googleapis.com/vach/PUB_DC2_ICS-40730.png" download>ICS-40730 DC プリアンプ回路図 (.png)</a></li>
-            </ul>
+            <div id="download-resources-container">
+                <p>読み込み中…</p>
+            </div>
         </section>
         <section id="external-links">
             <h2>参考リンク</h2>
             <p>自作以外の情報源や役に立つ外部記事へのリンク集です。</p>
-            <ul>
-                <li><a href="https://cc.cqpub.co.jp/system/contents/1188/" target="_blank" rel="noopener">雑音が少ない1次ロー・パス・フィルタはどっち？ (CQ Connect 素晴らしい記事)</a></li>
-                <li><a href="https://audioxpress.com/article/measurements-rate-new-smt-low-voltage-jfets-under-consistent-conditions-an-update-using-modern-jfets" target="_blank" rel="noopener">新SMT低電圧JFET測定比較 (audioxpress)</a></li>
-                <li><a href="https://www.electronicdesign.com/technologies/power/article/21796240/measurements-rate-smt-low-voltage-n-jfets-under-consistent-conditions" target="_blank" rel="noopener">SMT低電圧N-JFET測定 (Electronic Design)</a></li>
-                <li><a href="https://www.marutsu.co.jp/" target="_blank" rel="noopener">マルツーオンライン (部品調達に便利な通販サイト)</a></li>
-                <li><a href="https://www.mouser.jp/" target="_blank" rel="noopener">Mouser (MEMSマイクセル購入のおすすめサイト)</a></li>
-                <li><a href="https://www.hpmemoryproject.org/timeline/art_fong/hp355_01.htm" target="_blank" rel="noopener">HP 355D アッテネータHP 355Dの解説 (HPメモリープロジェクト)</a></li>
-                <li><a href="https://av.watch.impress.co.jp/docs/series/dal/1490395.html" target="_blank" rel="noopener">UAC-232レビュー (藤本健のDigital Audio Laboratory)</a></li>
-                <li><a href="https://av.watch.impress.co.jp/docs/series/dal/1347029.html" target="_blank" rel="noopener">RME Fireface UCX IIレビュー (藤本健のDigital Audio Laboratory)</a></li>
-                <li><a href="https://www.analog.com/jp/products/ltc6655.html" target="_blank" rel="noopener">LTC6655 ノイズ0.25ppmリファレンス (Analog Devices)</a></li>
-                <li><a href="https://www.roomeqwizard.com/" target="_blank" rel="noopener">Room Eq Wizard (無料FFT解析ソフト)</a></li>
-                <li><a href="https://www.youtube.com/watch?v=prjB_myCwSY" target="_blank" rel="noopener">簡易リフローのもっとわかりやすい動画</a></li>
+            <ul id="external-links-list">
+                <li>読み込み中…</li>
             </ul>
         </section>
     </main>
@@ -69,5 +43,60 @@
             <p>© 2025 バーチャ農ちゃんねる. All Rights Reserved.</p>
         </div>
     </footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var list = document.getElementById('external-links-list');
+        list.innerHTML = '<li>読み込み中…</li>';
+        fetch('data/externalLinks.json')
+          .then(function(res) { return res.json(); })
+          .then(function(items) {
+            if (!Array.isArray(items) || items.length === 0) {
+              list.innerHTML = '<li>リンクがありません。</li>';
+              return;
+            }
+            list.innerHTML = '';
+            items.forEach(function(item) {
+              var li = document.createElement('li');
+              var a = document.createElement('a');
+              a.href = item.url;
+              a.textContent = item.title;
+              if (item.target) a.target = item.target;
+              if (item.rel) a.rel = item.rel;
+              li.appendChild(a);
+              list.appendChild(li);
+            });
+          })
+          .catch(function(err) {
+            list.innerHTML = '<li>読み込みに失敗しました。</li>';
+            console.error(err);
+          });
+        // ダウンロード可能なリソースをJSONから読み込んで表示
+        var drContainer = document.getElementById('download-resources-container');
+        if (drContainer) {
+          drContainer.innerHTML = '<p>読み込み中…</p>';
+          fetch('data/downloadResources.json')
+            .then(function(res) { return res.json(); })
+            .then(function(categories) {
+              if (!Array.isArray(categories) || categories.length === 0) {
+                drContainer.innerHTML = '<p>リソースがありません。</p>';
+                return;
+              }
+              var html = '';
+              categories.forEach(function(cat) {
+                html += '<h3>' + cat.category + '</h3><ul>';
+                (cat.items || []).forEach(function(item) {
+                  html += '<li><a href="' + item.url + '" download>' + item.title + '</a></li>';
+                });
+                html += '</ul>';
+              });
+              drContainer.innerHTML = html;
+            })
+            .catch(function(err) {
+              drContainer.innerHTML = '<p>読み込みに失敗しました。</p>';
+              console.error(err);
+            });
+        }
+      });
+    </script>
 </body>
 </html>

@@ -5,6 +5,7 @@
  * YouTube Data API を使用して、指定されたチャンネルのプレイリスト一覧と
  * 各プレイリストに含まれる動画IDを取得し、
  * public/data/playlists.json として保存します。
+ * プレイリストに含まれる動画のうち、公開ステータスが "public" のものだけを取得します。
  *
  * 環境変数:
  *   YOUTUBE_API_KEY (APIキー)
@@ -80,7 +81,24 @@ async function fetchPlaylistVideoIds(playlistId) {
       }
     });
   } while (nextPageToken);
-  return videoIds;
+  // フィルタ: 公開ステータスが "public" の動画IDのみ返す
+  const publicIds = [];
+  // videos.list は一度に最大50件までなのでチャンク処理
+  for (let i = 0; i < videoIds.length; i += 50) {
+    const chunk = videoIds.slice(i, i + 50);
+    const res = await youtube.videos.list({
+      part: 'status',
+      id: chunk.join(','),
+    });
+    if (res.data.items && res.data.items.length) {
+      res.data.items.forEach(item => {
+        if (item.status && item.status.privacyStatus === 'public') {
+          publicIds.push(item.id);
+        }
+      });
+    }
+  }
+  return publicIds;
 }
 
 (async () => {

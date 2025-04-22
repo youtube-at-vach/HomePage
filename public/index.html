@@ -89,15 +89,45 @@
         container.innerHTML = '<li>読み込み中…</li>';
         Promise.all([
           fetch('data/videos.json').then(function(res) { return res.json(); }),
+          fetch('data/playlists.json').then(function(res) { return res.json(); }),
           fetch('data/videoExcludes.json').then(function(res) { return res.json(); })
         ])
         .then(function(results) {
           var videos = results[0];
-          var excludes = results[1];
+          var playlists = results[1];
+          var excludes = results[2];
           var excludeSet = new Set(excludes);
-          // フィルタリング: 除外リストに含まれる動画を除外
+          var used = new Set();
+          var playlistHtml = '';
+
+          // シリーズ（プレイリスト）ごとに動画を表示
+          playlists.forEach(function(pl) {
+            var vids = videos.filter(function(v) {
+              return pl.videoIds.includes(v.id) && !excludeSet.has(v.id);
+            });
+            if (vids.length === 0) return;
+            playlistHtml += '<li class="playlist-group"><h3>' + pl.title + '</h3><div class="thumbnails">';
+            vids.forEach(function(video) {
+              var thumbUrl = (video.thumbnails && video.thumbnails.medium && video.thumbnails.medium.url)
+                || (video.thumbnails && video.thumbnails.default && video.thumbnails.default.url) || '';
+              var titleEsc = video.title.replace(/"/g, '&quot;');
+              var categoryEsc = (video.category || '').replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              playlistHtml += '<a href="' + video.url + '" target="_blank" class="thumb" title="' + titleEsc + '">';
+              playlistHtml += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
+              playlistHtml += '<div class="overlay">';
+              playlistHtml += '<span class="category-tag">' + categoryEsc + '</span>';
+              playlistHtml += '<p class="video-title">' + titleEsc + '</p>';
+              playlistHtml += '</div>';
+              playlistHtml += '</a>';
+            });
+            playlistHtml += '</div></li>';
+            vids.forEach(function(v) { used.add(v.id); });
+          });
+
+          // フィルタリング: 除外リストおよびプレイリストで既出の動画を除外
           var filtered = videos.filter(function(v) {
-            return !excludeSet.has(v.id);
+            return !excludeSet.has(v.id) && !used.has(v.id);
           });
           // 年月ごとにグループ化
           var groups = {};
@@ -111,10 +141,10 @@
             groups[key].push(video);
           });
           var keys = Object.keys(groups).sort().reverse();
-          // HTML 作成
-          var html = '';
+          // HTML 作成（年月別）
+          var monthHtml = '';
           keys.forEach(function(key) {
-            html += '<li class="month-group"><h3>' + key + '</h3><div class="thumbnails">';
+            monthHtml += '<li class="month-group"><h3>' + key + '</h3><div class="thumbnails">';
             groups[key].forEach(function(video) {
               var thumbUrl = (video.thumbnails && video.thumbnails.medium && video.thumbnails.medium.url)
                 || (video.thumbnails && video.thumbnails.default && video.thumbnails.default.url) || '';

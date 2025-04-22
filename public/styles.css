@@ -122,3 +122,31 @@ footer {
   padding: 20px 0;
   margin-top: 40px;
 }
+#projects-list {
+  list-style: none;
+  padding: 0;
+}
+/* 動画サムネイルのギャラリー */
+#projects-list .month-group {
+  margin-bottom: 30px;
+}
+#projects-list .month-group h3 {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+#projects-list .thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+#projects-list .thumb img {
+  width: 200px;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+  transition: opacity 0.3s ease;
+}
+#projects-list .thumb:hover img {
+  opacity: 0.8;
+}

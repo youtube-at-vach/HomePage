@@ -86,36 +86,51 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         var container = document.getElementById('projects-list');
-        fetch('data/videos.json')
-          .then(function(response) { return response.json(); })
-          .then(function(videos) {
-            var groups = {};
-          videos.forEach(function(video) {
+        container.innerHTML = '<li>読み込み中…</li>';
+        Promise.all([
+          fetch('data/videos.json').then(function(res) { return res.json(); }),
+          fetch('data/videoExcludes.json').then(function(res) { return res.json(); })
+        ])
+        .then(function(results) {
+          var videos = results[0];
+          var excludes = results[1];
+          var excludeSet = new Set(excludes);
+          // フィルタリング: 除外リストに含まれる動画を除外
+          var filtered = videos.filter(function(v) {
+            return !excludeSet.has(v.id);
+          });
+          // 年月ごとにグループ化
+          var groups = {};
+          filtered.forEach(function(video) {
             var d = new Date(video.publishedAt);
+            if (isNaN(d)) return;
             var year = d.getFullYear();
-            // include all videos from 2021 onward
-            if (year < 2021) return;
             var month = ('0' + (d.getMonth() + 1)).slice(-2);
             var key = year + '年' + month + '月';
-              if (!groups[key]) groups[key] = [];
-              groups[key].push(video);
-            });
-          // sort year-month keys in descending order (newest first)
-          var keys = Object.keys(groups).sort().reverse();
-            var html = '';
-            keys.forEach(function(key) {
-              html += '<li><strong>' + key + '</strong><ul>';
-              groups[key].forEach(function(video) {
-                html += '<li><a href="' + video.url + '" target="_blank">' + video.title + '</a></li>';
-              });
-              html += '</ul></li>';
-            });
-            container.innerHTML = html || '<li>該当する動画がありません。</li>';
-          })
-          .catch(function(err) {
-            container.innerHTML = '<li>読み込みに失敗しました。</li>';
-            console.error(err);
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(video);
           });
+          var keys = Object.keys(groups).sort().reverse();
+          // HTML 作成
+          var html = '';
+          keys.forEach(function(key) {
+            html += '<li class="month-group"><h3>' + key + '</h3><div class="thumbnails">';
+            groups[key].forEach(function(video) {
+              var thumbUrl = (video.thumbnails && video.thumbnails.medium && video.thumbnails.medium.url)
+                || (video.thumbnails && video.thumbnails.default && video.thumbnails.default.url) || '';
+              var titleEsc = video.title.replace(/"/g, '&quot;');
+              html += '<a href="' + video.url + '" target="_blank" class="thumb" title="' + titleEsc + '">';
+              html += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
+              html += '</a>';
+            });
+            html += '</div></li>';
+          });
+          container.innerHTML = html || '<li>該当する動画がありません。</li>';
+        })
+        .catch(function(err) {
+          container.innerHTML = '<li>読み込みに失敗しました。</li>';
+          console.error(err);
+        });
       });
     </script>
 </body>

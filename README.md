@@ -38,3 +38,14 @@ node scripts/splitVideos.js
 ```
 
 実行後、public/data 以下に 2021-10.json, 2021-11.json ... といったファイルが作成されます。
+
+## JSONファイルの編集（インタラクティブフィルタ）
+
+`public/data/videos.json` には過去の不要な動画も含まれる場合があります。以下のスクリプトで対話的に一覧を表示し、
+必要なものだけを選んでファイルを更新できます。
+
+### 使用方法
+
+```bash
+node scripts/editVideos.js
+```

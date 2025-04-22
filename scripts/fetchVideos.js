@@ -35,9 +35,26 @@ const youtube = google.youtube({
   version: 'v3',
   auth: apiKey,
 });
+/**
+ * 動画カテゴリ一覧を取得し、ID→名称マップを返す
+ * @returns {Promise<Object<string,string>>}
+ */
+async function fetchCategories() {
+  const res = await youtube.videoCategories.list({ part: 'snippet', regionCode: 'JP' });
+  const map = {};
+  res.data.items.forEach(cat => {
+    map[cat.id] = cat.snippet.title;
+  });
+  return map;
+}
 
 /**
  * チャンネルの動画をすべて取得
+ */
+/**
+ * 指定チャンネルの全動画を取得（categoryId を含む）
+ * @param {string} channelId
+ * @returns {Promise<Array<Object>>}
  */
 async function fetchAllVideos(channelId) {
   let videos = [];
@@ -54,10 +71,7 @@ async function fetchAllVideos(channelId) {
     nextPageToken = searchRes.data.nextPageToken;
     const ids = searchRes.data.items.map(item => item.id.videoId).join(',');
     if (!ids) break;
-    const videoRes = await youtube.videos.list({
-      part: 'snippet',
-      id: ids,
-    });
+    const videoRes = await youtube.videos.list({ part: 'snippet', id: ids });
     videoRes.data.items.forEach(item => {
       videos.push({
         id: item.id,
@@ -65,7 +79,8 @@ async function fetchAllVideos(channelId) {
         description: item.snippet.description,
         publishedAt: item.snippet.publishedAt,
         thumbnails: item.snippet.thumbnails,
-        url: `https://www.youtube.com/watch?v=${item.id}`
+        url: `https://www.youtube.com/watch?v=${item.id}`,
+        categoryId: item.snippet.categoryId
       });
     });
   } while (nextPageToken);
@@ -77,7 +92,12 @@ async function fetchAllVideos(channelId) {
  */
 (async () => {
   try {
-    const videos = await fetchAllVideos(channelId);
+    // カテゴリ一覧を取得し、ID→名称マップを構築
+    const categoryMap = await fetchCategories();
+    // 動画情報を取得（categoryId 付き）
+    const rawVideos = await fetchAllVideos(channelId);
+    // カテゴリ名を付与
+    const videos = rawVideos.map(v => Object.assign({}, v, { category: categoryMap[v.categoryId] || null }));
     const outputDir = path.join(__dirname, '..', 'public', 'data');
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });

@@ -141,7 +141,7 @@ footer {
   gap: 10px;
 }
 #projects-list .thumb img {
-  width: 200px;
+  width: 300px; /* 1.5x of previous 200px to accommodate longer titles */
   height: auto;
   display: block;
   border-radius: 4px;

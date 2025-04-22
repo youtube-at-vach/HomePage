@@ -49,13 +49,13 @@ async function main() {
     }
   }
   console.log(`\n${kept.length} videos kept, ${videos.length - kept.length} dropped.`);
-  const finalAns = await question('Write filtered list back to videos.json? (Y/n) ');
-  if (!finalAns.trim().toLowerCase().startsWith('n')) {
-    fs.writeFileSync(dataPath, JSON.stringify(kept, null, 2), 'utf-8');
-    console.log(`Updated ${dataPath}`);
-  } else {
-    console.log('Aborted: no changes written.');
-  }
+  // Exclude list: IDs of videos dropped
+  const allIDs = videos.map(v => v.id);
+  const keptIDs = new Set(kept.map(v => v.id));
+  const excludeIDs = allIDs.filter(id => !keptIDs.has(id));
+  const exclPath = path.join(path.dirname(dataPath), 'videoExcludes.json');
+  fs.writeFileSync(exclPath, JSON.stringify(excludeIDs, null, 2), 'utf-8');
+  console.log(`Excluded IDs written to ${exclPath}`);
   rl.close();
 }
 

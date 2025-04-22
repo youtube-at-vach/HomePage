@@ -55,8 +55,8 @@ const excludes = allIDs.filter(id => micIDs.indexOf(id) < 0);
 
 // 書き出し
 try {
-  fs.writeFileSync(exclPath, JSON.stringify(excludes, null, 2), 'utf8');
-  console.log(`Generated excludes list: ${excludes.length} IDs written to ${exclPath}`);
+    fs.writeFileSync(exclPath, JSON.stringify(excludes, null, 2), 'utf8');
+    console.log(`Generated excludes list: ${excludes.length} IDs written to ${exclPath}`);
 } catch (err) {
   exitWithError(`ファイル書き込みに失敗しました: ${err.message}`);
 }

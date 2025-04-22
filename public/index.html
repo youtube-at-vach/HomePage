@@ -119,8 +119,14 @@
               var thumbUrl = (video.thumbnails && video.thumbnails.medium && video.thumbnails.medium.url)
                 || (video.thumbnails && video.thumbnails.default && video.thumbnails.default.url) || '';
               var titleEsc = video.title.replace(/"/g, '&quot;');
+              var categoryEsc = (video.category || '').replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
               html += '<a href="' + video.url + '" target="_blank" class="thumb" title="' + titleEsc + '">';
               html += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
+              html += '<div class="overlay">';
+              html += '<span class="category-tag">' + categoryEsc + '</span>';
+              html += '<p class="video-title">' + titleEsc + '</p>';
+              html += '</div>';
               html += '</a>';
             });
             html += '</div></li>';

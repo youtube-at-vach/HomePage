@@ -150,3 +150,34 @@ footer {
 #projects-list .thumb:hover img {
   opacity: 0.8;
 }
+/* Overlay title and category on thumbnail */
+#projects-list .thumb {
+  position: relative;
+  display: inline-block;
+}
+#projects-list .thumb .overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 0 0 4px 4px;
+}
+#projects-list .thumb .category-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+#projects-list .thumb .video-title {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  word-break: break-word;
+}

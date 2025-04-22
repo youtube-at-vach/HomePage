@@ -151,17 +151,18 @@
               var titleEsc = video.title.replace(/"/g, '&quot;');
               var categoryEsc = (video.category || '').replace(/&/g, '&amp;')
                 .replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-              html += '<a href="' + video.url + '" target="_blank" class="thumb" title="' + titleEsc + '">';
-              html += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
-              html += '<div class="overlay">';
-              html += '<span class="category-tag">' + categoryEsc + '</span>';
-              html += '<p class="video-title">' + titleEsc + '</p>';
-              html += '</div>';
-              html += '</a>';
+              monthHtml += '<a href="' + video.url + '" target="_blank" class="thumb" title="' + titleEsc + '">';
+              monthHtml += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
+              monthHtml += '<div class="overlay">';
+              monthHtml += '<span class="category-tag">' + categoryEsc + '</span>';
+              monthHtml += '<p class="video-title">' + titleEsc + '</p>';
+              monthHtml += '</div>';
+              monthHtml += '</a>';
             });
-            html += '</div></li>';
+            monthHtml += '</div></li>';
           });
-          container.innerHTML = html || '<li>該当する動画がありません。</li>';
+          var fullHtml = playlistHtml + monthHtml;
+          container.innerHTML = fullHtml || '<li>該当する動画がありません。</li>';
         })
         .catch(function(err) {
           container.innerHTML = '<li>読み込みに失敗しました。</li>';

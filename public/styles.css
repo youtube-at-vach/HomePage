@@ -135,6 +135,15 @@ footer {
   margin-bottom: 10px;
   color: #333;
 }
+/* プレイリスト（シリーズ）グループ */
+#projects-list .playlist-group {
+  margin-bottom: 30px;
+}
+#projects-list .playlist-group h3 {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: #333;
+}
 #projects-list .thumbnails {
   display: flex;
   flex-wrap: wrap;

@@ -3,24 +3,28 @@
     "category": "LTspice 回路図ファイル (.asc)",
     "items": [
       {
-        "title": "STV2 プロトタイプ回路シミュレーションファイル (.asc)",
+        "title": "STV2 AC プロトタイプシミュレーションファイル (.asc)",
         "url": "https://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_ORIGINAL.asc"
-      },
-      {
-        "title": "ステートバリアブル発振器シミュレーションファイル (.asc)",
-        "url": "https://storage.googleapis.com/vach/PUB_Tragi_State_Variable_Sine_Wave_Oscillator.asc"
       },
       {
         "title": "STV2 DC プロトタイプシミュレーションファイル (.asc)",
         "url": "https://storage.googleapis.com/vach/PUB_STV2_PROTOTYPE_DC2.asc"
       },
       {
-        "title": "リップルフィルタ実験ファイル (.asc)",
-        "url": "https://storage.googleapis.com/vach/PUB_RIPPLE.asc"
-      },
-      {
         "title": "STV2 DC オリジナルシミュレーションファイル (.asc)",
         "url": "https://storage.googleapis.com/vach/PUB_STV2_DC_ORIGINAL.asc"
+      },
+      {
+        "title": "超低ノイズSPINELLI&HABARMANアンプ(2024)シミュレーションファイル (.zip)",
+        "url": "https://storage.googleapis.com/vach/PUB_SPINELLI_HABARMAN_AMP.zip"
+      },
+      {
+        "title": "ステートバリアブル発振器シミュレーションファイル (.asc)",
+        "url": "https://storage.googleapis.com/vach/PUB_Tragi_State_Variable_Sine_Wave_Oscillator.asc"
+      },
+      {
+        "title": "リップルフィルタ実験ファイル (.asc)",
+        "url": "https://storage.googleapis.com/vach/PUB_RIPPLE.asc"
       }
     ]
   },
@@ -50,6 +54,55 @@
       {
         "title": "ICS-40730 DC プリアンプ回路図 (.png)",
         "url": "https://storage.googleapis.com/vach/PUB_DC2_ICS-40730.png"
+      },
+      {
+        "title": "測定用超高サンプリングレート矩形波(44.1kHzから1536kHz)",
+        "url": "https://storage.googleapis.com/vach/square_wave_44k1-1536kHz.zip"
+      }
+    ]
+  },
+  {
+    "category": "ちゃんねるテーマ曲(フリー素材)",
+    "items": [
+      {
+        "title": "ハイパーウルトラスーパーやばいモード(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/AI%E3%81%A7%E3%82%82%E3%81%AA%E3%82%93%E3%81%A7%E3%82%82%E5%BE%A1%E5%BA%A7%E3%82%8C.wav"
+      },
+      {
+        "title": "AIでも何でも御座れ(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/AI%E3%81%A7%E3%82%82%E3%81%AA%E3%82%93%E3%81%A7%E3%82%82%E5%BE%A1%E5%BA%A7%E3%82%8C.wav"
+      },
+      {
+        "title": "マイクで繋がる電子回路とオーディオの謎(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/%E3%83%9E%E3%82%A4%E3%82%AF%E3%81%A7%E7%B9%8B%E3%81%8C%E3%82%8B%E9%9B%BB%E5%AD%90%E5%9B%9E%E8%B7%AF%E3%81%A8%E3%82%AA%E3%83%BC%E3%83%87%E3%82%A3%E3%82%AA%E3%81%AE%E8%AC%8E.wav"
+      },
+      {
+        "title": "Together Forever(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/Together%20Forever.wav"
+      },
+      {
+        "title": "マイクを作れ(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/%E3%83%9E%E3%82%A4%E3%82%AF%E3%82%92%E4%BD%9C%E3%82%8C.wav"
+      },
+      {
+        "title": "リズミカル電子回路(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/%E3%83%AA%E3%82%BA%E3%83%9F%E3%82%AB%E3%83%AB%E9%9B%BB%E5%AD%90%E5%9B%9E%E8%B7%AF.wav"
+      },
+      {
+        "title": "低予算で頑張ろう(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/%E4%BD%8E%E4%BA%88%E7%AE%97%E3%81%A7%E9%A0%91%E5%BC%B5%E3%82%8D%E3%81%86.wav"
+      },
+      {
+        "title": "僕がペアになるよ(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/%E5%83%95%E3%81%8C%E3%83%9A%E3%82%A2%E3%81%AB%E3%81%AA%E3%82%8B%E3%82%88.wav"
+      },
+      {
+        "title": "教科書に書けないおっさんの旅(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/%E6%95%99%E7%A7%91%E6%9B%B8%E3%81%AB%E6%9B%B8%E3%81%91%E3%81%AA%E3%81%84%E3%81%8A%E3%81%A3%E3%81%95%E3%82%93%E3%81%AE%E6%97%85.wav"
+      },
+      {
+        "title": "見えないものを見る(.wav)",
+        "url": "https://storage.googleapis.com/vach/channel_theme/%E8%A6%8B%E3%81%88%E3%81%AA%E3%81%84%E3%82%82%E3%81%AE%E3%82%92%E8%A6%8B%E3%82%8B.wav"
       }
     ]
   }

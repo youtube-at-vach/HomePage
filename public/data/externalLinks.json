@@ -1,5 +1,11 @@
 [
   {
+    "title": "高周波ドットコム？ (スタック電子の公式通販サイト)",
+    "url": "https://www.kosyuha.com/",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
     "title": "雑音が少ない1次ロー・パス・フィルタはどっち？ (CQ Connect 素晴らしい記事)",
     "url": "https://cc.cqpub.co.jp/system/contents/1188/",
     "target": "_blank",
@@ -24,8 +30,8 @@
     "rel": "noopener"
   },
   {
-    "title": "Mouser (MEMSマイクセル購入のおすすめサイト)",
-    "url": "https://www.mouser.jp/",
+    "title": "Digikey (電子部品購入のおすすめサイト)",
+    "url": "https://www.digikey.jp/",
     "target": "_blank",
     "rel": "noopener"
   },
@@ -62,6 +68,24 @@
   {
     "title": "簡易リフローのもっとわかりやすい動画",
     "url": "https://www.youtube.com/watch?v=prjB_myCwSY",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "title": "MOGAMIのシールド線の説明ページ",
+    "url": "http://www.mogami.com/paper/shield/shield-01.html",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "title": "Manusが作った低ノイズアンプのレポートのHP",
+    "url": "https://wufkebcs.manus.space",
+    "target": "_blank",
+    "rel": "noopener"
+  },
+  {
+    "title": "ManusAIが作ってくれたロックインアンプの解説HP",
+    "url": "https://ebmnwlju.manus.space",
     "target": "_blank",
     "rel": "noopener"
   }

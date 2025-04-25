@@ -1,0 +1,9 @@
+
+こちらのリンクを外部リンクに追加して下さい。
+
+Regulators for High Performance Audio
+https://pearl-hifi.com/06_Lit_Archive/14_Books_Tech_Papers/Jung_W/Regs_for_High_Perf_Audio_1-4.pdf
+
+雑音理論と低雑音回路の設計法
+https://www.analog.com/media/jp/landing-pages/ATS/ats2016/A1_low-noise-design-method_ATS2016.pdf
+

@@ -1,0 +1,21 @@
+| **Category**   | **Part(s)**                 | **Value / Model**     | **Package**       | **Description**                                 |
+|----------------|-----------------------------|------------------------|-------------------|-------------------------------------------------|
+| **Capacitors** | C1, C3–C7, C9–C12           | 220µF 25V              | E3.5-8            | Polarized electrolytic capacitor (25PZF220M8X9, Akizuki) |
+|                | C2, C8                      | 0.1µF 250V             | C102-064X133      | Metallized polypropylene capacitor (250MPS104J, Akizuki) |
+| **Diodes**     | D1–D3, D5–D7                | 1N4148                 | DO35-7            | General-purpose switching diode                 |
+|                | D4, D8                      | 4.7V Zener             | DO41-10           | 1W Zener diode                                  |
+| **Cooling fan**      | F1, F2                      | 20PB020-01025          | 20PB020-01025     | Cooling fan (Akizuki)                      |
+| **LEDs**       | LED1, LED2                  | Red                    | LED5MM            | 5mm LED (Red)                                   |
+| **Resistors**  | R1, R9                      | 12kΩ                   | 0207/10           | 1/4W metal film resistor                        |
+|                | R2, R10                     | 100Ω                   | 0207/10           | 1/4W metal film resistor                        |
+|                | R3, R11                     | 10Ω                    | 0207/10           | 1/4W metal film resistor                        |
+|                | R4, R12                     | 22Ω                    | 0207/10           | 1/4W metal film resistor                        |
+|                | R5, R13                     | 220Ω                   | 0207/10           | 1/4W metal film resistor                        |
+|                | R6, R14                     | 2.2kΩ                  | 0207/10           | 1/4W metal film resistor                        |
+|                | R7, R15                     | 1kΩ                    | 0411/15           | 1/2W metal film resistor                        |
+|                | R8, R16                     | 470Ω                   | 0411/15           | 1/2W metal film resistor                        |
+| **Transistors**| T1                          | 2SA970                 | TO92-ECB          | PNP transistor                                  |
+|                | T2                          | TTC3710B               | C369-2            | NPN power transistor                            |
+|                | T3                          | 2SC2240                | TO92-ECB          | NPN transistor                                  |
+|                | T4                          | TTA1452B               | C369-2            | PNP power transistor                            |
+| **ICs**        | U1, U2                      | AD848                  | DIL08-400         | Operational amplifier                           |

@@ -42,6 +42,7 @@
       color: #555;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <h1>低ノイズアンプ LNA-01</h1>
@@ -59,6 +60,8 @@
         <div class="caption">裏面</div>
       </div>
     </div>
+    <h3>部品表</h3>
+    <div id="bom-lna1">Loading BOM...</div>
   </section>
 
   <section>
@@ -74,6 +77,8 @@
         <div class="caption">裏面</div>
       </div>
     </div>
+    <h3>部品表</h3>
+    <div id="bom-rect">Loading BOM...</div>
   </section>
 
   <section>
@@ -89,7 +94,29 @@
         <div class="caption">裏面</div>
       </div>
     </div>
+    <h3>部品表</h3>
+    <div id="bom-power">Loading BOM...</div>
   </section>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var boms = [
+        { id: 'bom-lna1', url: 'data/LNA01/lna01_bom.txt' },
+        { id: 'bom-rect', url: 'data/LNA01/lna01rect_bom.txt' },
+        { id: 'bom-power', url: 'data/LNA01/lna01power_bom.txt' }
+      ];
+      boms.forEach(function(bom) {
+        fetch(bom.url)
+          .then(function(response) { return response.text(); })
+          .then(function(md) {
+            document.getElementById(bom.id).innerHTML = marked.parse(md);
+          })
+          .catch(function(err) {
+            document.getElementById(bom.id).textContent = 'Error loading BOM';
+            console.error(err);
+          });
+      });
+    });
+  </script>
 </body>
 </html>

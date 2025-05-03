@@ -1,7 +1,9 @@
-| Part      | Value         | Device          | Package        | Description                              |
-|-----------|---------------|------------------|----------------|------------------------------------------|
-| C1–C5     | 0.47µF 250V   | 250MPS474J       | C150-064X183   | Film capacitor, AKIZUKI                  |
-| C51–C54   | 820µF 25V     | 25PZJ820M10X15   | E5-10.5        | Hybrid electrolytic capacitor, AKIZUKI   |
-| D1–D4     | —             | SBM1045VSS       | DO201-15       | Schottky barrier diode (SBD), AKIZUKI    |
-| T1        | HP-098        | HP-098           | HP-098         | Transformer 100V to ±9V, AKIZUKI          |
-| T2        | SSR21H        | SSR21H           | SSR21H         | Common mode choke, 42.5mH, AKIZUKI        |
+| Part    | Value        | Device         | Package     | Description                            | Supplier | Price |
+|---------|--------------|----------------|-------------|----------------------------------------|----------|-------|
+| C1–C5   | 0.47µF 250V  | 250MPS474J     | C150        | Film capacitor                         | AKIZUKI  | ¥40   |
+| C51–C54 | 820µF 25V    | 25PZJ820M10X15 | E5          | Hybrid electrolytic capacitor          | AKIZUKI  | ¥130  |
+| D1–D4   | —            | SBM1045VSS     | DO201       | Schottky barrier diode (SBD)           | AKIZUKI  | ¥40   |
+| T1      | —            | HP-098         | —           | Transformer 100V to ±9V                | AKIZUKI  | ¥1050 |
+| T2      | —            | SSR21H         | —           | Common mode choke, 42.5mH              | AKIZUKI  | ¥50   |
+
+## 合計金額¥1980

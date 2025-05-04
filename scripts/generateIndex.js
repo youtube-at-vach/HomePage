@@ -11,6 +11,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const articlesDir = path.join(__dirname, '..', 'public', 'articles');
 const dataDir = path.join(__dirname, '..', 'public', 'data');
@@ -36,11 +37,47 @@ const files = fs.readdirSync(articlesDir)
   .reverse();
 
 const list = files.map(file => {
-  const fullPath = path.join(articlesDir, file);
-  const content = fs.readFileSync(fullPath, 'utf8');
-  const firstLine = content.split(/\r?\n/)[0] || '';
-  const title = firstLine.replace(/^#\s*/, '').trim();
-  return { file, title, url: `articles/${file}` };
+  const fullMdPath = path.join(articlesDir, file);
+  // Generate HTML from Markdown using Marp
+  const baseName = file.replace(/\.md$/, '');
+  const htmlFile = baseName + '.html';
+  const fullHtmlPath = path.join(articlesDir, htmlFile);
+  try {
+    execSync(`marp "${fullMdPath}" -o "${fullHtmlPath}"`, { stdio: 'inherit' });
+  } catch (err) {
+    exitWithError(`Marp conversion failed for ${file}: ${err.message}`);
+  }
+  // Extract title from Markdown (skip YAML front-matter, find first heading)
+  const content = fs.readFileSync(fullMdPath, 'utf8');
+  const lines = content.split(/\r?\n/);
+  let title = '';
+  let inFrontMatter = false;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    // Detect start of YAML front-matter
+    if (i === 0 && line === '---') {
+      inFrontMatter = true;
+      continue;
+    }
+    // Skip lines in front-matter until closing '---'
+    if (inFrontMatter) {
+      if (line === '---') {
+        inFrontMatter = false;
+      }
+      continue;
+    }
+    // Use first Markdown heading as title
+    if (line.startsWith('#')) {
+      title = line.replace(/^#+\s*/, '').trim();
+      break;
+    }
+  }
+  // Fallback: use file base name if no title found
+  if (!title) {
+    console.warn(`No title found in ${file}, using file name.`);
+    title = baseName;
+  }
+  return { file: htmlFile, title, url: `articles/${htmlFile}` };
 });
 
 // JSON に書き出し

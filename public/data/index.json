@@ -1,7 +1,22 @@
 [
   {
-    "file": "tl072.md",
+    "file": "opa211vsopa1612.html",
+    "title": "OPA1612とOPA211の比較調査",
+    "url": "articles/opa211vsopa1612.html"
+  },
+  {
+    "file": "marp_tl072.html",
     "title": "TL072代替オペアンプの比較",
-    "url": "articles/tl072.md"
+    "url": "articles/marp_tl072.html"
+  },
+  {
+    "file": "marp_rode.html",
+    "title": "RODEマイクラインナップ比較調査",
+    "url": "articles/marp_rode.html"
+  },
+  {
+    "file": "marp_low_noise_amp.html",
+    "title": "超低雑音入力換算電圧密度アンプ比較",
+    "url": "articles/marp_low_noise_amp.html"
   }
 ]

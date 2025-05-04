@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <a href="#main" class="skip-link">メインコンテンツへスキップ</a>
     <!-- ヘッダー -->
     <header>
         <div class="container">
@@ -21,7 +22,7 @@
     </header>
 
     <!-- メインコンテンツ -->
-    <main class="container">
+    <main id="main" class="container">
         <section id="download-resources">
             <h2>ダウンロード可能なリソース</h2>
             <div id="download-resources-container">
@@ -96,6 +97,14 @@
               console.error(err);
             });
         }
+      // Ensure all external links use noreferrer for security
+      document.querySelectorAll('a[target="_blank"]').forEach(function(a) {
+        var rel = a.getAttribute('rel') || '';
+        if (!rel.includes('noreferrer')) {
+          rel = rel + (rel ? ' ' : '') + 'noreferrer';
+          a.setAttribute('rel', rel);
+        }
+      });
       });
     </script>
 </body>

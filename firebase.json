@@ -6,10 +6,16 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [
+    // No SPA rewrites: serve static files directly; enable caching for assets
+    "headers": [
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "**/*.{json,css,js,png,jpg,jpeg,svg}",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=31536000,immutable"
+          }
+        ]
       }
     ]
   }

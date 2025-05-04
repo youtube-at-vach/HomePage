@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <a href="#main" class="skip-link">メインコンテンツへスキップ</a>
     <!-- ヘッダー -->
     <header>
         <div class="container">
@@ -22,8 +23,8 @@
                     <li><a href="#resources">リソース</a></li>
                     <li><a href="lna01.html">低ノイズアンプ LNA-01</a></li>
                     <!-- LTSpice JFETモデルシミュレータへのリンクを追加 -->
-                    <li><a href="https://spice-model-manager-72390409021.asia-northeast2.run.app/" target="_blank">LTSpice JFETモデルシミュレータ</a></li>
-                    <li><a href="https://github.com/youtube-at-vach/audio_tools" target="_blank">オーディオ測定用プログラム (GitHub)</a></li>
+                    <li><a href="https://spice-model-manager-72390409021.asia-northeast2.run.app/" target="_blank" rel="noopener noreferrer">LTSpice JFETモデルシミュレータ</a></li>
+                    <li><a href="https://github.com/youtube-at-vach/audio_tools" target="_blank" rel="noopener noreferrer">オーディオ測定用プログラム (GitHub)</a></li>
                     <li><a href="#contact">お問い合わせ</a></li>
                 </ul>
             </nav>
@@ -31,7 +32,7 @@
     </header>
 
     <!-- メインコンテンツ -->
-    <main class="container">
+    <main id="main" class="container">
         <!-- ヒーローイメージ -->
         <div class="hero-container">
             <img src="images/hero.png" alt="ロボットと少年がマイク回路を調整するイラスト" class="hero-image">
@@ -44,7 +45,7 @@
         <section id="simulator">
             <h2>LTSpice JFETモデルシミュレータ</h2>
             <p>シミュレーション用JFETモデルを管理・編集できるオンラインツールです。自作回路のシミュレーションにお役立てください。</p>
-            <a href="https://spice-model-manager-72390409021.asia-northeast2.run.app/" target="_blank" rel="noopener">
+            <a href="https://spice-model-manager-72390409021.asia-northeast2.run.app/" target="_blank" rel="noopener noreferrer">
                 <img src="images/spicemodel1.png" alt="LTSpice JFETモデルシミュレータ" class="simulator-image">
             </a>
         </section>
@@ -83,7 +84,7 @@
         <section id="contact">
             <h2>YouTubeチャンネル＆お問い合わせ</h2>
             <p>最新動画はYouTubeで随時公開中！チャンネル登録＆通知オンで新着を見逃さずチェックしてください。ご質問・ご要望はコメント欄またはサイト下部のお問い合わせフォームからお気軽にどうぞ。</p>
-            <a href="https://www.youtube.com/@va-ch" target="_blank" class="button">YouTubeチャンネルへ移動</a>
+            <a href="https://www.youtube.com/@va-ch" target="_blank" rel="noopener noreferrer" class="button">YouTubeチャンネルへ移動</a>
         </section>
     </main>
 
@@ -125,7 +126,7 @@
               var titleEsc = video.title.replace(/"/g, '&quot;');
               var categoryEsc = (video.category || '').replace(/&/g, '&amp;')
                 .replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-              playlistHtml += '<a href="' + video.url + '" target="_blank" class="thumb" title="' + titleEsc + '">';
+            playlistHtml += '<a href="' + video.url + '" target="_blank" rel="noopener noreferrer" class="thumb" title="' + titleEsc + '">';
               playlistHtml += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
               playlistHtml += '<div class="overlay">';
               playlistHtml += '<span class="category-tag">' + categoryEsc + '</span>';
@@ -163,7 +164,7 @@
               var titleEsc = video.title.replace(/"/g, '&quot;');
               var categoryEsc = (video.category || '').replace(/&/g, '&amp;')
                 .replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-              monthHtml += '<a href="' + video.url + '" target="_blank" class="thumb" title="' + titleEsc + '">';
+              monthHtml += '<a href="' + video.url + '" target="_blank" rel="noopener noreferrer" class="thumb" title="' + titleEsc + '">';
               monthHtml += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
               monthHtml += '<div class="overlay">';
               monthHtml += '<span class="category-tag">' + categoryEsc + '</span>';
@@ -195,7 +196,7 @@
               var titleEsc = item.title.replace(/"/g, '&quot;')
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
               var urlEsc = item.url.replace(/"/g, '&quot;');
-              html += '<li><a href="' + urlEsc + '" target="_blank">' + titleEsc + '</a></li>';
+              html += '<li><a href="' + urlEsc + '" target="_blank" rel="noopener noreferrer">' + titleEsc + '</a></li>';
             });
             aiContainer.innerHTML = html;
           })

@@ -15,6 +15,11 @@
     "url": "articles/marp_rode.html"
   },
   {
+    "file": "marp_opamp.html",
+    "title": "AD797クラスの超低ノイズオペアンプ比較",
+    "url": "articles/marp_opamp.html"
+  },
+  {
     "file": "marp_low_noise_amp.html",
     "title": "超低雑音入力換算電圧密度アンプ比較",
     "url": "articles/marp_low_noise_amp.html"

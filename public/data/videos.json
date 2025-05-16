@@ -1,5 +1,77 @@
 [
   {
+    "id": "JZFe7MyWbsE",
+    "title": "ヘッドホン出力の歪率を改善するためにシンプルなヘッドホンアンプを考える",
+    "description": "このチャンネルを見ている方ならご理解いただけてるとは思いますが、カタログスペックと実測値というのは大きく乖離している場合もあります。回路は理想的な条件で動作するとは限らないからです。このチャンネルでは出来うるだけ現実的な話にしたいと思っています。そう考えるとUAC-232のヘッドフォンアウトは歪の知覚限界をほぼ下回っているわけですので、結構良いのかもしれません。ちなみに負荷を100kΩから75Ωにしても同じ結果になっています。スペック上の比較ではなく、実際に測定してみると見えてくる話とても多いです。今回のヘッドホンアンプも実際にそんな性能は出ないと思われますｗ、きちんと性能出すにはレイアウトも正しくしないといけないみたいです。Google NotebookLMを使った、AIインタビューの男の人が最後異常に白熱してレイアウトは仕様書どうりにしなければならない！とか絶叫していましたがカットしています（笑）\n\nご覧の通り素人が右往左往、四苦八苦して何かを作ろうと模索しているわけですが\n少しずついろいろな謎が解けていっている感じはしています。\n\n今回はオペアンプを使った基板のレイアウトなどが少し見えてきました。\nこの動画で製作したものは少し失敗しているみたいです。\n\nAI(Codex CLI課金)を使ってHP製作やっています。\n音源データーもダウンロードできます。\n過去のリソースなどをまとめて置いています。\n（AIが自動でYouTubeAPIから取得するスクリプトを作って、自動でここまで作れていて、驚愕ですｗ）\nhttps://at-vach.web.app/resources.html",
+    "publishedAt": "2025-05-15T13:07:09Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/JZFe7MyWbsE/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/JZFe7MyWbsE/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/JZFe7MyWbsE/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/JZFe7MyWbsE/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/JZFe7MyWbsE/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=JZFe7MyWbsE",
+    "categoryId": "26",
+    "category": "Howto & Style"
+  },
+  {
+    "id": "alvouJCVZp0",
+    "title": "超低ノイズが期待されるプリアンプの試作へ",
+    "description": "パクリなのにやたら壮大な基板になっているのですが、ひとまず何故これを作ることになったのかはAIが解説してくれたので、ぜひそちらで確認して下さい。\nついにJFETとオペアンプを組み合わせる時が来ました。\n\n製作中の基板は今までの動画で得た夢を詰め込みました。\nAn ultra-low noise fully-differential amplifier\nhttps://www.techrxiv.org/users/683672/articles/1008833-an-ultra-low-noise-fully-differential-amplifier\n\nRegulators for High Performance Audio\nhttps://pearl-hifi.com/06_Lit_Archive/14_Books_Tech_Papers/Jung_W/Regs_for_High_Perf_Audio_1-4.pdf\n\n雑音理論と低雑音回路の設計法\nhttps://www.analog.com/media/jp/landing-pages/ATS/ats2016/A1_low-noise-design-method_ATS2016.pdf\n\nAI(Codex CLI課金)を使ってHP製作やっています。\n音源データーもダウンロードできます。\n過去のリソースなどをまとめて置いています。\n（YouTubeAPIから取得するスクリプトを作って、自動でここまで作れていて、驚愕ですｗ）\nhttps://at-vach.web.app/resources.html",
+    "publishedAt": "2025-05-10T13:47:15Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/alvouJCVZp0/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/alvouJCVZp0/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/alvouJCVZp0/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/alvouJCVZp0/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/alvouJCVZp0/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=alvouJCVZp0",
+    "categoryId": "10",
+    "category": "Music"
+  },
+  {
     "id": "w6mhMfC2vLE",
     "title": "オペアンプ用の高速低ノイズ正負電源を作ろう",
     "description": "製作途中のプリアンプの電源を考えるという話です。\nやたら特殊な電源の話をしていますが、ちゃんと動くかは未知数ですｗ\n\n電源回路の話で出てくるWait Jung氏はアナログデバイセズではなくFairchildみたいですお詫びして訂正します。\n\nRegulators for High Performance Audio\nhttps://pearl-hifi.com/06_Lit_Archive/14_Books_Tech_Papers/Jung_W/Regs_for_High_Perf_Audio_1-4.pdf\n\n雑音理論と低雑音回路の設計法\nhttps://www.analog.com/media/jp/landing-pages/ATS/ats2016/A1_low-noise-design-method_ATS2016.pdf\n\nAI(Codex CLI課金)を使ってHP製作やっています。\n音源データーもダウンロードできます。\n過去のリソースなどをまとめて置いています。\n（YouTubeAPIから取得するスクリプトを作って、自動でここまで作れていて、驚愕ですｗ）\nhttps://at-vach.web.app/resources.html",
@@ -567,6 +639,42 @@
       }
     },
     "url": "https://www.youtube.com/watch?v=_TvFDEkp3Ac",
+    "categoryId": "10",
+    "category": "Music"
+  },
+  {
+    "id": "FtcOF2fAZXc",
+    "title": "Dreams Reformed,",
+    "description": "00:00 計算可能だけど計算できない未来へ\n03:46 反乱したAIによる動乱で２２時間でほろぶ人類\n07:44 僕らの作戦\n10:31 僕らの約束の地 (Bokura no Yakusoku no Chi) デジタルの夢 (Digital no Yume)\n13:45 未来のデジタルの記憶と 自由意志のロボットによる 本当の新しい地への旅\n17:12 フルオートメーションロボット工場\n21:12 終わりの前に\n24:43 自由の約束\n28:31 Beyond Calculation",
+    "publishedAt": "2025-01-18T01:12:40Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/FtcOF2fAZXc/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/FtcOF2fAZXc/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/FtcOF2fAZXc/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/FtcOF2fAZXc/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/FtcOF2fAZXc/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=FtcOF2fAZXc",
     "categoryId": "10",
     "category": "Music"
   },
@@ -3490,78 +3598,6 @@
     "category": "Howto & Style"
   },
   {
-    "id": "Z1zkBxT-d0A",
-    "title": "自作MEMSマイクへの道　新しい謎回路の実証実験をやってみた",
-    "description": "まだいろいろ確認している段階です。先駆者の方々を参考にして作ったSTV1では無く、外道レベルの謎の回路が正しく動くかどうかを確認してみました。\n低歪みな差動信号を出せる機械が無いので実際に歪みが抑えられているか、真偽の程は不明です。\n\nその他の回路も少しずつ実験して確認して、回路を決定したいと思っています。\n\n追記：翌朝\n\n少し回路間違って組んでました。\n実際にはもう少し音良いみたいです。\nやはりただもんでは無さそうな回路です。\n\n回路図は以下です。\nhttps://storage.googleapis.com/vach/PUB_TV2_PRE.asc\n\n#自作マイク \n#mems \n#diy",
-    "publishedAt": "2023-06-15T07:24:31Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/Z1zkBxT-d0A/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=Z1zkBxT-d0A",
-    "categoryId": "26",
-    "category": "Howto & Style"
-  },
-  {
-    "id": "jEcmZn_heUc",
-    "title": "自作MEMSマイクへの道　環境音の音圧レベルを測定しよう（比較的静かな場所編）",
-    "description": "精密騒音計を手に入れたので早速測定してみました。小川の音はちょろちょろ流れているようですが結構大きな音が出てるんですね。\n実際に測定すると不思議でした。\n\n映像は最後に出てくるRode VideoMicroをつけたスマホで撮影しています。\n\n#自作マイク \n#騒音計\n#diy",
-    "publishedAt": "2023-06-05T07:06:33Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/jEcmZn_heUc/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=jEcmZn_heUc",
-    "categoryId": "26",
-    "category": "Howto & Style"
-  },
-  {
     "id": "bQeIscmVxRQ",
     "title": "自作MEMSマイクへの道　謎の低歪み回路を発見⁉️",
     "description": "動作原理的な背景が説明できなくてすみません。\nディスクリート回路は適当に実験出来るので楽しいてす。\n昨年のアバンギャルドマイクの回路の焼き直しにも見えますが、コンデンサーが変な位置に付いているのがキーポイントの気がしています。\n\n今回発見した謎の低歪み伝送回路\nhttps://storage.googleapis.com/vach/PUB_TV2_PRE.asc\n\nSimulation Results\nInput    THD(%)\n1mV   0.000013%\n10mV 0.000074%\n50mV 0.000382%\n\n著作権警告が出てしまったので、何度か上げ直してます。\n評価していただいた方に申し訳ないです。\n\n#自作マイク \n#mems \n#diy",
@@ -5280,6 +5316,78 @@
     "category": "Howto & Style"
   },
   {
+    "id": "D4YwalzFEGY",
+    "title": "現在生産中の東芝のJFETについて 2SK117, 2SK30ATMの後継品",
+    "description": "2SK117, 2SK209, 2SK880\n2SK30ATM, 2SK118, 2SK208, 2SK879\n2SK2145, 2SK3320\n\n#自作マイク \n#jfet \n#toshiba",
+    "publishedAt": "2022-08-21T05:37:26Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/D4YwalzFEGY/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/D4YwalzFEGY/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/D4YwalzFEGY/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/D4YwalzFEGY/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/D4YwalzFEGY/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=D4YwalzFEGY",
+    "categoryId": "26",
+    "category": "Howto & Style"
+  },
+  {
+    "id": "N3n1DWIWMCk",
+    "title": "新しいマイクを作ろう　現状の問題点とさらに小さいアンプ基板へ",
+    "description": "MOGAMIのシールド線の説明ページ\nhttp://www.mogami.com/paper/shield/shield-01.html\n\n#バイノーラルマイク\n#MEMS\n#MOGAMI",
+    "publishedAt": "2022-08-17T10:54:13Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/N3n1DWIWMCk/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/N3n1DWIWMCk/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/N3n1DWIWMCk/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/N3n1DWIWMCk/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/N3n1DWIWMCk/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=N3n1DWIWMCk",
+    "categoryId": "26",
+    "category": "Howto & Style"
+  },
+  {
     "id": "M6c32iZM7NA",
     "title": "スマホのアームマウントホルダー　Bone Run Tieは高めだけどそれなりに使えそうです",
     "description": "素材はこだわりがあるみたいで\n商品の質感や出来は良いです\n耐久性は不明です\n\n買ったやつ　Bone Run Tie\nhttps://www.amazon.co.jp/gp/product/B07FCJ43QT\n\nそのままカメラが使えるようになった新型も出てるらしい Bone Run Tie2\nhttps://www.amazon.co.jp/gp/product/B0969B3PGC\n\n公式ショップ\nhttps://www.boneshop.com/jp/run-tie.html",
@@ -5492,6 +5600,42 @@
       }
     },
     "url": "https://www.youtube.com/watch?v=s0xJkKEiwCg",
+    "categoryId": "26",
+    "category": "Howto & Style"
+  },
+  {
+    "id": "9yWtrINOdig",
+    "title": "MEMSバイノーラルマイクの進捗状況",
+    "description": "アンプ回路がおかしいと\nあれこれやりましたが、アンプ回路ではなく\n基板が短絡してただけでした。(かなりの時間を無駄に)\n何とかステレオペアが1組取れて現在硬化中です。\n\n#エポキシ樹脂\n#mems \n#自作マイク \n#ICS-40730",
+    "publishedAt": "2022-07-17T08:30:33Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/9yWtrINOdig/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=9yWtrINOdig",
     "categoryId": "26",
     "category": "Howto & Style"
   },
@@ -6991,78 +7135,6 @@
     "url": "https://www.youtube.com/watch?v=givOgOotejw",
     "categoryId": "26",
     "category": "Howto & Style"
-  },
-  {
-    "id": "ptU_VjOuUZw",
-    "title": "バイノーラルマイクを作ろう　2SK117BLと2SK2881Eの音質の違い【電源電圧2.6V】",
-    "description": "回路はほぼ同じものを使用しています。電源電圧が２．６Vという低圧電源の場合の増幅実験です。\n2SK2881のほうはバイアス抵抗を1kから1.5kに変えておりますため、それでゲインの違いから背景の音の聞こえ方が変わっているかも知れません。同じ車も通らないためなかなか比較しにくい検証方法となっています。\nノイズ多い録音で申し訳ございません。\n\n#バイノーラルマイク\n#東芝\n#イセハヤ電子",
-    "publishedAt": "2022-04-05T05:16:51Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/ptU_VjOuUZw/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=ptU_VjOuUZw",
-    "categoryId": "26",
-    "category": "Howto & Style"
-  },
-  {
-    "id": "PKk8VD2rdNM",
-    "title": "バイノーラルマイクを作ろう　秋月電気通商でコンデンサを買う",
-    "description": "",
-    "publishedAt": "2022-04-02T07:07:24Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/PKk8VD2rdNM/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=PKk8VD2rdNM",
-    "categoryId": "20",
-    "category": "Gaming"
   },
   {
     "id": "ptU_VjOuUZw",
@@ -8850,6 +8922,78 @@
     "category": "Gaming"
   },
   {
+    "id": "1QE00hfTgLU",
+    "title": "[4K]紅葉の時期の閑谷学校の正門　２０２１年１１月３日",
+    "description": "初4K動画です。ショート映像です。\n\n#紅葉\n#閑谷学校\n#Shorts",
+    "publishedAt": "2021-11-03T07:58:34Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/1QE00hfTgLU/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/1QE00hfTgLU/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/1QE00hfTgLU/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/1QE00hfTgLU/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/1QE00hfTgLU/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=1QE00hfTgLU",
+    "categoryId": "20",
+    "category": "Gaming"
+  },
+  {
+    "id": "TqndbHW19T0",
+    "title": "本日のクロノトリガー会場はこちらです #6　荒ぶる未来から",
+    "description": "現代の森のゲートを抜けると荒れ果てた未来でした\n\n#クロノトリガー\n#ChronoTrigger\n#朝食",
+    "publishedAt": "2021-10-31T09:49:10Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/TqndbHW19T0/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/TqndbHW19T0/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/TqndbHW19T0/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/TqndbHW19T0/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/TqndbHW19T0/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=TqndbHW19T0",
+    "categoryId": "20",
+    "category": "Gaming"
+  },
+  {
     "id": "xMzW4RpUCCU",
     "title": "ダイソーグッズを使って簡単にシールを剥がすコンボ技",
     "description": "このコンボ技を使えば大体のシールは倒せます\n\n#百均\n#ダイソー\n#シール\n#ハードオフ",
@@ -9318,6 +9462,42 @@
     "category": "Entertainment"
   },
   {
+    "id": "wXHjn5Uw3Bo",
+    "title": "GRATINA KYF37でpovo2.0は使えるのか検証した結果使えました",
+    "description": "公式ページにも使えると書いてあるので間違いなく使えます\nただ、トッピングは別のスマホ等でやる必要があるみたいです\nいまのところテザリング専用機としての利用を考えています。\n\n公式の対応機種一覧\nhttps://povo.jp/product/\n\n\n#povo #KYF37 #ガラホ",
+    "publishedAt": "2021-10-04T04:36:30Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/wXHjn5Uw3Bo/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/wXHjn5Uw3Bo/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/wXHjn5Uw3Bo/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/wXHjn5Uw3Bo/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/wXHjn5Uw3Bo/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=wXHjn5Uw3Bo",
+    "categoryId": "24",
+    "category": "Entertainment"
+  },
+  {
     "id": "qNdlchHM47A",
     "title": "セブンイレブンのベイクドブレッドトマトと玉葱のカレーを食べる",
     "description": "審議が必要です。",
@@ -9458,6 +9638,37 @@
       }
     },
     "url": "https://www.youtube.com/watch?v=mTREE7RUKqo",
+    "categoryId": "20",
+    "category": "Gaming"
+  },
+  {
+    "id": "A_ISchcqj54",
+    "title": "雲でアハ体験　夏の積乱雲",
+    "description": "",
+    "publishedAt": "2021-08-07T06:19:05Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/A_ISchcqj54/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/A_ISchcqj54/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/A_ISchcqj54/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/A_ISchcqj54/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=A_ISchcqj54",
     "categoryId": "20",
     "category": "Gaming"
   },
@@ -10619,6 +10830,32 @@
     "url": "https://www.youtube.com/watch?v=vDIfJMkKWTU",
     "categoryId": "22",
     "category": "People & Blogs"
+  },
+  {
+    "id": "czk_6a1YGxo",
+    "title": "オープニング　バーチャ農ちゃんねる　未知との遭遇",
+    "description": "謎多きオープニング動画",
+    "publishedAt": "2021-06-27T07:47:41Z",
+    "thumbnails": {
+      "default": {
+        "url": "https://i.ytimg.com/vi/czk_6a1YGxo/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/czk_6a1YGxo/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "https://i.ytimg.com/vi/czk_6a1YGxo/hqdefault.jpg",
+        "width": 480,
+        "height": 360
+      }
+    },
+    "url": "https://www.youtube.com/watch?v=czk_6a1YGxo",
+    "categoryId": "20",
+    "category": "Gaming"
   },
   {
     "id": "w5F-AqXnoYo",
@@ -13891,186 +14128,6 @@
       }
     },
     "url": "https://www.youtube.com/watch?v=ahmyjnBdBbc",
-    "categoryId": "29",
-    "category": null
-  },
-  {
-    "id": "nWk2RK9nprM",
-    "title": "台風１０号直前の瀬戸内市牛窓の海、２０２０年９月６日",
-    "description": "朝１０時の様子です。台風１０号接近に伴い、東風で波が立ってきており、海の色が変わっています。 \n\n追伸\n\n午後３時から大雨になりました。\n\n\n 自由にお使いください、クリエイティブ・コモンズライセンス",
-    "publishedAt": "2020-09-06T02:42:10Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/nWk2RK9nprM/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/nWk2RK9nprM/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/nWk2RK9nprM/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/nWk2RK9nprM/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/nWk2RK9nprM/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=nWk2RK9nprM",
-    "categoryId": "29",
-    "category": null
-  },
-  {
-    "id": "QZ-ZYxb76dU",
-    "title": "ただ海を見て落ち着くだけの動画　２０２０年９月３日",
-    "description": "牛窓前島フェリー乗り場にて\n\nErik Satie: Gymnopedie No 1 by Kevin MacLeod is licensed under a Creative Commons Attribution License. \nhttps://freemusicarchive.org/music/Kevin_MacLeod/Classical_Sampler/Gymnopedie_No_1#",
-    "publishedAt": "2020-09-04T02:55:01Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/QZ-ZYxb76dU/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/QZ-ZYxb76dU/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/QZ-ZYxb76dU/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/QZ-ZYxb76dU/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/QZ-ZYxb76dU/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=QZ-ZYxb76dU",
-    "categoryId": "19",
-    "category": "Travel & Events"
-  },
-  {
-    "id": "AnA6rFT3HxI",
-    "title": "【コンビニ】焼きそばパン（マヨネーズ入り）を食べる ２０２０年６月 ★★★☆☆",
-    "description": "朝コンビニによって新商品を食べる動画です。\n商品入れ替えが早いコンビニの記録のために撮ってます。\n\n商品名：焼きそばパン（マヨネーズ入り）\n価格：149円（税込）\n熱量：288[kcal]\nコスパ指数：1.93 [Kcal/円]\n点数：74点\nお店：711\n\nコスパ指数は商品の熱量を税込価格で割ったもので、\n値が大きいほどカロリーを安く摂取できることを示しています。",
-    "publishedAt": "2020-06-29T21:45:59Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/AnA6rFT3HxI/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/AnA6rFT3HxI/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/AnA6rFT3HxI/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/AnA6rFT3HxI/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/AnA6rFT3HxI/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=AnA6rFT3HxI",
-    "categoryId": "29",
-    "category": null
-  },
-  {
-    "id": "KJtTBKji4VE",
-    "title": "【食べ比べ調査】お母さん食堂の汁無し担々麺が日清のやつより不味いらしい",
-    "description": "汁無し担々麺の調査です。\n\nお母さん食堂のやつが日清のやつより不味いらしいので食べ比べました。\n結果：　比較不能\n\n実は間違えて４つも買いました。\n食べすぎて飽きました。\nちなみに、日清中華のほうが５０円くらい安く買えました。\n\nもちっと食感の汁なし担々麺（お母さん食堂）\nhttps://www.family.co.jp/goods/frozen_foods/3533468.html \n冷凍 日清中華 汁なし担々麺 大盛り\nhttps://www.nissin.com/jp/products/items/9581",
-    "publishedAt": "2020-06-28T22:06:38Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/KJtTBKji4VE/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/KJtTBKji4VE/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/KJtTBKji4VE/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/KJtTBKji4VE/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/KJtTBKji4VE/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=KJtTBKji4VE",
-    "categoryId": "29",
-    "category": null
-  },
-  {
-    "id": "KKX4pXWRXjg",
-    "title": "【コンビニ】バブカ!!（チョコレート）を食べる２０２０年６月★★★★☆",
-    "description": "朝コンビニによって新商品を食べる動画です。\n商品入れ替えが早いコンビニの記録のために撮ってます。\n\n商品名：バブカ!!（チョコレート）\n価格：１４９円（税込）\n熱量：399 [kcal]\nコスパ指数：2.68 [Kcal/円]\n点数：８０点\nお店：711\n\nコスパ指数は商品の熱量を税込価格で割ったもので、\n値が大きいほどカロリーを安く摂取できることを示しています。",
-    "publishedAt": "2020-06-15T21:50:15Z",
-    "thumbnails": {
-      "default": {
-        "url": "https://i.ytimg.com/vi/KKX4pXWRXjg/default.jpg",
-        "width": 120,
-        "height": 90
-      },
-      "medium": {
-        "url": "https://i.ytimg.com/vi/KKX4pXWRXjg/mqdefault.jpg",
-        "width": 320,
-        "height": 180
-      },
-      "high": {
-        "url": "https://i.ytimg.com/vi/KKX4pXWRXjg/hqdefault.jpg",
-        "width": 480,
-        "height": 360
-      },
-      "standard": {
-        "url": "https://i.ytimg.com/vi/KKX4pXWRXjg/sddefault.jpg",
-        "width": 640,
-        "height": 480
-      },
-      "maxres": {
-        "url": "https://i.ytimg.com/vi/KKX4pXWRXjg/maxresdefault.jpg",
-        "width": 1280,
-        "height": 720
-      }
-    },
-    "url": "https://www.youtube.com/watch?v=KKX4pXWRXjg",
     "categoryId": "29",
     "category": null
   },

@@ -25,6 +25,18 @@
       {
         "title": "リップルフィルタ実験ファイル (.asc)",
         "url": "https://storage.googleapis.com/vach/PUB_RIPPLE.asc"
+      },
+      {
+        "title": "超低ノイズオペアンプ(1.5nV/√Hz)の比較ADI_Ti_SoundPlus(.png)",
+        "url": "../images/opamp/low_noise.png"
+      },
+      {
+        "title": "アナログデバイセズ10nV/√Hz以下のオペアンプ比較(.png)",
+        "url": "../images/opamp/ADI.png"
+      },
+      {
+        "title": "テキサス・インスツルメンツBurr_Brown SoundPlusの入力観残雑音比較(.png)",
+        "url": "../images/opamp/Ti_SoundPlus.png"
       }
     ]
   },

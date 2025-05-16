@@ -20,6 +20,11 @@
     "url": "articles/marp_opamp.html"
   },
   {
+    "file": "marp_noise.html",
+    "title": "電子部品ノイズの基本分類と物理的起源",
+    "url": "articles/marp_noise.html"
+  },
+  {
     "file": "marp_low_noise_amp.html",
     "title": "超低雑音入力換算電圧密度アンプ比較",
     "url": "articles/marp_low_noise_amp.html"

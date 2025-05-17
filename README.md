@@ -1,6 +1,6 @@
-# バーチャ農ちゃんねるの保管庫
+# 銀河ヒッチハイク・DIYオーディオガイド リポジトリ
 
-このリポジトリは「バーチャ農ちゃんねる」の静的サイトおよび、YouTube Data APIを使用して動画の基本データを取得・保存するスクリプトを含みます。
+このリポジトリは「銀河ヒッチハイク・DIYオーディオガイド」の静的サイトおよび、YouTube Data APIを使用して動画やプレイリストデータを取得・管理するスクリプト、外部リンク取得や記事インデックス生成ツールを含みます。
 
 ## 動画データの取得
 
@@ -27,10 +27,21 @@
 4. public/data/videos.json に取得結果が出力されます。  
    Webサイトからフェッチして表示に利用してください。
 
-## JSONファイルの編集（インタラクティブフィルタ）
+## プレイリストデータの取得（fetchPlaylists.js）
 
-`public/data/videos.json` には過去の不要な動画も含まれる場合があります。以下のスクリプトで対話的に一覧を表示し、
-必要なものだけを選んでファイルを更新できます。
+YouTube Data API を使用して、指定したチャンネルのプレイリスト一覧と各プレイリストに含まれる動画IDを取得し、`public/data/playlists.json` に保存します。
+
+### 使用方法
+
+```bash
+export YOUTUBE_API_KEY=YOUR_API_KEY
+node scripts/fetchPlaylists.js CHANNEL_ID
+```
+
+## 動画データのフィルタリングと除外リスト生成（editVideos.js）
+
+`public/data/videos.json` には不要な動画も含まれる場合があります。以下のスクリプトで対話的に一覧を表示し、必要な動画を選択できます。
+選択結果に基づいて、`public/data/videoExcludes.json` に除外動画IDリストを生成します。
 
 ### 使用方法
 
@@ -49,14 +60,22 @@ node scripts/editVideos.js
 node scripts/extractSummary.js
 ```
  
-## 除外リストの自動生成
+## 外部リンク一覧の取得（fetchExternalLinks.js）
 
-`public/data/videos_mic.json` に表示したい動画の ID を配列で設定しておくと、
-`public/data/videos.json` と比較し、差分（不要動画）の ID を
-`public/data/videoExcludes.json` に自動で出力するスクリプトを追加しました。
+`public/data/allurls.txt` に記載された URL 一覧を読み込み、各 URL のページタイトルを取得して、`public/data/externalLinks.json` に保存します。
 
 ### 使用方法
 
 ```bash
-node scripts/updateExcludes.js
+node scripts/fetchExternalLinks.js
+```
+
+## 記事インデックスの生成（generateIndex.js）
+
+`public/articles` フォルダ内の Markdown ファイルからタイトルなどのメタデータを抽出し、`public/data/index.json` として保存します。
+
+### 使用方法
+
+```bash
+node scripts/generateIndex.js
 ```

@@ -31,11 +31,11 @@
         "url": "../images/opamp/low_noise.png"
       },
       {
-        "title": "アナログデバイセズ10nV/√Hz以下のオペアンプ比較(.png)",
+        "title": "アナログデバイセズ10nV/√Hz以下のオペアンプの入力換算ノイズ比較(.png)",
         "url": "../images/opamp/ADI.png"
       },
       {
-        "title": "テキサス・インスツルメンツBurr_Brown SoundPlusの入力観残雑音比較(.png)",
+        "title": "テキサス・インスツルメンツBurr_Brown SoundPlusの入力換算ノイズ比較(.png)",
         "url": "../images/opamp/Ti_SoundPlus.png"
       }
     ]

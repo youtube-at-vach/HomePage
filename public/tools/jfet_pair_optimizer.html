@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>JFET IDSS ペア最適化（GA対応）</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 30px auto; }
+    textarea { width: 100%; height: 150px; }
+    input[type="number"] { width: 100px; }
+    button { margin-top: 10px; }
+    pre { background: #f0f0f0; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>JFET IDSS 最適ペア選定ツール</h2>
+  <label>IDSS値を1行ずつ入力（mA）:</label><br>
+  <textarea id="idssInput">21.4\n22.6\n14.56\n14.41\n16.8\n16.22\n13.39\n13.72</textarea><br>
+
+  <label>1組に含める個数（通常は2）:</label>
+  <input type="number" id="groupSize" value="2" min="2"><br>
+
+  <button onclick="runOptimizer()">最適なペアを計算</button>
+
+  <h3>結果:</h3>
+  <pre id="result"></pre>
+
+<script>
+function runOptimizer() {
+  const idssInput = document.getElementById("idssInput").value;
+  const groupSize = parseInt(document.getElementById("groupSize").value);
+  const resultBox = document.getElementById("result");
+
+  let idss = idssInput.split(/\n/).map(s => parseFloat(s.trim())).filter(v => !isNaN(v));
+  if (idss.length < groupSize * 2) {
+    resultBox.textContent = "入力数が少なすぎます。最低 " + (groupSize * 2) + " 個必要です。";
+    return;
+  }
+
+  const totalComb = combinationCount(idss.length, groupSize);
+  const useGA = totalComb > 10000;
+
+  if (useGA) {
+    resultBox.textContent = `総当たり組み合わせが ${totalComb} 通りで多すぎるため、遺伝的アルゴリズムで計算します...\n`;
+    setTimeout(() => {
+      const res = geneticOptimizer(idss, groupSize);
+      resultBox.textContent += res;
+    }, 100);
+  } else {
+    const res = bruteForceOptimizer(idss, groupSize);
+    resultBox.textContent = res;
+  }
+}
+
+
+function combinationCount(n, r) {
+  const f = x => x <= 1 ? 1 : x * f(x - 1);
+  return f(n) / (f(r) * f(n - r));
+}
+
+function bruteForceOptimizer(arr, size) {
+  let bestDiff = Infinity, best1 = [], best2 = [];
+  const comb = k_combinations(arr, size);
+
+  for (let i = 0; i < comb.length; i++) {
+    const group1 = comb[i];
+    const rest = arr.filter(x => !group1.includes(x));
+    const subComb = k_combinations(rest, size);
+    for (let j = 0; j < subComb.length; j++) {
+      const group2 = subComb[j];
+      const avg1 = average(group1);
+      const avg2 = average(group2);
+      const diff = Math.abs(avg1 - avg2);
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        best1 = group1;
+        best2 = group2;
+      }
+    }
+  }
+  return formatResult(best1, best2, bestDiff, "総当たり");
+}
+
+
+function geneticOptimizer(idss, groupSize) {
+  const populationSize = 50;
+  const generations = 300;
+  const mutationRate = 0.1;
+
+  let population = [];
+  for (let i = 0; i < populationSize; i++) {
+    population.push(shuffle([...idss]));
+  }
+
+  let best = null;
+  let bestFitness = Infinity;
+
+  for (let g = 0; g < generations; g++) {
+    const fitnesses = population.map(individual => {
+      const group1 = individual.slice(0, groupSize);
+      const group2 = individual.slice(groupSize, 2 * groupSize);
+      const avg1 = average(group1);
+      const avg2 = average(group2);
+      return Math.abs(avg1 - avg2);
+    });
+
+    const ranked = population.map((ind, idx) => ({ ind, fit: fitnesses[idx] }))
+                             .sort((a, b) => a.fit - b.fit);
+
+    if (ranked[0].fit < bestFitness) {
+      bestFitness = ranked[0].fit;
+      best = ranked[0].ind.slice(0, 2 * groupSize);
+    }
+
+    const newPop = [];
+
+    // エリート選択 + トーナメント交叉
+    while (newPop.length < populationSize) {
+      const p1 = tournamentSelect(ranked);
+      const p2 = tournamentSelect(ranked);
+      let child = crossover(p1, p2);
+
+      if (Math.random() < mutationRate) {
+        child = mutate(child);
+      }
+
+      newPop.push(child);
+    }
+
+    population = newPop;
+  }
+
+  const group1 = best.slice(0, groupSize);
+  const group2 = best.slice(groupSize, 2 * groupSize);
+  return formatResult(group1, group2, bestFitness, "遺伝的アルゴリズム");
+}
+
+function tournamentSelect(pop) {
+  const k = 5;
+  const selected = [];
+  for (let i = 0; i < k; i++) {
+    selected.push(pop[Math.floor(Math.random() * pop.length)]);
+  }
+  selected.sort((a, b) => a.fit - b.fit);
+  return selected[0].ind;
+}
+
+function crossover(p1, p2) {
+  const child = [];
+  const used = new Set();
+  for (let i = 0; i < p1.length; i++) {
+    const val = Math.random() < 0.5 ? p1[i] : p2[i];
+    if (!used.has(val)) {
+      child.push(val);
+      used.add(val);
+    }
+  }
+
+  // 補完（足りない分）
+  for (let i = 0; i < p1.length; i++) {
+    if (!used.has(p1[i])) {
+      child.push(p1[i]);
+      used.add(p1[i]);
+    }
+    if (child.length === p1.length) break;
+  }
+
+  return child;
+}
+
+function mutate(ind) {
+  const i = Math.floor(Math.random() * ind.length);
+  const j = Math.floor(Math.random() * ind.length);
+  [ind[i], ind[j]] = [ind[j], ind[i]];
+  return ind;
+}
+
+function average(arr) {
+  return sum(arr) / arr.length;
+}
+
+function sum(arr) {
+  return arr.reduce((a, b) => a + b, 0);
+}
+
+function k_combinations(set, k) {
+  let i, j, combs, head, tailcombs;
+
+  if (k > set.length || k <= 0) return [];
+  if (k === set.length) return [set];
+  if (k === 1) return set.map(el => [el]);
+
+  combs = [];
+  for (i = 0; i < set.length - k + 1; i++) {
+    head = set.slice(i, i + 1);
+    tailcombs = k_combinations(set.slice(i + 1), k - 1);
+    for (j = 0; j < tailcombs.length; j++) {
+      combs.push(head.concat(tailcombs[j]));
+    }
+  }
+  return combs;
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function formatResult(group1, group2, diff, method) {
+  const avg1 = average(group1);
+  const avg2 = average(group2);
+  return `=== 最適な2ペア（${method}使用） ===\n`
+       + `ペア1: [${group1.join(", ")}] 合計 = ${sum(group1).toFixed(4)} / 平均 = ${avg1.toFixed(4)} mA\n`
+       + `ペア2: [${group2.join(", ")}] 合計 = ${sum(group2).toFixed(4)} / 平均 = ${avg2.toFixed(4)} mA\n`
+       + `差: ${Math.abs(avg1 - avg2).toFixed(4)} mA`;
+}
+</script>
+</body>
+</html>
+

@@ -274,3 +274,25 @@ nav ul .dropdown-menu li a:hover {
     margin-top: 10px;
   }
 }
+
+/* Hero Slideshow Styles */
+.hero-container {
+    position: relative; /* Needed for absolute positioning of slides if we add next/prev buttons later */
+    overflow: hidden; /* Ensures no overflow if images are larger than container */
+}
+
+.hero-slide {
+    width: 100%; /* Make images responsive within the container */
+    height: auto;
+    display: none; /* Hide all slides by default */
+    animation: fadeEffect 1.5s; /* Animation for fade in/out */
+}
+
+.hero-slide.active {
+    display: block; /* Show only the active slide */
+}
+
+@keyframes fadeEffect {
+    from {opacity: 0.4}
+    to {opacity: 1}
+}

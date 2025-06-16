@@ -1,22 +1,33 @@
-| Part           | Value        | Device       | Package     | Description                                      | Supplier | Price |
-|----------------|--------------|--------------|-------------|--------------------------------------------------|----------|-------|
-| C1, C2         | 20pF         | —            | C050        | Mica capacitor                                   | AKIZUKI  | —     | A
-| C3–C9, C11     | 0.1µF 16V       | ECHU     | C3225       | Panasonic ECHU film capacitor                    | AKIZUKI  | ¥40   | A
-| C10            | 100µF 16V   | ECAS          | EIA7343     | MURATA ECAS                                      | AKIZUKI  | ¥150 | A
-| C12            | 1000µF 16V       | OS-CON        | E5          | Polymer capacitor                                | AKIZUKI  | ¥100 | A
-| C13, C14       | 47µF 63V         | —             | E3.5        | Hybrid aluminum electrolytic capacitor etc          | AKIZUKI  | ¥80  | A
-| JMP1, JMP2     | 0Ω           | —             | —           | Jumper resistor                                  | AKIZUKI  | ¥250/100 | A
-| JP3            | —            | JP2Q          | JP2Q        | Jumper                                           | AKIZUKI  | —     | A
-| R1–R4          | 1kΩ         | —             | —           | 1/2W metal film resistor                         | -  | —     | --(1k/2)
-| R10–R15        | 1kΩ          | —             | —           | 1/4W metal film resistor                         | -  | —     | M
-| R21            | 1Ω           | —             | —           | 1/4W metal film resistor                         | -  | —     | A(1)
-| R22            | 9.1Ω         | —             | —           | 1/4W metal film resistor                         | -  | —     | A(10)
-| R23            | 100Ω         | —             | —           | 1/4W metal film resistor                         | -  | —     | M
-| R31, R32, R41, R42 | 1kΩ      | —             | —           | 1/2W metal film resistor                         | -  | —     | --(1k/2)
-| R51            | 2kΩ          | —             | —           | 1/4W metal film resistor                         | -  | —     | M
-| U1–U16         | —            | CPH3910       | SC59        | N-ch low-noise JFET                              | digi-key  | ¥120 | 
-| U20, U21       | —            | OPA1612       | DIL08       | Low-noise Dual opamp                             | NFJ?  | ¥660 | Y
-| U22            | —            | TL072         | DIL08       | Dual opamp                                       | AKIZUKI  | ¥30   | A
-| ZD1            | 4.7V         | ZPY           | DO41        | Zener diode                                      | AKIZUKI  | ¥100/20 | A
+| Part     | Value     | Type / Notes                                         |
+|----------|-----------|------------------------------------------------------|
+| C1       | 1000u     | POLARIZED CAPACITOR, 1000uF                          |
+| C2       | 100u      | MURATA ECAS 16V                                      |
+| C3, C4   | 47u       | POLARIZED CAPACITOR                                  |
+| C20-C30  | 0.1u      | CERAMIC CAPACITOR                                    |
+| C31-C34  | 220p      | CERAMIC CAPACITOR                                    |
+| J10-J29  | CPH3910   | Dual Nch FET, SC-59                                  |
+| JMP1,2   | 0         | 0Ω Jumper Resistor, 1/4W                             |
+| JP1      | —         | 2x4 PIN HEADER                                       |
+| JP2      | —         | 2x1 PIN HEADER                                       |
+| R1       | 100       | Resistor, 1/4W, 1%, Ins Amp GAINSET (40dB)           |
+| R10-R13  | 1k        | Resistor, 1/4W, 0.1%                                 |
+| R14,R15  | 1k        | Resistor, 1/4W, 1%                                   |
+| R20,R21  | 1k        | Resistor, 1/4W, 1% (OPTION)                          |
+| R22      | 100       | Guard Load Resistor, 1/4W, 1%                        |
+| R51      | 2k        | Zener Bias Resistor, 1/4W, 1%                        |
+| RA1-4    | 100       | Gain A Resistor, 1/2W, 1%                            |
+| RB1      | 0.1       | Gain B Resistor (60dB), 1/4W, 1%                     |
+| RB2      | 1         | Gain B Resistor (40dB), 1/4W, 1%                     |
+| RB3      | 10        | Gain B Resistor (20dB), 1/4W, 1%                     |
+| RB4      | 100       | Gain B Resistor (12dB), 1/4W, 1%                     |
+| RD1-4    | 200       | Id Bias Resistor, 1/2W                               |
+| RD51     | 2k        | Id Bias Resistor, 1/4W, 1%                           |
+| RD52     | 1k        | Id Bias Resistor, 1/4W, 1%                           |
+| T1, T2   | 2SA1359   | PNP Transistor, TO-126                               |
+| U20,U21  | OPA1612   | Precision OpAmp, DIP-8                               |
+| U22      | TL072     | General-purpose OpAmp, DIP-8                         |
+| U23      | SSM2019   | Instrumentation Amp, DIP-8                           |
+| VR1      | 10k       | Trim Potentiometer 3296W                             |
+| VR2,VR3  | 100k      | Trim Potentiometer 3296W (OPTION)                    |
+| ZD1      | 4.7V      | Zener Diode                                          |
 
-## 合計金額¥4220

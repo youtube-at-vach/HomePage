@@ -65,8 +65,19 @@
         </section>
         <section id="resources">
             <h2>リソース／ダウンロード</h2>
-            <p>以下のリソース一覧ページより、各ファイルをダウンロードできます。</p>
-            <a href="resources.html" class="button">リソース一覧ページ</a>
+            <section id="download-resources">
+                <h3>ダウンロード可能なリソース</h3>
+                <div id="download-resources-container">
+                    <p>読み込み中…</p>
+                </div>
+            </section>
+            <section id="external-links">
+                <h3>参考リンク</h3>
+                <p>自作以外の情報源や役に立つ外部記事へのリンク集です。</p>
+                <ul id="external-links-list">
+                    <li>読み込み中…</li>
+                </ul>
+            </section>
         </section>
         <section id="ai-articles">
             <h2>AIによる調査記事</h2>
@@ -95,7 +106,6 @@
     </footer>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // 動画ギャラリーの読み込み機能は削除されました
         // AIによる調査記事一覧表示
         var aiContainer = document.getElementById('ai-articles-list');
         aiContainer.innerHTML = '<li>読み込み中…</li>';
@@ -119,6 +129,60 @@
             aiContainer.innerHTML = '<li>読み込みに失敗しました。</li>';
             console.error(err);
           });
+
+        // リソースのダウンロード一覧表示
+        var drContainer = document.getElementById('download-resources-container');
+        if (drContainer) {
+          drContainer.innerHTML = '<p>読み込み中…</p>';
+          fetch('data/downloadResources.json')
+            .then(function(res) { return res.json(); })
+            .then(function(categories) {
+              if (!Array.isArray(categories) || categories.length === 0) {
+                drContainer.innerHTML = '<p>リソースがありません。</p>';
+                return;
+              }
+              var html = '';
+              categories.forEach(function(cat) {
+                html += '<h3>' + cat.category + '</h3><ul>';
+                (cat.items || []).forEach(function(item) {
+                  html += '<li><a href="' + item.url + '" download>' + item.title + '</a></li>';
+                });
+                html += '</ul>';
+              });
+              drContainer.innerHTML = html;
+            })
+            .catch(function(err) {
+              drContainer.innerHTML = '<p>読み込みに失敗しました。</p>';
+              console.error(err);
+            });
+        }
+
+        // リソースの外部リンク表示
+        var extList = document.getElementById('external-links-list');
+        if (extList) {
+          extList.innerHTML = '<li>読み込み中…</li>';
+          fetch('data/externalLinks.json')
+            .then(function(res) { return res.json(); })
+            .then(function(items) {
+              if (!Array.isArray(items) || items.length === 0) {
+                extList.innerHTML = '<li>リンクがありません。</li>';
+                return;
+              }
+              var html = '';
+              items.forEach(function(item) {
+                var aTag = '<a href="' + item.url + '"';
+                if (item.target) aTag += ' target="' + item.target + '"';
+                if (item.rel) aTag += ' rel="' + item.rel + '"';
+                aTag += '>' + item.title + '</a>';
+                html += '<li>' + aTag + '</li>';
+              });
+              extList.innerHTML = html;
+            })
+            .catch(function(err) {
+              extList.innerHTML = '<li>読み込みに失敗しました。</li>';
+              console.error(err);
+            });
+        }
       });
     </script>
 </body>

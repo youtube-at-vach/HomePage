@@ -1,10 +1,10 @@
-# 銀河ヒッチハイク・DIYオーディオガイド リポジトリ
+# ようこそ！銀河ヒッチハイク・DIYオーディオガイド リポジトリへ！
 
-このリポジトリは「銀河ヒッチハイク・DIYオーディオガイド」の静的サイトおよび、YouTube Data APIを使用して動画やプレイリストデータを取得・管理するスクリプト、外部リンク取得や記事インデックス生成ツールを含みます。
+このリポジトリは、あなた自身の「銀河ヒッチハイク・DIYオーディオガイド」静的サイトを構築するための秘密基地です！YouTube Data APIを駆使して動画データを取得・管理する魔法のスクリプトや、記事インデックスを自動生成する便利なツールが揃っています。さあ、一緒に宇宙の果てまで届くような、魅力的なオーディオガイドを作り上げましょう！
 
-## 動画データの取得
+## 動画データの取得 (scripts/fetchVideos.js)
 
-以下の手順で動画データを取得し、public/data/videos.json に保存できます。
+YouTube銀河から動画データをビームアップする準備はOK？ このスクリプトはあなたの頼れるトランスポーター！指定したチャンネルIDから動画の詳細情報をまるっと取得し、`public/data/videos.json` にきちんと整理整頓してくれます。これで、あなたのサイトに動画コンテンツをリッチに表示できますね！
 
 1. 依存パッケージをインストール (初回のみ)
 
@@ -25,54 +25,11 @@
    ```
 
 4. public/data/videos.json に取得結果が出力されます。  
-   Webサイトからフェッチして表示に利用してください。
+   Webサイトからフェッチして表示に利用してください。準備万端！
 
-## プレイリストデータの取得（fetchPlaylists.js）
+## 記事インデックスの魔法（scripts/generateIndex.js）
 
-YouTube Data API を使用して、指定したチャンネルのプレイリスト一覧と各プレイリストに含まれる動画IDを取得し、`public/data/playlists.json` に保存します。
-
-### 使用方法
-
-```bash
-export YOUTUBE_API_KEY=YOUR_API_KEY
-node scripts/fetchPlaylists.js CHANNEL_ID
-```
-
-## 動画データのフィルタリングと除外リスト生成（editVideos.js）
-
-`public/data/videos.json` には不要な動画も含まれる場合があります。以下のスクリプトで対話的に一覧を表示し、必要な動画を選択できます。
-選択結果に基づいて、`public/data/videoExcludes.json` に除外動画IDリストを生成します。
-
-### 使用方法
-
-```bash
-node scripts/editVideos.js
-```
-
-## JSONファイルの概要抽出
-
-`public/data/videos.json` からタイトルと概要(description)のみを抜き出し、
-`public/data/videos-summary.json` を生成するスクリプトを用意しています。
-
-### 使用方法
-
-```bash
-node scripts/extractSummary.js
-```
- 
-## 外部リンク一覧の取得（fetchExternalLinks.js）
-
-`public/data/allurls.txt` に記載された URL 一覧を読み込み、各 URL のページタイトルを取得して、`public/data/externalLinks.json` に保存します。
-
-### 使用方法
-
-```bash
-node scripts/fetchExternalLinks.js
-```
-
-## 記事インデックスの生成（generateIndex.js）
-
-`public/articles` フォルダ内の Markdown ファイルからタイトルなどのメタデータを抽出し、`public/data/index.json` として保存します。
+あなたの素晴らしい記事たちを、魔法のようにインデックス化したいと思ったことはありませんか？ このスクリプトはあなたの専属司書です！`public/articles` フォルダ内をくまなくスキャンし、タイトルやメタデータを抽出して、便利な `public/data/index.json` ファイルをサッと作成してくれます。これで、訪問者はあなたの知識の海をスムーズに航海できるでしょう！
 
 ### 使用方法
 

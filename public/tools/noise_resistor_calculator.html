@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ノイズ電圧 & 熱ノイズ抵抗計算</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 2em auto; padding: 1em; }
+    label { display: block; margin-top: 1em; }
+    input, select { width: 100%; padding: 0.5em; font-size: 1em; }
+    .output { margin-top: 1em; padding: 1em; background: #f5f5f5; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>ノイズ電圧 & 熱ノイズ抵抗計算</h1>
+  <p>
+    アンプの入力換算ノイズ電圧を dBV<sub>rms</sub> または dBV<sub>rms</sub>/&radic;Hz で入力し、
+    温度（℃）、帯域幅（Hz）を指定すると、
+    <strong>電圧 RMS</strong> と <strong>電圧密度 (&radic;Hzあたり)</strong>、
+    それらを熱ノイズと見なしたときの等価抵抗値を表示します。
+  </p>
+
+  <!-- 入力形式の選択 -->
+  <label for="inputType">入力形式：</label>
+  <select id="inputType">
+    <option value="dbv">dBV<sub>rms</sub></option>
+    <option value="dbv_density">dBV<sub>rms</sub>/&radic;Hz</option>
+  </select>
+
+  <!-- ノイズレベルの入力 -->
+  <label for="dbv">ノイズレベル (dBV)：</label>
+  <input type="number" id="dbv" step="0.1" value="-120">
+
+  <!-- 温度（摂氏）入力 -->
+  <label for="celsius">温度 (℃)：</label>
+  <input type="number" id="celsius" step="0.1" value="17">
+
+  <!-- 帯域幅（Hz）入力。多くのRMS電圧計は約500kHzを使用 -->
+  <label for="bandwidth">帯域幅 (Hz)：</label>
+  <input type="number" id="bandwidth" step="0.1" value="500000">
+
+  <!-- 結果表示領域 -->
+  <div class="output" id="results">
+    <p>ここに結果が表示されます</p>
+  </div>
+
+  <script>
+    const k = 1.380649e-23; // ボルツマン定数 J/K
+
+    // SI接頭辞付きで値をフォーマットする関数
+    function formatSI(value, unit) {
+      if (value === 0) return `0 ${unit}`;
+      const abs = Math.abs(value);
+      const prefixes = [
+        { pow: 24, symbol: 'Y' },{ pow: 21, symbol: 'Z' },{ pow: 18, symbol: 'E' },
+        { pow: 15, symbol: 'P' },{ pow: 12, symbol: 'T' },{ pow: 9, symbol: 'G' },
+        { pow: 6, symbol: 'M' },{ pow: 3, symbol: 'k' },{ pow: 0, symbol: '' },
+        { pow: -3, symbol: 'm' },{ pow: -6, symbol: 'µ' },{ pow: -9, symbol: 'n' },
+        { pow: -12, symbol: 'p' },{ pow: -15, symbol: 'f' },{ pow: -18, symbol: 'a' }
+      ];
+      for (const p of prefixes) {
+        const scale = Math.pow(10, p.pow);
+        if (abs >= scale) {
+          const v = value / scale;
+          return `${v.toFixed(3)} ${p.symbol}${unit}`;
+        }
+      }
+      return `${value.toExponential(3)} ${unit}`;
+    }
+
+    // 計算を実行する関数
+    function calculate() {
+      const type = document.getElementById('inputType').value;
+      const dbv = parseFloat(document.getElementById('dbv').value);
+      const c = parseFloat(document.getElementById('celsius').value);
+      const B = parseFloat(document.getElementById('bandwidth').value);
+      const T = c + 273.15; // 摂氏 → ケルビン
+
+      const v_factor = Math.pow(10, dbv / 20); // dBV → Vへの倍率
+
+      let v_rms, v_density;
+      if (type === 'dbv') {
+        // dBVrms入力時：v_rmsからv_densityを逆算
+        v_rms     = v_factor;
+        v_density = v_rms / Math.sqrt(B);
+      } else {
+        // dBVrms/√Hz入力時：v_densityからv_rmsを計算
+        v_density = v_factor;
+        v_rms     = v_density * Math.sqrt(B);
+      }
+
+      // 熱雑音等価抵抗 R = V^2 / (4 k T B)
+      const R = (v_rms * v_rms) / (4 * k * T * B);
+
+      // フォーマットして文字列化
+      const vrmsStr     = formatSI(v_rms, 'V');
+      const vdensityStr = formatSI(v_density, 'V/√Hz');
+      const rStr        = formatSI(R, 'Ω');
+
+      // 結果表示のHTML
+      const html = `
+        <p><strong>電圧 RMS (帯域幅 ${formatSI(B,'Hz')}):</strong> ${vrmsStr}</p>
+        <p><strong>電圧密度 (&radic;Hzあたり):</strong> ${vdensityStr}</p>
+        <p><strong>等価熱ノイズ抵抗:</strong> ${rStr}</p>
+        <p><strong>計算条件:</strong> T=${c.toFixed(1)}℃ (${T.toFixed(2)}K), B=${formatSI(B,'Hz')}</p>
+      `;
+      document.getElementById('results').innerHTML = html;
+    }
+
+    // 入力変更時に再計算
+    ['inputType','dbv','celsius','bandwidth'].forEach(id =>
+      document.getElementById(id).addEventListener('input', calculate)
+    );
+    window.addEventListener('load', calculate);
+  </script>
+</body>
+</html>

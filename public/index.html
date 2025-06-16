@@ -18,8 +18,6 @@
             <nav>
                 <ul>
                     <li><a href="#home">ホーム</a></li>
-                    <li><a href="#projects">動画ギャラリー</a></li>
-                    <li><a href="#categories">カテゴリー</a></li>
                     <li><a href="#resources">リソース</a></li>
                     <li class="dropdown">
                         <a href="#">ツール</a>
@@ -27,6 +25,7 @@
                             <li><a href="lna01.html">低ノイズアンプ LNA-01</a></li>
                             <li><a href="https://spice-model-manager-72390409021.asia-northeast2.run.app/" target="_blank" rel="noopener noreferrer">LTSpice JFETモデルシミュレータ</a></li>
                             <li><a href="tools/jfet_pair_optimizer.html">JFET IDSS 最適ペア選定ツール</a></li>
+                            <li><a href="tools/noise_resistor_calculator.html">ノイズ電圧 &amp; 熱ノイズ抵抗計算</a></li>
                             <li><a href="https://github.com/youtube-at-vach/audio_tools" target="_blank" rel="noopener noreferrer">オーディオ測定用プログラム (GitHub)</a></li>
                         </ul>
                     </li>
@@ -54,21 +53,14 @@
                 <img src="images/spicemodel1.png" alt="LTSpice JFETモデルシミュレータ" class="simulator-image">
             </a>
         </section>
-        <section id="projects">
-            <h2>動画ギャラリー</h2>
-            <ul id="projects-list">
-                <li>読み込み中…</li>
-            </ul>
-        </section>
-        <section id="categories">
-            <h2>カテゴリー</h2>
+        <section id="tools">
+            <h2>ツール</h2>
             <ul>
-                <li>MEMSマイク設計・低ノイズ化</li>
-                <li>プリアンプ回路（JFET選定・DC化・歪率測定）</li>
-                <li>音質測定＆解析（REW・UAC‑232・HP355D等）</li>
-                <li>回路シミュレーション（LTspiceファイル公開）</li>
-                <li>DIY修理（電源装置メンテナンス）</li>
-                <li>AIクリエイティブ（音楽生成ワークショップ）</li>
+                <li><a href="lna01.html">低ノイズアンプ LNA-01</a> – 低ノイズDCプリアンプの設計情報と部品表を掲載しています。</li>
+                <li><a href="https://spice-model-manager-72390409021.asia-northeast2.run.app/" target="_blank" rel="noopener noreferrer">LTSpice JFETモデルシミュレータ</a> – JFETモデルの管理・編集をWEB上で手軽に行えます。</li>
+                <li><a href="tools/jfet_pair_optimizer.html">JFET IDSS 最適ペア選定ツール</a> – 実測IDSS値から最適なJFETペアを自動で計算します。</li>
+                <li><a href="tools/noise_resistor_calculator.html">ノイズ電圧 & 熱ノイズ抵抗計算</a> – 回路の熱雑音と抵抗値を計算します。</li>
+                <li><a href="https://github.com/youtube-at-vach/audio_tools" target="_blank" rel="noopener noreferrer">オーディオ測定用プログラム (GitHub)</a> – DIYオーディオ測定向けのプログラムをまとめています。</li>
             </ul>
         </section>
         <section id="resources">
@@ -103,89 +95,7 @@
     </footer>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        var container = document.getElementById('projects-list');
-        container.innerHTML = '<li>読み込み中…</li>';
-        Promise.all([
-          fetch('data/videos.json').then(function(res) { return res.json(); }),
-          fetch('data/playlists.json').then(function(res) { return res.json(); }),
-          fetch('data/videoExcludes.json').then(function(res) { return res.json(); })
-        ])
-        .then(function(results) {
-          var videos = results[0];
-          var playlists = results[1];
-          var excludes = results[2];
-          var excludeSet = new Set(excludes);
-          var used = new Set();
-          var playlistHtml = '';
-
-          // シリーズ（プレイリスト）ごとに動画を表示
-          playlists.forEach(function(pl) {
-            var vids = videos.filter(function(v) {
-              return pl.videoIds.includes(v.id) && !excludeSet.has(v.id);
-            });
-            if (vids.length === 0) return;
-            playlistHtml += '<li class="playlist-group"><h3>' + pl.title + '</h3><div class="thumbnails">';
-            vids.forEach(function(video) {
-              var thumbUrl = (video.thumbnails && video.thumbnails.medium && video.thumbnails.medium.url)
-                || (video.thumbnails && video.thumbnails.default && video.thumbnails.default.url) || '';
-              var titleEsc = video.title.replace(/"/g, '&quot;');
-              var categoryEsc = (video.category || '').replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            playlistHtml += '<a href="' + video.url + '" target="_blank" rel="noopener noreferrer" class="thumb" title="' + titleEsc + '">';
-              playlistHtml += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
-              playlistHtml += '<div class="overlay">';
-              playlistHtml += '<span class="category-tag">' + categoryEsc + '</span>';
-              playlistHtml += '<p class="video-title">' + titleEsc + '</p>';
-              playlistHtml += '</div>';
-              playlistHtml += '</a>';
-            });
-            playlistHtml += '</div></li>';
-            vids.forEach(function(v) { used.add(v.id); });
-          });
-
-          // フィルタリング: 除外リストおよびプレイリストで既出の動画を除外
-          var filtered = videos.filter(function(v) {
-            return !excludeSet.has(v.id) && !used.has(v.id);
-          });
-          // 年月ごとにグループ化
-          var groups = {};
-          filtered.forEach(function(video) {
-            var d = new Date(video.publishedAt);
-            if (isNaN(d)) return;
-            var year = d.getFullYear();
-            var month = ('0' + (d.getMonth() + 1)).slice(-2);
-            var key = year + '年' + month + '月';
-            if (!groups[key]) groups[key] = [];
-            groups[key].push(video);
-          });
-          var keys = Object.keys(groups).sort().reverse();
-          // HTML 作成（年月別）
-          var monthHtml = '';
-          keys.forEach(function(key) {
-            monthHtml += '<li class="month-group"><h3>' + key + '</h3><div class="thumbnails">';
-            groups[key].forEach(function(video) {
-              var thumbUrl = (video.thumbnails && video.thumbnails.medium && video.thumbnails.medium.url)
-                || (video.thumbnails && video.thumbnails.default && video.thumbnails.default.url) || '';
-              var titleEsc = video.title.replace(/"/g, '&quot;');
-              var categoryEsc = (video.category || '').replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-              monthHtml += '<a href="' + video.url + '" target="_blank" rel="noopener noreferrer" class="thumb" title="' + titleEsc + '">';
-              monthHtml += '<img src="' + thumbUrl + '" alt="' + titleEsc + '">';
-              monthHtml += '<div class="overlay">';
-              monthHtml += '<span class="category-tag">' + categoryEsc + '</span>';
-              monthHtml += '<p class="video-title">' + titleEsc + '</p>';
-              monthHtml += '</div>';
-              monthHtml += '</a>';
-            });
-            monthHtml += '</div></li>';
-          });
-          var fullHtml = playlistHtml + monthHtml;
-          container.innerHTML = fullHtml || '<li>該当する動画がありません。</li>';
-        })
-        .catch(function(err) {
-          container.innerHTML = '<li>読み込みに失敗しました。</li>';
-          console.error(err);
-        });
+        // 動画ギャラリーの読み込み機能は削除されました
         // AIによる調査記事一覧表示
         var aiContainer = document.getElementById('ai-articles-list');
         aiContainer.innerHTML = '<li>読み込み中…</li>';

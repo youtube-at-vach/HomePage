@@ -1,6 +1,0 @@
-public/data/allurls.txt
-public/data/externalLinks-all.json
-public/data/playlists.json
-public/data/videoExcludes.json
-public/data/videos-summary.json
-public/data/videos.json

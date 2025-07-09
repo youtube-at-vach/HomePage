@@ -2,22 +2,52 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>JFET IDSS ペア最適化（GA対応）</title>
+  <title>JFET IDSS ペア最適化（GA対応＋分散考慮）</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 30px auto; }
+    body { font-family: sans-serif; max-width: 700px; margin: 30px auto; }
     textarea { width: 100%; height: 150px; }
-    input[type="number"] { width: 100px; }
-    button { margin-top: 10px; }
-    pre { background: #f0f0f0; padding: 10px; }
+    input[type="number"], select { width: 150px; margin-right: 10px; }
+    button { margin-top: 10px; padding: 8px 16px; }
+    pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
+    .control { margin: 8px 0; }
+    .help { font-size: 0.9em; color: #555; }
   </style>
 </head>
 <body>
-  <h2>JFET IDSS 最適ペア選定ツール</h2>
-  <label>IDSS値を1行ずつ入力（mA）:</label><br>
-  <textarea id="idssInput">21.4&NewLine;22.6&NewLine;14.56&NewLine;14.41&NewLine;16.8&NewLine;16.22&NewLine;13.39&NewLine;13.72</textarea><br>
+  <h2>JFET IDSS 最適ペア選定ツール（分散も考慮）</h2>
 
-  <label>1組に含める個数（通常は2）:</label>
-  <input type="number" id="groupSize" value="2" min="1"><br>
+  <div class="control">
+    <label>IDSS値を1行ずつ入力（mA）:</label><br>
+    <textarea id="idssInput">21.4
+22.6
+14.56
+14.41
+16.8
+16.22
+13.39
+13.72</textarea>
+  </div>
+
+  <div class="control">
+    <label>1組に含める個数（通常は2）:</label>
+    <input type="number" id="groupSize" value="2" min="1">
+  </div>
+
+  <div class="control">
+    <label>評価方法:</label>
+    <select id="modeSelect">
+      <option value="mixed" selected>拡張（平均差＋ばらつき）</option>
+      <option value="average">基本（平均差のみ）</option>
+      <option value="variance">試験的（ばらつきのみ）</option>
+    </select>
+    <span class="help">用途に応じて選択してください</span>
+  </div>
+
+  <div class="control" id="weightControl">
+    <label>分散重み付け係数:</label>
+    <input type="number" id="stdWeight" value="0.1" step="0.01" min="0">
+    <span class="help">目安: 0＝平均差優先, 0.1～1＝平均差重視＋ばらつき適度考慮, ≥1＝ばらつき重視</span>
+  </div>
 
   <button onclick="runOptimizer()">最適なペアを計算</button>
 
@@ -25,198 +55,129 @@
   <pre id="result"></pre>
 
 <script>
-function runOptimizer() {
-  const idssInput = document.getElementById("idssInput").value;
-  const groupSize = parseInt(document.getElementById("groupSize").value);
-  const resultBox = document.getElementById("result");
+// モード変更時に重み入力欄の有効/無効を切り替え
+document.getElementById('modeSelect').addEventListener('change', e => {
+  const mode = e.target.value;
+  document.getElementById('weightControl').style.display = (mode === 'mixed') ? 'block' : 'none';
+});
 
-  let idss = idssInput.split(/\n/).map(s => parseFloat(s.trim())).filter(v => !isNaN(v));
+function runOptimizer() {
+  const idss = document.getElementById("idssInput").value
+    .split(/\n/).map(s => parseFloat(s.trim())).filter(v => !isNaN(v));
+  const groupSize = parseInt(document.getElementById("groupSize").value);
   if (idss.length < groupSize * 2) {
-    resultBox.textContent = "入力数が少なすぎます。最低 " + (groupSize * 2) + " 個必要です。";
-    return;
+    return showResult(`入力数が少なすぎます。最低 ${groupSize * 2} 個必要です。`);
   }
+
+  const mode = document.getElementById("modeSelect").value;
+  let stdWeight = 0;
+  if (mode === 'mixed') stdWeight = parseFloat(document.getElementById("stdWeight").value);
+  else if (mode === 'average') stdWeight = 0;
+  else if (mode === 'variance') stdWeight = 1;
 
   const totalComb = combinationCount(idss.length, groupSize);
   const useGA = totalComb > 10000;
 
   if (useGA) {
-    resultBox.textContent = `総当たり組み合わせが ${totalComb} 通りで多すぎるため、遺伝的アルゴリズムで計算します...\n`;
+    showResult(`総当たり ${totalComb} 通りが多すぎるため、GAで計算します…\n`);
     setTimeout(() => {
-      const res = geneticOptimizer(idss, groupSize);
-      resultBox.textContent += res;
-    }, 100);
+      const res = geneticOptimizer(idss, groupSize, stdWeight);
+      appendResult(res);
+    }, 50);
   } else {
-    const res = bruteForceOptimizer(idss, groupSize);
-    resultBox.textContent = res;
+    const res = bruteForceOptimizer(idss, groupSize, stdWeight);
+    showResult(res);
   }
 }
 
+function showResult(text) { document.getElementById('result').textContent = text; }
+function appendResult(text) { document.getElementById('result').textContent += text; }
 
 function combinationCount(n, r) {
-  const f = x => x <= 1 ? 1 : x * f(x - 1);
+  const f = x => (x <= 1 ? 1 : x * f(x - 1));
   return f(n) / (f(r) * f(n - r));
 }
 
-function bruteForceOptimizer(arr, size) {
-  let bestDiff = Infinity, best1 = [], best2 = [];
-  const comb = k_combinations(arr, size);
-
-  for (let i = 0; i < comb.length; i++) {
-    const group1 = comb[i];
-    const rest = arr.filter(x => !group1.includes(x));
-    const subComb = k_combinations(rest, size);
-    for (let j = 0; j < subComb.length; j++) {
-      const group2 = subComb[j];
-      const avg1 = average(group1);
-      const avg2 = average(group2);
-      const diff = Math.abs(avg1 - avg2);
-      if (diff < bestDiff) {
-        bestDiff = diff;
-        best1 = group1;
-        best2 = group2;
-      }
-    }
-  }
-  return formatResult(best1, best2, bestDiff, "総当たり");
-}
-
-
-function geneticOptimizer(idss, groupSize) {
-  const populationSize = 50;
-  const generations = 300;
-  const mutationRate = 0.1;
-
-  let population = [];
-  for (let i = 0; i < populationSize; i++) {
-    population.push(shuffle([...idss]));
-  }
-
-  let best = null;
-  let bestFitness = Infinity;
-
-  for (let g = 0; g < generations; g++) {
-    const fitnesses = population.map(individual => {
-      const group1 = individual.slice(0, groupSize);
-      const group2 = individual.slice(groupSize, 2 * groupSize);
-      const avg1 = average(group1);
-      const avg2 = average(group2);
-      return Math.abs(avg1 - avg2);
+// 最適化ロジック
+function bruteForceOptimizer(arr, size, stdW) {
+  let bestFit = Infinity, b1 = [], b2 = [];
+  k_combinations(arr, size).forEach(g1 => {
+    const rest = arr.filter(v => !g1.includes(v));
+    k_combinations(rest, size).forEach(g2 => {
+      const fit = fitness(g1, g2, stdW);
+      if (fit < bestFit) { bestFit = fit; b1 = g1; b2 = g2; }
     });
-
-    const ranked = population.map((ind, idx) => ({ ind, fit: fitnesses[idx] }))
-                             .sort((a, b) => a.fit - b.fit);
-
-    if (ranked[0].fit < bestFitness) {
-      bestFitness = ranked[0].fit;
-      best = ranked[0].ind.slice(0, 2 * groupSize);
-    }
-
-    const newPop = [];
-
-    // エリート選択 + トーナメント交叉
-    while (newPop.length < populationSize) {
-      const p1 = tournamentSelect(ranked);
-      const p2 = tournamentSelect(ranked);
-      let child = crossover(p1, p2);
-
-      if (Math.random() < mutationRate) {
-        child = mutate(child);
-      }
-
-      newPop.push(child);
-    }
-
-    population = newPop;
-  }
-
-  const group1 = best.slice(0, groupSize);
-  const group2 = best.slice(groupSize, 2 * groupSize);
-  return formatResult(group1, group2, bestFitness, "遺伝的アルゴリズム");
+  });
+  return formatResult(b1, b2, bestFit);
 }
 
-function tournamentSelect(pop) {
-  const k = 5;
-  const selected = [];
-  for (let i = 0; i < k; i++) {
-    selected.push(pop[Math.floor(Math.random() * pop.length)]);
+function geneticOptimizer(idss, groupSize, stdW) {
+  const popSize = 50, gens = 200, mutRate = 0.1;
+  let pop = Array.from({ length: popSize }, () => shuffle([...idss]));
+  let best, bestFit = Infinity;
+  for (let g = 0; g < gens; g++) {
+    const scored = pop.map(ind => ({ ind, fit: fitness(
+      ind.slice(0, groupSize), ind.slice(groupSize, 2*groupSize), stdW
+    ) }));
+    scored.sort((a, b) => a.fit - b.fit);
+    if (scored[0].fit < bestFit) { bestFit = scored[0].fit; best = scored[0].ind.slice(0, 2*groupSize); }
+    pop = nextGen(scored, popSize, mutRate);
   }
-  selected.sort((a, b) => a.fit - b.fit);
-  return selected[0].ind;
+  return formatResult(best.slice(0, groupSize), best.slice(groupSize), bestFit);
 }
 
+function nextGen(scored, popSize, mutRate) {
+  const newP = [];
+  while (newP.length < popSize) {
+    const p1 = tournament(scored), p2 = tournament(scored);
+    let c = crossover(p1, p2);
+    if (Math.random() < mutRate) c = mutate(c);
+    newP.push(c);
+  }
+  return newP;
+}
+
+function fitness(g1, g2, stdW) {
+  const avg1 = average(g1), avg2 = average(g2);
+  const diff = Math.abs(avg1 - avg2);
+  const s1 = stddev(g1), s2 = stddev(g2);
+  return diff + stdW * (s1 + s2);
+}
+
+// ユーティリティ
+function average(a) { return a.reduce((x, y) => x + y, 0) / a.length; }
+function stddev(a) { const mu = average(a); return Math.sqrt(a.reduce((s, v) => s + (v - mu) ** 2, 0) / a.length); }
+function tournament(sc) { return sc.sort(() => 0.5 - Math.random())[0].ind; }
 function crossover(p1, p2) {
-  const child = [];
-  const used = new Set();
-  for (let i = 0; i < p1.length; i++) {
-    const val = Math.random() < 0.5 ? p1[i] : p2[i];
-    if (!used.has(val)) {
-      child.push(val);
-      used.add(val);
-    }
+  const len = p1.length, child = [], used = new Set();
+  for (let i = 0; i < len; i++) {
+    const v = Math.random() < 0.5 ? p1[i] : p2[i];
+    if (!used.has(v)) { child.push(v); used.add(v); }
   }
-
-  // 補完（足りない分）
-  for (let i = 0; i < p1.length; i++) {
-    if (!used.has(p1[i])) {
-      child.push(p1[i]);
-      used.add(p1[i]);
-    }
-    if (child.length === p1.length) break;
-  }
-
+  p1.concat(p2).forEach(v => { if (child.length < len && !used.has(v)) { child.push(v); used.add(v); } });
   return child;
 }
-
-function mutate(ind) {
-  const i = Math.floor(Math.random() * ind.length);
-  const j = Math.floor(Math.random() * ind.length);
-  [ind[i], ind[j]] = [ind[j], ind[i]];
-  return ind;
-}
-
-function average(arr) {
-  return sum(arr) / arr.length;
-}
-
-function sum(arr) {
-  return arr.reduce((a, b) => a + b, 0);
-}
-
+function mutate(ind) { const i = Math.floor(Math.random() * ind.length), j = Math.floor(Math.random() * ind.length); [ind[i], ind[j]] = [ind[j], ind[i]]; return ind; }
 function k_combinations(set, k) {
-  let i, j, combs, head, tailcombs;
-
   if (k > set.length || k <= 0) return [];
-  if (k === set.length) return [set];
-  if (k === 1) return set.map(el => [el]);
-
-  combs = [];
-  for (i = 0; i < set.length - k + 1; i++) {
-    head = set.slice(i, i + 1);
-    tailcombs = k_combinations(set.slice(i + 1), k - 1);
-    for (j = 0; j < tailcombs.length; j++) {
-      combs.push(head.concat(tailcombs[j]));
-    }
+  if (k === set.length) return [set.slice()];
+  if (k === 1) return set.map(v => [v]);
+  const res = [];
+  for (let i = 0; i <= set.length - k; i++) {
+    const head = [set[i]];
+    k_combinations(set.slice(i + 1), k - 1).forEach(t => res.push(head.concat(t)));
   }
-  return combs;
+  return res;
 }
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-function formatResult(group1, group2, diff, method) {
-  const avg1 = average(group1);
-  const avg2 = average(group2);
-  return `=== 最適な2ペア（${method}使用） ===\n`
-       + `ペア1: [${group1.join(", ")}] 合計 = ${sum(group1).toFixed(4)} / 平均 = ${avg1.toFixed(4)} mA\n`
-       + `ペア2: [${group2.join(", ")}] 合計 = ${sum(group2).toFixed(4)} / 平均 = ${avg2.toFixed(4)} mA\n`
-       + `差: ${Math.abs(avg1 - avg2).toFixed(4)} mA`;
+// 表示フォーマットを見やすく
+function formatResult(g1, g2, fit) {
+  return `=== 最適なペア ===\n` +
+         `ペア1: [${g1.join(", ")}] 平均 = ${average(g1).toFixed(4)} mA, σ = ${stddev(g1).toFixed(4)} mA\n` +
+         `ペア2: [${g2.join(", ")}] 平均 = ${average(g2).toFixed(4)} mA, σ = ${stddev(g2).toFixed(4)} mA\n` +
+         `評価スコア（低いほどマッチ） = ${fit.toFixed(4)}`;
 }
 </script>
 </body>
 </html>
-

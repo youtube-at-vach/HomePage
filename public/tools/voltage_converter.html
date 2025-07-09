@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>信号レベル変換計算機</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, select, button { margin: 5px; }
+    .result { margin-top: 20px; font-weight: bold; }
+    svg { border: 1px solid #ccc; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>信号レベル変換計算機</h2>
+
+  <label>値:</label>
+  <input type="number" id="value" placeholder="数値のみ">
+  <select id="unit">
+    <option value="dBV">dBV</option>
+    <option value="Vrms">Vrms</option>
+    <option value="Vpp">Vpp</option>
+    <option value="dBu">dBu</option>
+    <option value="dBm">dBm</option>
+  </select>
+
+  <label>インピーダンス:</label>
+  <select id="impedance">
+    <option value="600">600 Ω</option>
+    <option value="50">50 Ω</option>
+    <option value="10">10 Ω</option>
+    <option value="1000">1 kΩ</option>
+  </select>
+
+  <button onclick="convert()">変換</button>
+
+  <div class="result" id="output"></div>
+  <svg width="500" height="100" id="waveform"></svg>
+
+  <script>
+    function formatSI(value) {
+      const prefixes = [
+        { factor: 1e-12, symbol: "p" },
+        { factor: 1e-9, symbol: "n" },
+        { factor: 1e-6, symbol: "µ" },
+        { factor: 1e-3, symbol: "m" },
+        { factor: 1, symbol: "" },
+        { factor: 1e3, symbol: "k" },
+        { factor: 1e6, symbol: "M" }
+      ];
+      for (let i = prefixes.length - 1; i >= 0; i--) {
+        if (Math.abs(value) >= prefixes[i].factor) {
+          return (value / prefixes[i].factor).toFixed(3) + " " + prefixes[i].symbol;
+        }
+      }
+      return value.toExponential(3);
+    }
+
+    function convert() {
+      const val = parseFloat(document.getElementById("value").value);
+      const unit = document.getElementById("unit").value;
+      const Z = parseFloat(document.getElementById("impedance").value);
+      if (isNaN(val)) return alert("数値を入力してください");
+
+      let Vrms;
+      switch (unit) {
+        case "dBV":
+          Vrms = Math.pow(10, val / 20);
+          break;
+        case "dBu":
+          Vrms = Math.pow(10, (val - 2.21) / 20);
+          break;
+        case "dBm":
+          Vrms = Math.sqrt(0.001 * Math.pow(10, val / 10) * Z);
+          break;
+        case "Vrms":
+          Vrms = val;
+          break;
+        case "Vpp":
+          Vrms = val / (2 * Math.sqrt(2));
+          break;
+      }
+
+      const dBV = 20 * Math.log10(Vrms);
+      const dBu = 20 * Math.log10(Vrms / 0.775);
+      const dBm = 10 * Math.log10((Vrms * Vrms) / Z * 1000);
+      const Vpp = Vrms * 2 * Math.sqrt(2);
+      const ratio = Math.pow(10, dBV / 20);
+
+      document.getElementById("output").innerHTML = `
+        <p>dBV: ${dBV.toFixed(2)} dBV</p>
+        <p>Vrms: ${formatSI(Vrms)}V</p>
+        <p>Vpp: ${formatSI(Vpp)}V</p>
+        <p>dBu: ${dBu.toFixed(2)} dBu</p>
+        <p>dBm (${Z}Ω): ${dBm.toFixed(2)} dBm</p>
+        <p>電圧倍率 (dBV基準): ${ratio.toFixed(2)} 倍</p>
+      `;
+
+      drawWaveform(Vpp);
+    }
+
+    function drawWaveform(Vpp) {
+      const svg = document.getElementById("waveform");
+      const width = svg.clientWidth;
+      const height = svg.clientHeight;
+      svg.innerHTML = "";
+
+      const amp = height / 2 * 0.9;
+      const mid = height / 2;
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      let d = "M 0 " + mid;
+      for (let x = 0; x <= width; x++) {
+        const t = x / width * 2 * Math.PI;
+        const y = mid - Math.sin(t) * amp * (Vpp / 2);
+        d += ` L ${x} ${y}`;
+      }
+      path.setAttribute("d", d);
+      path.setAttribute("stroke", "blue");
+      path.setAttribute("fill", "none");
+      svg.appendChild(path);
+    }
+  </script>
+</body>
+</html>

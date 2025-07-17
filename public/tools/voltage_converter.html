@@ -1,123 +1,162 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>信号レベル変換計算機</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    input, select, button { margin: 5px; }
-    .result { margin-top: 20px; font-weight: bold; }
-    svg { border: 1px solid #ccc; margin-top: 20px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信号レベルコンバータ</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .row { display: flex; align-items: center; margin-bottom: 10px; }
+        .row label { width: 100px; }
+        .row input, .row select { margin-right: 5px; }
+        .row input[type="number"] { width: 100px; }
+        .notes { font-size: 0.9em; color: #555; margin-bottom: 15px; }
+        button { padding: 5px 10px; font-size: 1em; }
+        input.active { background-color: #e0f7fa; }
+    </style>
 </head>
 <body>
-  <h2>信号レベル変換計算機</h2>
+    <h1>信号レベルコンバータ</h1>
+    <p class="notes">
+        一つのフィールドをクリックしてアクティブにし、値を入力／選択後「変換」ボタンを押してください。<br>
+        Vrms/Vpp の接頭辞は自動的に最適化されます。<br>
+        <strong>dBm 計算に用いるインピーダンス：</strong>任意に選択できます。
+    </p>
+    <div class="row">
+        <label for="impedance">インピーダンス</label>
+        <select id="impedance">
+            <option value="50">50 Ω</option>
+            <option value="75">75 Ω</option>
+            <option value="600">600 Ω</option>
+            <option value="1000">1 kΩ</option>
+        </select>
+    </div>
+    <div class="row">
+        <label for="vrms">Vrms</label>
+        <input type="number" id="vrms" step="any" onfocus="setActive('vrms')" placeholder="入力">
+        <select id="vrmsPrefix" disabled>
+            <option value="1e-12">p</option>
+            <option value="1e-9">n</option>
+            <option value="1e-6">µ</option>
+            <option value="1e-3">m</option>
+            <option value="1">none</option>
+            <option value="1e3">k</option>
+            <option value="1e6">M</option>
+            <option value="1e9">G</option>
+        </select><span>V</span>
+    </div>
+    <div class="row">
+        <label for="vpp">Vpp</label>
+        <input type="number" id="vpp" step="any" onfocus="setActive('vpp')" placeholder="入力">
+        <select id="vppPrefix" disabled>
+            <option value="1e-12">p</option>
+            <option value="1e-9">n</option>
+            <option value="1e-6">µ</option>
+            <option value="1e-3">m</option>
+            <option value="1">none</option>
+            <option value="1e3">k</option>
+            <option value="1e6">M</option>
+            <option value="1e9">G</option>
+        </select><span>V</span>
+    </div>
+    <div class="row">
+        <label for="dBV">dBV</label>
+        <input type="number" id="dBV" step="any" onfocus="setActive('dBV')" placeholder="入力">
+    </div>
+    <div class="row">
+        <label for="dBu">dBu</label>
+        <input type="number" id="dBu" step="any" onfocus="setActive('dBu')" placeholder="入力">
+    </div>
+    <div class="row">
+        <label for="dBm">dBm</label>
+        <input type="number" id="dBm" step="any" onfocus="setActive('dBm')" placeholder="入力">
+    </div>
+    <div class="row">
+        <button onclick="onCalculate()">変換</button>
+    </div>
 
-  <label>値:</label>
-  <input type="number" id="value" placeholder="数値のみ">
-  <select id="unit">
-    <option value="dBV">dBV</option>
-    <option value="Vrms">Vrms</option>
-    <option value="Vpp">Vpp</option>
-    <option value="dBu">dBu</option>
-    <option value="dBm">dBm</option>
-  </select>
+    <script>
+        let activeField = '';
+        const fields = ['vrms','vpp','dBV','dBu','dBm'];
+        const prefixes = [
+            {sym:'p', val:'1e-12'},
+            {sym:'n', val:'1e-9'},
+            {sym:'µ', val:'1e-6'},
+            {sym:'m', val:'1e-3'},
+            {sym:'none', val:'1'},
+            {sym:'k', val:'1e3'},
+            {sym:'M', val:'1e6'},
+            {sym:'G', val:'1e9'}
+        ];
 
-  <label>インピーダンス:</label>
-  <select id="impedance">
-    <option value="600">600 Ω</option>
-    <option value="50">50 Ω</option>
-    <option value="10">10 Ω</option>
-    <option value="1000">1 kΩ</option>
-  </select>
 
-  <button onclick="convert()">変換</button>
-
-  <div class="result" id="output"></div>
-  <svg width="500" height="100" id="waveform"></svg>
-
-  <script>
-    function formatSI(value) {
-      const prefixes = [
-        { factor: 1e-12, symbol: "p" },
-        { factor: 1e-9, symbol: "n" },
-        { factor: 1e-6, symbol: "µ" },
-        { factor: 1e-3, symbol: "m" },
-        { factor: 1, symbol: "" },
-        { factor: 1e3, symbol: "k" },
-        { factor: 1e6, symbol: "M" }
-      ];
-      for (let i = prefixes.length - 1; i >= 0; i--) {
-        if (Math.abs(value) >= prefixes[i].factor) {
-          return (value / prefixes[i].factor).toFixed(3) + " " + prefixes[i].symbol;
+        function setActive(f){
+            activeField = f;
+            updateStyles();
         }
-      }
-      return value.toExponential(3);
-    }
+        function updateStyles(){
+            fields.forEach(f=>{
+                const el=document.getElementById(f);
+                if(f===activeField){ el.classList.add('active'); el.readOnly=false; }
+                else { el.classList.remove('active'); el.readOnly=true; el.value=''; }
+            });
+            ['vrms','vpp'].forEach(f=>{
+                document.getElementById(f+'Prefix').disabled = (activeField!==f);
+            });
+        }
 
-    function convert() {
-      const val = parseFloat(document.getElementById("value").value);
-      const unit = document.getElementById("unit").value;
-      const Z = parseFloat(document.getElementById("impedance").value);
-      if (isNaN(val)) return alert("数値を入力してください");
+        function autoPrefix(val, selectId, inputId){
+            const abs = Math.abs(val);
+            let best = prefixes[0];
+            let minError = Infinity;
 
-      let Vrms;
-      switch (unit) {
-        case "dBV":
-          Vrms = Math.pow(10, val / 20);
-          break;
-        case "dBu":
-          Vrms = Math.pow(10, (val - 2.21) / 20);
-          break;
-        case "dBm":
-          Vrms = Math.sqrt(0.001 * Math.pow(10, val / 10) * Z);
-          break;
-        case "Vrms":
-          Vrms = val;
-          break;
-        case "Vpp":
-          Vrms = val / (2 * Math.sqrt(2));
-          break;
-      }
+            for (let i = 0; i < prefixes.length; i++) {
+                const scaleVal = parseFloat(prefixes[i].val); // ← ここ重要
+                const scaled = abs / scaleVal;
+                const error = Math.abs(Math.log10(scaled));
+                if (error < minError) {
+                    minError = error;
+                    best = prefixes[i];
+                }
+            }
 
-      const dBV = 20 * Math.log10(Vrms);
-      const dBu = 20 * Math.log10(Vrms / 0.775);
-      const dBm = 10 * Math.log10((Vrms * Vrms) / Z * 1000);
-      const Vpp = Vrms * 2 * Math.sqrt(2);
-      const ratio = Math.pow(10, dBV / 20);
+            document.getElementById(selectId).value = best.val;
+            const scaled = val / parseFloat(best.val); // ← ここも修正
+            const displayVal = Math.abs(scaled) < 1e-3 || Math.abs(scaled) > 1e6
+                ? scaled.toExponential(3)
+                : scaled.toFixed(6).replace(/\.?0+$/, '');
+            document.getElementById(inputId).value = displayVal;
+        }
 
-      document.getElementById("output").innerHTML = `
-        <p>dBV: ${dBV.toFixed(2)} dBV</p>
-        <p>Vrms: ${formatSI(Vrms)}V</p>
-        <p>Vpp: ${formatSI(Vpp)}V</p>
-        <p>dBu: ${dBu.toFixed(2)} dBu</p>
-        <p>dBm (${Z}Ω): ${dBm.toFixed(2)} dBm</p>
-        <p>電圧倍率 (dBV基準): ${ratio.toFixed(2)} 倍</p>
-      `;
 
-      drawWaveform(Vpp);
-    }
 
-    function drawWaveform(Vpp) {
-      const svg = document.getElementById("waveform");
-      const width = svg.clientWidth;
-      const height = svg.clientHeight;
-      svg.innerHTML = "";
+        function onCalculate(){
+            if(!activeField){ alert('フィールドを選択してください'); return; }
+            const Z = parseFloat(document.getElementById('impedance').value);
+            let vrms;
+            const dBV= parseFloat(document.getElementById('dBV').value);
+            const dBu= parseFloat(document.getElementById('dBu').value);
+            const dBm= parseFloat(document.getElementById('dBm').value);
+            const vppV= parseFloat(document.getElementById('vpp').value) * (parseFloat(document.getElementById('vppPrefix').value)||1);
+            const vrmsV= parseFloat(document.getElementById('vrms').value) * (parseFloat(document.getElementById('vrmsPrefix').value)||1);
 
-      const amp = height / 2 * 0.9;
-      const mid = height / 2;
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      let d = "M 0 " + mid;
-      for (let x = 0; x <= width; x++) {
-        const t = x / width * 2 * Math.PI;
-        const y = mid - Math.sin(t) * amp * (Vpp / 2);
-        d += ` L ${x} ${y}`;
-      }
-      path.setAttribute("d", d);
-      path.setAttribute("stroke", "blue");
-      path.setAttribute("fill", "none");
-      svg.appendChild(path);
-    }
-  </script>
+            switch(activeField){
+                case 'vrms': vrms = vrmsV; break;
+                case 'vpp': vrms = vppV/(2*Math.sqrt(2)); break;
+                case 'dBV': vrms = Math.pow(10, dBV/20); break;
+                case 'dBu': vrms = 0.775 * Math.pow(10, dBu/20); break;
+                case 'dBm': vrms = Math.pow(10, (dBm - (10*Math.log10(Z) - 30))/20); break;
+            }
+            // 他のフィールド更新
+            autoPrefix(vrms,'vrmsPrefix','vrms');
+            autoPrefix(vrms*2*Math.sqrt(2),'vppPrefix','vpp');
+            document.getElementById('dBV').value = (20*Math.log10(vrms)).toFixed(2);
+            document.getElementById('dBu').value = (20*Math.log10(vrms/0.775)).toFixed(2);
+            const dbmOut = 20*Math.log10(vrms) - 10*Math.log10(Z) + 30;
+            document.getElementById('dBm').value = dbmOut.toFixed(2);
+        }
+
+        updateStyles();
+    </script>
 </body>
 </html>

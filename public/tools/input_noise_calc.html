@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>入力換算ノイズ電圧/電流密度計算機</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; line-height: 1.6; }
+    .field { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+    input, select, button { padding: 0.4rem; font-size: 1rem; }
+    .result, .error { margin-top: 1.5rem; padding: 1rem; border-radius: 0.5rem; }
+    .result { border: 1px solid #4caf50; background: #e8f5e9; }
+    .error { border: 1px solid #f44336; background: #ffebee; color: #c62828; }
+    .explanation { margin-bottom: 2rem; padding: 1rem; background: #f1f8e9; border: 1px solid #c5e1a5; }
+  </style>
+</head>
+<body>
+  <h1>入力換算ノイズ計算機</h1>
+  <div class="explanation">
+    <p>このツールは、入力抵抗を2種類 (R1, R2) で測定したノイズから、<strong>入力換算電圧ノイズ密度</strong> (<code>e_n</code>) と <strong>入力換算電流ノイズ密度</strong> (<code>i_n</code>) を推定するものです。</p>
+    <ul>
+      <li><strong>R1, R2</strong>: 入力に接続した抵抗 (Ω)。小さい値 (例: 10Ω～100Ω) と大きい値 (例: 1MΩ～10MΩ) で測定します。</li>
+      <li><strong>V1, V2</strong>: 各抵抗接続時に測定した出力ノイズ密度。V/√Hz、mV/√Hz、µV/√Hz、nV/√Hz、pV/√Hz、dBVrms/√Hz で入力可能。</li>
+      <li>測定手順:
+        <ol>
+          <li>R1 を回路入力に接続し、V1 を測定。</li>
+          <li>R2 を接続し直し、V2 を測定。</li>
+          <li>両条件でアンプゲインを一定に保ち、連立式 <code>V^2 = e_n^2 + (i_n R)^2 + 4kTR</code> を解いて <code>e_n</code>, <code>i_n</code> を計算。</li>
+        </ol>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 入力フォーム -->
+  <div class="field">
+    <label for="R1_val">抵抗 R1:</label>
+    <input type="number" id="R1_val" value="100" step="any">
+    <select id="R1_pref">
+      <option value="1e-3">mΩ</option>
+      <option value="1" selected>Ω</option>
+      <option value="1e3">kΩ</option>
+      <option value="1e6">MΩ</option>
+      <option value="1e9">GΩ</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="R2_val">抵抗 R2:</label>
+    <input type="number" id="R2_val" value="1" step="any">
+    <select id="R2_pref">
+      <option value="1e-3">mΩ</option>
+      <option value="1">Ω</option>
+      <option value="1e3">kΩ</option>
+      <option value="1e6" selected>MΩ</option>
+      <option value="1e9">GΩ</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="V1_val">ノイズ V1:</label>
+    <input type="number" id="V1_val" value="1.5" step="any">
+    <select id="V1_unit">
+      <option value="V">V/√Hz</option>
+      <option value="mV">mV/√Hz</option>
+      <option value="µV">µV/√Hz</option>
+      <option value="nV" selected>nV/√Hz</option>
+      <option value="pV">pV/√Hz</option>
+      <option value="dBV">dBVrms/√Hz</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="V2_val">ノイズ V2:</label>
+    <input type="number" id="V2_val" value="500" step="any">
+    <select id="V2_unit">
+      <option value="V">V/√Hz</option>
+      <option value="mV">mV/√Hz</option>
+      <option value="µV">µV/√Hz</option>
+      <option value="nV" selected>nV/√Hz</option>
+      <option value="pV">pV/√Hz</option>
+      <option value="dBV">dBVrms/√Hz</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="T_val">温度 T:</label>
+    <input type="number" id="T_val" value="300" step="any">
+    <span>K</span>
+  </div>
+
+  <button onclick="compute()">計算する</button>
+
+  <!-- 結果表示 -->
+  <div id="error" class="error" style="display:none;"></div>
+  <div id="result" class="result" style="display:none;">
+    <h2>結果</h2>
+    <p id="en_out"></p>
+    <p id="in_out"></p>
+    <p id="temp_out"></p>
+  </div>
+
+  <script>
+    function toNumber(val, unit) {
+      switch (unit) {
+        case 'V': return val;
+        case 'mV': return val * 1e-3;
+        case 'µV': return val * 1e-6;
+        case 'nV': return val * 1e-9;
+        case 'pV': return val * 1e-12;
+        case 'dBV': return Math.pow(10, val/20);
+      }
+      return val;
+    }
+    function formatSI(value, unit) {
+      const prefixes = [
+        {val:1e-15, sym:'f'},
+        {val:1e-12, sym:'p'},
+        {val:1e-9, sym:'n'},
+        {val:1e-6, sym:'µ'},
+        {val:1e-3, sym:'m'},
+        {val:1, sym:''},
+        {val:1e3, sym:'k'},
+        {val:1e6, sym:'M'},
+        {val:1e9, sym:'G'}
+      ];
+      for (let i = prefixes.length-1; i >= 0; i--) {
+        const p = prefixes[i];
+        if (value >= p.val) {
+          return (value / p.val).toFixed(3) + ' ' + p.sym + unit;
+        }
+      }
+      return value.toExponential(3) + ' ' + unit;
+    }
+    function compute() {
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('result').style.display = 'none';
+      const k = 1.380649e-23;
+      const R1 = parseFloat(document.getElementById('R1_val').value) * parseFloat(document.getElementById('R1_pref').value);
+      const R2 = parseFloat(document.getElementById('R2_val').value) * parseFloat(document.getElementById('R2_pref').value);
+      const V1 = toNumber(parseFloat(document.getElementById('V1_val').value), document.getElementById('V1_unit').value);
+      const V2 = toNumber(parseFloat(document.getElementById('V2_val').value), document.getElementById('V2_unit').value);
+      const T = parseFloat(document.getElementById('T_val').value) || 300;
+      if (R1 <= 0 || R2 <= 0) return showError('抵抗値は正の数で入力してください。');
+      if (isNaN(V1) || isNaN(V2)) return showError('ノイズ値を正しく入力してください。');
+      const V1_sq = V1*V1, V2_sq = V2*V2;
+      const eR1_sq = 4*k*T*R1, eR2_sq = 4*k*T*R2;
+      const numerator = V2_sq - V1_sq - (eR2_sq - eR1_sq);
+      const denominator = R2*R2 - R1*R1;
+      const i_n_sq = numerator/denominator;
+      if (i_n_sq <= 0) return showError('電流ノイズの計算結果が負またはゼロです。入力値を見直してください。');
+      const i_n = Math.sqrt(i_n_sq);
+      const e_n_sq = V1_sq - (i_n*R1)*(i_n*R1) - eR1_sq;
+      if (e_n_sq <= 0) return showError('電圧ノイズの計算結果が負またはゼロです。入力値を見直してください。');
+      const e_n = Math.sqrt(e_n_sq);
+      document.getElementById('en_out').textContent = 'e_n (電圧ノイズ密度): ' + formatSI(e_n, 'V/√Hz');
+      document.getElementById('in_out').textContent = 'i_n (電流ノイズ密度): ' + formatSI(i_n, 'A/√Hz');
+      const Tc = T - 273.15;
+      document.getElementById('temp_out').textContent = `温度: ${T.toFixed(1)} K (${Tc.toFixed(1)} ℃)`;
+      document.getElementById('result').style.display = 'block';
+    }
+    function showError(msg) {
+      const err = document.getElementById('error'); err.textContent = msg; err.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

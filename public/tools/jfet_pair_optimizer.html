@@ -100,16 +100,26 @@ function combinationCount(n, r) {
 
 // 最適化ロジック
 function bruteForceOptimizer(arr, size, stdW) {
+  const indices = arr.map((_, i) => i);  // インデックスの配列を作成
   let bestFit = Infinity, b1 = [], b2 = [];
-  k_combinations(arr, size).forEach(g1 => {
-    const rest = arr.filter(v => !g1.includes(v));
-    k_combinations(rest, size).forEach(g2 => {
+
+  k_combinations(indices, size).forEach(i1 => {
+    const usedSet = new Set(i1);
+    const rest = indices.filter(i => !usedSet.has(i));
+    k_combinations(rest, size).forEach(i2 => {
+      const g1 = i1.map(i => arr[i]);
+      const g2 = i2.map(i => arr[i]);
       const fit = fitness(g1, g2, stdW);
-      if (fit < bestFit) { bestFit = fit; b1 = g1; b2 = g2; }
+      if (fit < bestFit) {
+        bestFit = fit;
+        b1 = g1;
+        b2 = g2;
+      }
     });
   });
   return formatResult(b1, b2, bestFit);
 }
+
 
 function geneticOptimizer(idss, groupSize, stdW) {
   const popSize = 50, gens = 200, mutRate = 0.1;

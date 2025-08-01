@@ -1,8 +1,18 @@
 /* styles.css */
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Orbitron:wght@400;700&display=swap');
 
-/* Reset & box-sizing */
+:root {
+  --primary-color: #00aaff;
+  --background-color: #1a1a1a;
+  --text-color: #f0f0f0; /* General text, slightly brighter */
+  --body-text-color: #e8e8e8; /* Softer color for body text for readability */
+  --header-footer-bg: #111;
+  --card-bg: #2a2a2a;
+  --card-border: #444;
+  --accent-color: #00d1ff; /* Brighter, more vibrant cyan-blue for visibility */
+  --hover-color: #80e9ff; /* Even lighter for hover effect */
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -10,11 +20,27 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  line-height: 1.6;
+  font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--body-text-color);
+  font-size: 17px; /* Increased base font size for readability */
+  line-height: 1.8;
+  font-weight: 400;
+  letter-spacing: 0.03em; /* Adjusted for better spacing */
 }
+
+/* General Link Styles */
+a {
+  color: var(--accent-color);
+  text-decoration: none; /* No underline by default */
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--hover-color); /* Use variable for consistency */
+  text-decoration: underline; /* Underline on hover */
+}
+
 
 .container {
   width: 90%;
@@ -23,74 +49,85 @@ body {
 }
 
 header {
-  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  background: var(--header-footer-bg);
   color: #fff;
   padding: 20px 0;
+  border-bottom: 2px solid var(--accent-color);
 }
 
 header h1 {
-  font-size: 2rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.2rem;
+  text-shadow: 0 0 10px var(--accent-color);
 }
 
 nav ul {
   list-style: none;
   display: flex;
+  justify-content: flex-end;
 }
 
 nav ul li + li {
-  margin-left: 20px;
+  margin-left: 30px;
 }
 
 nav ul li a {
   color: #fff;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  font-size: 1.1rem;
 }
 
 nav ul li a:hover {
-  color: #ffdd57;
+  color: var(--accent-color);
+  text-shadow: 0 0 5px var(--accent-color);
 }
 
 main {
   margin: 40px 0;
-  /* セクションを縦に並べるレイアウトに変更 */
 }
 
 section {
-  background: #fff;
-  padding: 20px;
+  background: var(--card-bg);
+  padding: 30px;
   margin-bottom: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
 }
 
 section h2 {
-  margin-bottom: 15px;
-  font-size: 1.5rem;
-  color: #2575fc;
-  border-bottom: 2px solid #2575fc;
-  padding-bottom: 5px;
+  font-family: 'Orbitron', sans-serif;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: var(--accent-color);
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 10px;
 }
 
 section p {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  font-size: 1.05rem; /* Slightly larger font for readability */
+  line-height: 1.9;
 }
 
 .button {
   display: inline-block;
-  padding: 10px 20px;
-  background: #2575fc;
+  padding: 12px 25px;
+  background: var(--accent-color);
   color: #fff;
   text-decoration: none;
-  border-radius: 4px;
-  transition: background 0.3s ease;
+  border-radius: 8px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-weight: bold;
 }
 
 .button:hover {
-  background: #6a11cb;
+  background: var(--hover-color);
+  transform: translateY(-2px);
 }
-/* リスト内の項目を見やすく調整 */
+
 section ul {
   list-style-position: inside;
   padding-left: 20px;
@@ -98,10 +135,10 @@ section ul {
 }
 
 section ul li {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  font-size: 1rem;
 }
 
-/* ヒーローイメージのスタイル */
 .hero-container {
   text-align: center;
   margin-bottom: 40px;
@@ -110,126 +147,89 @@ section ul li {
   width: 100%;
   max-width: 1200px;
   height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 170, 255, 0.3);
   display: inline-block;
 }
 
-/* ツールセクションのスタイル */
 .tool-categories {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    gap: 30px;
 }
 
 .tool-category {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
+    background-color: #333;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #555;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tool-category:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
 }
 
 .tool-category h3 {
     margin-top: 0;
+    color: var(--accent-color);
 }
 
-/* フッターのスタイル */
 footer {
-    background-color: #333;
-    color: #fff;
+    background-color: var(--header-footer-bg);
+    color: #aaa;
     text-align: center;
-    padding: 20px 0;
+    padding: 30px 0;
     margin-top: 40px;
+    border-top: 2px solid var(--accent-color);
 }
 
-#projects-list {
-  list-style: none;
-  padding: 0;
-}
-/* 動画サムネイルのギャラリー */
-#projects-list .month-group {
-  margin-bottom: 30px;
-}
-#projects-list .month-group h3 {
-  font-size: 1.25rem;
-  margin-bottom: 10px;
-  color: #333;
-}
-/* プレイリスト（シリーズ）グループ */
-#projects-list .playlist-group {
-  margin-bottom: 30px;
-}
+#projects-list .month-group h3,
 #projects-list .playlist-group h3 {
-  font-size: 1.25rem;
-  margin-bottom: 10px;
-  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--accent-color);
 }
+
 #projects-list .thumbnails {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 20px;
 }
 #projects-list .thumb img {
-  width: 300px; /* 1.5x of previous 200px to accommodate longer titles */
+  width: 320px;
   height: auto;
   display: block;
-  border-radius: 4px;
-  transition: opacity 0.3s ease;
+  border-radius: 8px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  border: 2px solid transparent;
 }
 #projects-list .thumb:hover img {
   opacity: 0.8;
+  transform: scale(1.05);
+  border-color: var(--accent-color);
 }
-/* Overlay title and category on thumbnail */
-#projects-list .thumb {
-  position: relative;
-  display: inline-block;
-}
+
 #projects-list .thumb .overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  padding: 8px;
-  box-sizing: border-box;
-  border-radius: 0 0 4px 4px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 10px;
 }
-#projects-list .thumb .category-tag {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.3);
-  color: #fff;
-  font-size: 0.75rem;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-bottom: 4px;
-}
-#projects-list .thumb .video-title {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.2;
-  word-break: break-word;
-}
-/*==================== AI記事詳細 ====================*/
+
 #ai-article-detail {
-  border: 1px solid #ccc;
-  padding: 1em;
-  margin-top: 1em;
-  background-color: #f9f9f9;
+  border: 1px solid var(--card-border);
+  padding: 1.5em;
+  margin-top: 1.5em;
+  background-color: #333;
 }
-#ai-article-detail h3 {
-  margin-top: 0;
-  font-size: 1.2em;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5em;
-}
-/* Skip link for accessibility */
+
 .skip-link {
   position: absolute;
-  top: -40px;
+  top: -50px;
   left: 0;
-  background: #2575fc;
+  background: var(--accent-color);
   color: #fff;
-  padding: 8px;
+  padding: 10px;
   z-index: 1000;
   text-decoration: none;
   transition: top 0.3s ease;
@@ -237,13 +237,12 @@ footer {
 .skip-link:focus {
   top: 0;
 }
-/* Focus outline for interactive elements */
+
 a:focus {
-  outline: 2px solid #2575fc;
-  outline-offset: 2px;
+  outline: 3px solid var(--accent-color);
+  outline-offset: 3px;
 }
 
-/* Dropdown menu */
 nav ul li.dropdown {
   position: relative;
 }
@@ -254,42 +253,64 @@ nav ul li.dropdown > a::after {
 nav ul li.dropdown:hover > .dropdown-menu,
 nav ul li.dropdown:focus-within > .dropdown-menu {
   display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 nav ul .dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  background: #fff;
+  background: var(--card-bg);
   list-style: none;
   padding: 10px 0;
-  margin: 0;
-  border-radius: 4px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  min-width: 200px;
+  margin: 10px 0 0;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+  min-width: 220px;
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  border: 1px solid var(--card-border);
 }
 nav ul .dropdown-menu li {
   margin: 0;
 }
 nav ul .dropdown-menu li a {
-  color: #333;
-  padding: 8px 20px;
+  color: var(--text-color);
+  padding: 10px 25px;
   display: block;
   white-space: nowrap;
   text-decoration: none;
 }
 nav ul .dropdown-menu li a:hover {
-  background: #f4f4f4;
+  background: var(--accent-color);
+  color: #fff;
 }
-/* Responsive navigation for small screens */
+
 @media (max-width: 768px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
   nav ul {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
   }
   nav ul li + li {
     margin-left: 0;
-    margin-top: 10px;
+    margin-top: 15px;
   }
+}
+
+.simulator-image {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 170, 255, 0.3);
+    display: block;
+    margin: 30px auto;
 }

@@ -115,13 +115,32 @@ section ul li {
   display: inline-block;
 }
 
-footer {
-  background: #333;
-  color: #fff;
-  text-align: center;
-  padding: 20px 0;
-  margin-top: 40px;
+/* ツールセクションのスタイル */
+.tool-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
 }
+
+.tool-category {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.tool-category h3 {
+    margin-top: 0;
+}
+
+/* フッターのスタイル */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
 #projects-list {
   list-style: none;
   padding: 0;

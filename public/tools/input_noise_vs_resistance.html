@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>雑音可視化ツール</title>
+  <!-- CDN: math.js, Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: sans-serif; max-width: 900px; margin: 20px auto; }
+    .description { font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+    .controls label { display: flex; flex-direction: column; font-size: 0.9rem; }
+    .controls .field { display: flex; align-items: center; gap: 0.5rem; }
+    .results { margin-top: 1rem; font-size: 1rem; }
+    /* 固定サイズの canvas */
+    #chart-container { width: 800px; height: 500px; margin: auto; }
+    #noiseChart { width: 800px !important; height: 500px !important; }
+  </style>
+</head>
+<body>
+  <h1>入力換算雑音 vs 抵抗</h1>
+  <div class="description">
+    <p>このツールは、オペアンプのデータシートに記載された電圧雑音密度(<em>vₙ</em>)および電流雑音密度(<em>iₙ</em>)、動作温度(<em>T</em>)を入力し、ソース抵抗に対する入力換算雑音(合成雑音, 熱雑音, 電流換算雑音, 電圧雑音)をログ・ログスケールで可視化します。</p>
+    <p><strong>最適抵抗 Rₒₚₜ</strong> = <em>vₙ</em> / <em>iₙ</em> は、合成雑音が最小となる理想的なソース抵抗値です。<strong>推奨範囲</strong>は、合成雑音が熱雑音の√2倍以下となる抵抗範囲で、熱雑音に対して十分なマージンを確保しながら低雑音動作が期待できる領域です。</p>
+    <p>設計時には、実際のオペアンプデータシートから<strong>vₙ</strong>と<strong>iₙ</strong>を取得し、この計算機に入力することで、最適なソース抵抗の決定や設計の指針を得ることができます。</p>
+  </div>
+  <div class="controls">
+    <label>
+      電圧雑音密度 vₙ:
+      <div class="field">
+        <input type="number" id="vn_val" step="any" value="1.1">
+        <select id="vn_pref">
+          <option value="1e0">V</option>
+          <option value="1e-3">mV</option>
+          <option value="1e-6">µV</option>
+          <option value="1e-9" selected>nV</option>
+          <option value="1e-12">pV</option>
+          <option value="1e-15">fV</option>
+        </select>
+        <span>/√Hz</span>
+      </div>
+    </label>
+    <label>
+      電流雑音密度 iₙ:
+      <div class="field">
+        <input type="number" id="in_val" step="any" value="1.7">
+        <select id="in_pref">
+          <option value="1e0">A</option>
+          <option value="1e-3">mA</option>
+          <option value="1e-6">µA</option>
+          <option value="1e-9">nA</option>
+          <option value="1e-12" selected>pA</option>
+          <option value="1e-15">fA</option>
+        </select>
+        <span>/√Hz</span>
+      </div>
+    </label>
+    <label>
+      温度 T [K]:
+      <input type="number" id="T" step="any" value="300">
+    </label>
+  </div>
+  <div id="chart-container">
+    <canvas id="noiseChart"></canvas>
+  </div>
+  <div class="results" id="results"></div>
+
+  <script>
+  const k = 1.38e-23;
+  Chart.register(
+    Chart.LineController,
+    Chart.LineElement,
+    Chart.PointElement,
+    Chart.LinearScale,
+    Chart.LogarithmicScale,
+    Chart.Title,
+    Chart.Legend,
+    Chart.Tooltip,
+    Chart.CategoryScale
+  );
+
+  function siPrefix(val) {
+    const units = [
+      {f:1e12,p:'T'},{f:1e9,p:'G'},{f:1e6,p:'M'},
+      {f:1e3,p:'k'},{f:1,p:''},{f:1e-3,p:'m'},
+      {f:1e-6,p:'µ'},{f:1e-9,p:'n'},{f:1e-12,p:'p'},{f:1e-15,p:'f'}
+    ];
+    const a = Math.abs(val);
+    for (const u of units) {
+      if (a >= u.f) {
+        const v = val / u.f;
+        if (v >= 100) return `${v.toFixed(0)}${u.p}`;
+        if (v >= 10) return `${v.toFixed(1)}${u.p}`;
+        return `${v.toPrecision(2)}${u.p}`;
+      }
+    }
+    return val.toExponential(2);
+  }
+
+  function getInput(prefId, valId) {
+    return parseFloat(document.getElementById(prefId).value) * parseFloat(document.getElementById(valId).value);
+  }
+
+  function computeData() {
+    const vn = getInput('vn_pref', 'vn_val');
+    const inNoise = getInput('in_pref', 'in_val');
+    const T = parseFloat(document.getElementById('T').value);
+    const R = [], total = [], thermal = [], current = [];
+    const N = 300; // サンプリング数
+    for (let i = 0; i < N; i++) {
+      const r = Math.pow(10, i * (9 / (N - 1)));
+      R.push(r);
+      const t = Math.sqrt(4 * k * T * r);
+      const c = inNoise * r;
+      thermal.push(t);
+      current.push(c);
+      total.push(Math.sqrt(vn * vn + c * c + t * t));
+    }
+    let R_min = null, R_max = null;
+    total.forEach((v, i) => {
+      if (v <= Math.SQRT2 * thermal[i]) {
+        if (R_min === null) R_min = R[i];
+        R_max = R[i];
+      }
+    });
+    const R_opt = vn / inNoise;
+    return { R, total, thermal, current, R_min, R_max, R_opt, vn };
+  }
+
+  const ctx = document.getElementById('noiseChart').getContext('2d');
+  let chart;
+  function updateChart() {
+    const { R, total, thermal, current, R_min, R_max, R_opt, vn } = computeData();
+    const data = {
+      labels: R,
+      datasets: [
+        { label: '合成雑音', data: total, borderColor: 'black', fill: false, tension: 0 },
+        { label: '熱雑音 √4kTR', data: thermal, borderDash: [5, 5], borderColor: 'blue', fill: false, tension: 0 },
+        { label: '電流換算雑音 iₙ·R', data: current, borderDash: [5, 5], borderColor: 'green', fill: false, tension: 0 },
+        { label: `vₙ=${siPrefix(vn)}V/√Hz`, data: R.map(() => vn), borderDash: [2, 2], borderColor: 'red', fill: false }
+      ]
+    };
+    const options = {
+      scales: {
+        x: { type: 'logarithmic', title: { display: true, text: '抵抗 [Ω]' }, ticks: { callback: siPrefix } },
+        y: { type: 'logarithmic', title: { display: true, text: '電圧雑音密度 [V/√Hz]' }, ticks: { callback: siPrefix } }
+      },
+      plugins: { legend: { position: 'top' } },
+      animation: false
+    };
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, { type: 'line', data, options });
+    const res = document.getElementById('results');
+    let txt = `<strong>最適抵抗 Rₒₚₜ:</strong> ${siPrefix(R_opt)}Ω`;
+    if (R_min && R_max) txt += `<br><strong>推奨範囲:</strong> ${siPrefix(R_min)}Ω – ${siPrefix(R_max)}Ω`;
+    res.innerHTML = txt;
+  }
+
+  ['vn_pref','vn_val','in_pref','in_val','T'].forEach(id =>
+    document.getElementById(id).addEventListener('input', updateChart)
+  );
+  // 初期描画（DOMContentLoaded イベント及び即時実行）
+  document.addEventListener('DOMContentLoaded', updateChart);
+  updateChart();
+  </script>
+</body>
+</html>

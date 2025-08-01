@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多点入力換算ノイズ電圧/電流密度計算機</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; line-height: 1.6; }
+    .field { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+    input, select, button { padding: 0.4rem; font-size: 1rem; }
+    .result, .error { margin-top: 1.5rem; padding: 1rem; border-radius: 0.5rem; }
+    .result { border: 1px solid #4caf50; background: #e8f5e9; }
+    .error { border: 1px solid #f44336; background: #ffebee; color: #c62828; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; }
+    .delete-btn { cursor: pointer; color: #f44336; border: none; background: transparent; font-size: 1rem; }
+    .chart-controls { margin-top: 1rem; display: flex; align-items: center; gap: 1rem; }
+    canvas { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>多点入力換算ノイズ電圧/電流密度計算機</h1>
+  <div class="explanation">
+    <p>複数の抵抗・ノイズ測定点を追加・削除し、最小二乗フィッティングで精度向上します。</p>
+  </div>
+
+  <div class="field">
+    <label>抵抗 (R) とノイズ (V) を入力し、[データ点追加] をクリック</label>
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+      <div>
+        <input type="number" id="R_val" value="100" step="any"> 
+        <select id="R_pref">
+          <option value="1e-3">mΩ</option>
+          <option value="1">Ω</option>
+          <option value="1e3">kΩ</option>
+          <option value="1e6" selected>MΩ</option>
+          <option value="1e9">GΩ</option>
+        </select>
+      </div>
+      <div>
+        <input type="number" id="V_val" value="1.5" step="any"> 
+        <select id="V_unit">
+          <option value="V">V/√Hz</option>
+          <option value="mV">mV/√Hz</option>
+          <option value="µV">µV/√Hz</option>
+          <option value="nV" selected>nV/√Hz</option>
+          <option value="pV">pV/√Hz</option>
+          <option value="dBV">dBVrms/√Hz</option>
+        </select>
+      </div>
+      <div>
+        <button id="addBtn">データ点追加</button>
+        <button id="clearBtn">クリア</button>
+      </div>
+    </div>
+  </div>
+
+  <table id="dataTable">
+    <thead>
+      <tr><th>#</th><th>R</th><th>V</th><th>操作</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div id="error" class="error" style="display:none;"></div>
+  <div id="result" class="result" style="display:none;">
+    <h2>フィッティング結果</h2>
+    <p id="en_out"></p>
+    <p id="in_out"></p>
+    <p id="temp_out"></p>
+  </div>
+
+  <div class="chart-controls">
+    <label><input type="checkbox" id="logX" checked> X軸を対数スケールにする</label>
+    <label><input type="checkbox" id="logY" checked> Y軸を対数スケールにする</label>
+    <label><input type="checkbox" id="showSquared"> Y軸をV²で表示する</label>
+    <button id="redrawBtn">再描画</button>
+  </div>
+  <canvas id="chart" width="600" height="400"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const k = 1.380649e-23;
+    const T = 300;
+    let R_list = [], V_list = [], noiseChart = null;
+
+    function toNumber(val, unit) {
+      switch(unit) {
+        case 'V': return val;
+        case 'mV': return val * 1e-3;
+        case 'µV': return val * 1e-6;
+        case 'nV': return val * 1e-9;
+        case 'pV': return val * 1e-12;
+        case 'dBV': return Math.pow(10, val/20);
+      }
+      return val;
+    }
+
+    function formatSI(value, unit) {
+      const prefixes = [
+        {val:1e-15, sym:'f'},{val:1e-12, sym:'p'},{val:1e-9, sym:'n'},
+        {val:1e-6, sym:'µ'},{val:1e-3, sym:'m'},{val:1, sym:''},
+        {val:1e3, sym:'k'},{val:1e6, sym:'M'},{val:1e9, sym:'G'}
+      ];
+      for (let i = prefixes.length-1; i >= 0; i--) {
+        const p = prefixes[i];
+        if (Math.abs(value) >= p.val) {
+          return (value / p.val).toFixed(3) + ' ' + p.sym + unit;
+        }
+      }
+      return value.toExponential(3) + ' ' + unit;
+    }
+
+    function showError(msg) {
+      const e = document.getElementById('error'); e.textContent = msg; e.style.display = 'block';
+    }
+
+    function updateTable() {
+      const tbody = document.querySelector('#dataTable tbody');
+      tbody.innerHTML = '';
+      R_list.forEach((R, i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${i+1}</td>
+          <td>${formatSI(R,'Ω')}</td>
+          <td>${formatSI(V_list[i],'V/√Hz')}</td>
+          <td><button class="delete-btn" data-index="${i}">&times;</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.onclick = () => {
+          const i = +btn.dataset.index;
+          R_list.splice(i,1); V_list.splice(i,1);
+          document.getElementById('result').style.display='none';
+          updateTable(); if(noiseChart) noiseChart.destroy();
+          if(R_list.length>1) drawChart();
+        };
+      });
+    }
+
+    function drawChart() {
+      const R2 = R_list.map(R=>R*R);
+      const Ysq = R_list.map((R,i)=>V_list[i]*V_list[i] - 4*k*T*R);
+      const N = R2.length;
+      const sumR2 = R2.reduce((a,b)=>a+b,0);
+      const sumYsq = Ysq.reduce((a,b)=>a+b,0);
+      const sumR2R2 = R2.reduce((a,b)=>a+b*b,0);
+      const sumR2Y = R2.reduce((a,b,i)=>a + b*Ysq[i],0);
+      const slope = (N*sumR2Y - sumR2*sumYsq) / (N*sumR2R2 - sumR2*sumR2);
+      const intercept = (sumYsq - slope*sumR2) / N;
+      if(slope<=0||intercept<=0) { showError('フィッティング結果が不正です'); return; }
+      document.getElementById('error').style.display='none';
+      const in_n = Math.sqrt(slope), en_n = Math.sqrt(intercept);
+      document.getElementById('en_out').textContent=`e_n: ${formatSI(en_n,'V/√Hz')}`;
+      document.getElementById('in_out').textContent=`i_n: ${formatSI(in_n,'A/√Hz')}`;
+      document.getElementById('temp_out').textContent=`温度: ${T} K`;
+      document.getElementById('result').style.display='block';
+
+      const useSquared = document.getElementById('showSquared').checked;
+      const scatter = R_list.map((R,i)=>({ 
+        x: R, 
+        y: useSquared ? V_list[i]**2 : V_list[i], 
+        y_adj: Ysq[i] 
+      }));
+      const maxR = Math.max(...R_list);
+      const line = [
+        { x: 0, y: useSquared ? intercept : Math.sqrt(intercept) },
+        { x: maxR, y: useSquared ? (intercept + slope*maxR*maxR) : Math.sqrt(intercept + slope*maxR*maxR) }
+      ];
+
+      const ctx = document.getElementById('chart').getContext('2d');
+      const logX = document.getElementById('logX').checked;
+      const logY = document.getElementById('logY').checked;
+      if(noiseChart) noiseChart.destroy();
+      noiseChart = new Chart(ctx, {
+        type: 'scatter',
+        data: { datasets: [
+          {
+            label: '測定点',
+            data: scatter,
+            showLine: false,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+          {
+            label: 'フィッティング曲線',
+            data: line,
+            showLine: true,
+            fill: false,
+            pointRadius: 0,
+            borderDash: [5,5]
+          }
+        ] },
+        options: {
+          scales: {
+            x: { type: logX ? 'logarithmic' : 'linear', title: { display: true, text: 'R (Ω)' } },
+            y: { type: logY ? 'logarithmic' : 'linear', title: { display: true, text: useSquared ? 'ノイズ² (V²/Hz)' : 'ノイズ (V/√Hz)' } }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  if (context.dataset.label === '測定点') {
+                    const pt = context.raw;
+                    return useSquared
+                      ? `V²: ${formatSI(pt.y,'V²/Hz')}, adj: ${formatSI(pt.y_adj,'V²/Hz')}`
+                      : `V: ${formatSI(pt.y,'V/√Hz')}, adj: ${formatSI(Math.sqrt(pt.y_adj),'V/√Hz')}`;
+                  }
+                  return null;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    document.getElementById('addBtn').addEventListener('click', () => {
+      const R = +document.getElementById('R_val').value * +document.getElementById('R_pref').value;
+      const V = toNumber(+document.getElementById('V_val').value, document.getElementById('V_unit').value);
+      if (!(R > 0) || isNaN(V)) { showError('正しい値を入力してください'); return; }
+      document.getElementById('error').style.display = 'none';
+      R_list.push(R);
+      V_list.push(V);
+      updateTable();
+      if (R_list.length > 1) drawChart();
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      R_list = [];
+      V_list = [];
+      updateTable();
+      if (noiseChart) noiseChart.destroy();
+      document.getElementById('result').style.display = 'none';
+      document.getElementById('error').style.display = 'none';
+    });
+
+    ['logX', 'logY', 'showSquared'].forEach(id => {
+      document.getElementById(id).addEventListener('change', () => {
+        if (R_list.length > 1) drawChart();
+      });
+    });
+
+    document.getElementById('redrawBtn').addEventListener('click', () => {
+      if (R_list.length > 1) drawChart();
+    });
+  </script>
+</body>
+</html>

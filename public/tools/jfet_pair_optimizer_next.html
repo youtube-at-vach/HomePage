@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>JFET IDSS ペア最適化（Memetic GA + Early & Manual Stop）</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 30px auto; }
+    textarea { width: 100%; height: 150px; }
+    input[type="number"], select { width: 120px; margin-right: 10px; }
+    button { margin: 8px 4px; padding: 8px 16px; }
+    pre { background: #f0f0f0; padding: 10px; white-space: pre-wrap; }
+    .control { margin: 8px 0; }
+    .help { font-size: 0.9em; color: #555; }
+  </style>
+</head>
+<body>
+  <h2>Memetic GAによるJFET IDSS ペア最適化</h2>
+  <p>JFETのIDSSペアマッチは、測定の再現性やノイズ性能に大きく影響します。<strong>Memetic GA</strong>は、まず遺伝的アルゴリズムで多数の組み合わせをざっと探索し、
+  良さそうな組み合わせに対してさらに「スワップ操作」で少しずつ調整をかける手法です。</p>
+  <ul>
+    <li>広い組み合わせ空間から効率的に有望解を探索</li>
+    <li>見つかった解を局所的に詰めて平均差とばらつきを最小化</li>
+    <li>早期終了や手動停止にも対応</li>
+  </ul>
+
+  <div class="control">
+    <label>IDSSリスト (mA) :</label><br>
+    <textarea id="idssInput">21.4
+22.6
+14.56
+14.41
+16.8
+16.22
+13.39
+13.72</textarea>
+  </div>
+
+  <div class="control">
+    <label>グループサイズ:</label>
+    <input type="number" id="groupSize" value="2" min="1">
+  </div>
+
+  <div class="control">
+    <label>ペア内ばらつき重視（σ合計）:</label>
+    <input type="number" id="stdWeight" value="0.1" step="0.01" min="0">
+    <span class="help">ペア1とペア2のσ（ばらつき）を小さくするための重み</span>
+  </div>
+
+  <div class="control">
+    <label>左右ペア差の均一性（σ差）:</label>
+    <input type="number" id="diffWeight" value="0.1" step="0.01" min="0">
+    <span class="help">左右ペア間のσ（ばらつき）の差を小さくするための重み</span>
+  </div>
+
+  <div class="control">
+    <label>目標スコア (Early Stop):</label>
+    <input type="number" id="targetFit" value="0" step="0.01" min="0">
+  </div>
+
+  <div class="control">
+    <label>世代数:</label>
+    <input type="number" id="maxGen" value="200" min="1">
+  </div>
+
+  <div class="control">
+    <label>無限実行: </label>
+    <button id="startBtn">開始</button>
+    <button id="stopBtn" disabled>停止</button>
+  </div>
+
+  <h3>結果:</h3>
+  <pre id="result"></pre>
+
+<script>
+// UI要素
+const startBtn = document.getElementById('startBtn');
+const stopBtn  = document.getElementById('stopBtn');
+let running = false;
+startBtn.addEventListener('click', runMemeticGA);
+stopBtn.addEventListener('click', () => { running = false; });
+
+// 組み合わせ数計算
+function combinationCount(n, r) {
+  if (r > n) return 0;
+  let num = 1, denom = 1;
+  for (let i = 1; i <= r; i++) {
+    num *= (n - i + 1);
+    denom *= i;
+  }
+  return num / denom;
+}
+
+// 局所探索 (部分スワップ)
+function localSearch(ind, fitnessFn, iter = 20) {
+  let best = ind.slice(), bestFit = fitnessFn(best);
+  for (let k = 0; k < iter; k++) {
+    let cand = best.slice();
+    const i = Math.floor(Math.random() * cand.length);
+    const j = Math.floor(Math.random() * cand.length);
+    [cand[i], cand[j]] = [cand[j], cand[i]];
+    const f = fitness(cand);
+    if (f < bestFit) { bestFit = f; best = cand; }
+  }
+  return { ind: best, fit: bestFit };
+}
+
+// メイン実行
+async function runMemeticGA() {
+  if (running) return;
+  running = true;
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+  const resultEl = document.getElementById('result');
+  resultEl.textContent = 'Memetic GA 実行中...';
+
+  // 入力取得
+  const idss = document.getElementById('idssInput').value.split(/\n/).map(v => parseFloat(v)).filter(v => !isNaN(v));
+  const size = parseInt(document.getElementById('groupSize').value);
+  const stdW = parseFloat(document.getElementById('stdWeight').value);
+  const diffW = parseFloat(document.getElementById('diffWeight').value);
+  const target = parseFloat(document.getElementById('targetFit').value);
+  const maxGen = parseInt(document.getElementById('maxGen').value);
+
+  // 小規模なら全探索
+  if (combinationCount(idss.length, size) <= 10000) {
+    resultEl.textContent = bruteForce(idss, size, stdW, diffW);
+    reset();
+    return;
+  }
+
+  // GAパラメータ
+  const popSize = 50, mutInit = 0.2, mutFinal = 0.01;
+
+  // 初期集団
+  let pop = Array.from({ length: popSize }, () => shuffle(idss.slice()));
+  let globalBestFit = Infinity, globalBestArr;
+
+  for (let gen = 0; gen < maxGen && running; gen++) {
+    let scored = pop.map(ind => ({ ind, fit: fitness(ind, size, stdW, diffW) }));
+    scored.sort((a, b) => a.fit - b.fit);
+
+    // エリート局所探索
+    const elites = scored.slice(0, 2).map(x => x.ind);
+    elites.forEach(el => {
+      const { ind, fit } = localSearch(el, arr => fitness(arr, size, stdW, diffW), 30);
+      if (fit < scored[0].fit) {
+        scored.unshift({ ind, fit });
+        scored.pop();
+      }
+    });
+
+    // グローバル最良更新
+    if (scored[0].fit < globalBestFit) {
+      globalBestFit = scored[0].fit;
+      globalBestArr = scored[0].ind.slice(0, size * 2);
+    }
+
+    // 進捗表示
+    resultEl.textContent = `世代 ${gen + 1}/${maxGen}  最良スコア = ${globalBestFit.toFixed(4)}`;
+
+    // 早期終了
+    if (globalBestFit <= target) break;
+
+    // 次世代生成
+    const mutRate = mutInit * (1 - gen / maxGen) + mutFinal * (gen / maxGen);
+    pop = nextGeneration(scored, popSize, mutRate, size);
+    if (gen % 10 === 0) await new Promise(r => setTimeout(r, 0));
+  }
+
+  // 結果表示
+  if (globalBestArr) {
+    const g1 = globalBestArr.slice(0, size);
+    const g2 = globalBestArr.slice(size, size * 2);
+    resultEl.textContent = formatResult(g1, g2, globalBestFit);
+  }
+  reset();
+}
+
+// 次世代生成
+function nextGeneration(scored, popSize, mutRate, groupSize) {
+  const next = [];
+  while (next.length < popSize) {
+    const p1 = tournament(scored), p2 = tournament(scored);
+    let child = crossover(p1, p2);
+    if (Math.random() < mutRate) child = mutate(child);
+    next.push(child);
+  }
+  return next;
+}
+
+// 評価関数
+function fitness(arr, groupSize, stdW, diffW) {
+  const g1 = arr.slice(0, groupSize), g2 = arr.slice(groupSize, groupSize * 2);
+  const avg1 = mean(g1), avg2 = mean(g2);
+  const s1 = stddev(g1), s2 = stddev(g2);
+  const stdTotal = s1 + s2;
+  const stdDiff = Math.abs(s1 - s2);
+  return Math.abs(avg1 - avg2) + stdW * stdTotal + diffW * stdDiff;
+}
+
+// 全探索
+function bruteForce(arr, size, stdW, diffW) {
+  let best = Infinity, b1, b2;
+  const idx = arr.map((_, i) => i);
+  kCombinations(idx, size).forEach(c1 => {
+    const rest = idx.filter(i => !c1.includes(i));
+    kCombinations(rest, size).forEach(c2 => {
+      const g1 = c1.map(i => arr[i]), g2 = c2.map(i => arr[i]);
+      const f = fitness(g1.concat(g2), size, stdW, diffW);
+      if (f < best) { best = f; b1 = g1; b2 = g2; }
+    });
+  });
+  return formatResult(b1, b2, best);
+}
+
+// ユーティリティ関数
+function mean(a) { return a.reduce((s, v) => s + v, 0) / a.length; }
+function stddev(a) { const m = mean(a); return Math.sqrt(a.reduce((s, v) => s + (v - m) ** 2, 0) / a.length); }
+function tournament(sc) { return sc[Math.floor(Math.random() * Math.min(5, sc.length))].ind; }
+function crossover(a, b) {
+  const len = a.length, child = [], used = new Set();
+  for (let i = 0; i < len; i++) {
+    const v = Math.random() < 0.5 ? a[i] : b[i];
+    if (!used.has(v)) { child.push(v); used.add(v); }
+  }
+  [...a, ...b].forEach(v => { if (child.length < len && !used.has(v)) { child.push(v); used.add(v); } });
+  return child;
+}
+function mutate(a) { const i = Math.floor(Math.random() * a.length), j = Math.floor(Math.random() * a.length); [a[i], a[j]] = [a[j], a[i]]; return a; }
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function kCombinations(set, k) {
+  if (k > set.length || k <= 0) return [];
+  if (k === set.length) return [set.slice()];
+  if (k === 1) return set.map(v => [v]);
+  const res = [];
+  for (let i = 0; i <= set.length - k; i++) {
+    const head = [set[i]];
+    kCombinations(set.slice(i + 1), k - 1).forEach(t => res.push(head.concat(t)));
+  }
+  return res;
+}
+
+// 結果フォーマットを詳細化
+function formatResult(g1, g2, fit) {
+  const avg1 = mean(g1).toFixed(4);
+  const std1 = stddev(g1).toFixed(4);
+  const avg2 = mean(g2).toFixed(4);
+  const std2 = stddev(g2).toFixed(4);
+  return `=== 最適なペア ===
+ペア1: [${g1.join(', ')}] 平均 = ${avg1} mA, σ = ${std1} mA
+ペア2: [${g2.join(', ')}] 平均 = ${avg2} mA, σ = ${std2} mA
+評価スコア = ${fit.toFixed(4)}`;
+}
+
+// リセット
+function reset() { running = false; startBtn.disabled = false; stopBtn.disabled = true; }
+</script>
+</body>
+</html>

@@ -1,36 +1,150 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>雑音可視化ツール</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>雑音可視化ツール - オペアンプ最適抵抗設計</title>
+
   <!-- CDN: math.js, Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
   <style>
-    body { font-family: sans-serif; max-width: 900px; margin: 20px auto; }
-    .description { font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
-    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-    .controls label { display: flex; flex-direction: column; font-size: 0.9rem; }
-    .controls .field { display: flex; align-items: center; gap: 0.5rem; }
-    .results { margin-top: 1rem; font-size: 1rem; }
-    /* 固定サイズの canvas */
-    #chart-container { width: 800px; height: 500px; margin: auto; }
-    #noiseChart { width: 800px !important; height: 500px !important; }
+    :root {
+      --primary-color: #2c3e50;
+      --accent-color: #3498db;
+      --text-light: #ecf0f1;
+      --border-color: #bdc3c7;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .description {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      background-color: #f1f1f1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+      background-color: #fff;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .controls label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.95rem;
+      color: #444;
+      gap: 0.3rem;
+    }
+
+    .controls input[type="number"],
+    .controls select {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .controls input[type="number"]:focus,
+    .controls select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .field > span {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+    }
+
+    #chart-container {
+      width: 100%;
+      max-width: 800px;
+      height: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    #noiseChart {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .results {
+      margin-top: 1.5rem;
+      padding: 12px 16px;
+      background-color: #e8f5e9;
+      border-radius: 8px;
+      border-left: 4px solid var(--success-color);
+      font-size: 1rem;
+      color: #276a31;
+      line-height: 1.5;
+    }
+
+    .error {
+      color: var(--error-color) !important;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+      .results {
+        font-size: 0.95rem;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>入力換算雑音 vs 抵抗</h1>
+
   <div class="description">
     <p>このツールは、オペアンプのデータシートに記載された電圧雑音密度(<em>vₙ</em>)および電流雑音密度(<em>iₙ</em>)、動作温度(<em>T</em>)を入力し、ソース抵抗に対する入力換算雑音(合成雑音, 熱雑音, 電流換算雑音, 電圧雑音)をログ・ログスケールで可視化します。</p>
     <p><strong>最適抵抗 Rₒₚₜ</strong> = <em>vₙ</em> / <em>iₙ</em> は、合成雑音が最小となる理想的なソース抵抗値です。<strong>推奨範囲</strong>は、合成雑音が熱雑音の√2倍以下となる抵抗範囲で、熱雑音に対して十分なマージンを確保しながら低雑音動作が期待できる領域です。</p>
     <p>設計時には、実際のオペアンプデータシートから<strong>vₙ</strong>と<strong>iₙ</strong>を取得し、この計算機に入力することで、最適なソース抵抗の決定や設計の指針を得ることができます。</p>
   </div>
+
   <div class="controls">
     <label>
       電圧雑音密度 vₙ:
       <div class="field">
-        <input type="number" id="vn_val" step="any" value="1.1">
+        <input type="number" id="vn_val" step="any" value="1.1" min="0" />
         <select id="vn_pref">
           <option value="1e0">V</option>
           <option value="1e-3">mV</option>
@@ -42,10 +156,11 @@
         <span>/√Hz</span>
       </div>
     </label>
+
     <label>
       電流雑音密度 iₙ:
       <div class="field">
-        <input type="number" id="in_val" step="any" value="1.7">
+        <input type="number" id="in_val" step="any" value="1.7" min="0" />
         <select id="in_pref">
           <option value="1e0">A</option>
           <option value="1e-3">mA</option>
@@ -57,113 +172,272 @@
         <span>/√Hz</span>
       </div>
     </label>
+
     <label>
       温度 T [K]:
-      <input type="number" id="T" step="any" value="300">
+      <input type="number" id="T" step="any" value="300" min="0" />
     </label>
   </div>
+
   <div id="chart-container">
     <canvas id="noiseChart"></canvas>
   </div>
-  <div class="results" id="results"></div>
+
+  <div class="results" id="results">
+    <strong>最適抵抗 Rₒₚₜ:</strong> — Ω<br>
+    <strong>推奨範囲:</strong> — Ω – — Ω
+  </div>
 
   <script>
-  const k = 1.38e-23;
-  Chart.register(
-    Chart.LineController,
-    Chart.LineElement,
-    Chart.PointElement,
-    Chart.LinearScale,
-    Chart.LogarithmicScale,
-    Chart.Title,
-    Chart.Legend,
-    Chart.Tooltip,
-    Chart.CategoryScale
-  );
+    // === 定数定義 ===
+    const BOLTZMANN_CONSTANT = 1.38e-23; // J/K
+    const SQRT2 = Math.SQRT2;
+    const SAMPLING_POINTS = 300;
 
-  function siPrefix(val) {
-    const units = [
-      {f:1e12,p:'T'},{f:1e9,p:'G'},{f:1e6,p:'M'},
-      {f:1e3,p:'k'},{f:1,p:''},{f:1e-3,p:'m'},
-      {f:1e-6,p:'µ'},{f:1e-9,p:'n'},{f:1e-12,p:'p'},{f:1e-15,p:'f'}
-    ];
-    const a = Math.abs(val);
-    for (const u of units) {
-      if (a >= u.f) {
-        const v = val / u.f;
-        if (v >= 100) return `${v.toFixed(0)}${u.p}`;
-        if (v >= 10) return `${v.toFixed(1)}${u.p}`;
-        return `${v.toPrecision(2)}${u.p}`;
+    // === グローバル状態管理 ===
+    let chart = null;
+
+    // === ユーティリティ関数 ===
+    function siPrefix(val) {
+      if (!isFinite(val) || val <= 0) return "0";
+      const units = [
+        { f: 1e12, p: 'T' }, { f: 1e9, p: 'G' }, { f: 1e6, p: 'M' },
+        { f: 1e3, p: 'k' }, { f: 1, p: '' }, { f: 1e-3, p: 'm' },
+        { f: 1e-6, p: 'µ' }, { f: 1e-9, p: 'n' }, { f: 1e-12, p: 'p' }, { f: 1e-15, p: 'f' }
+      ];
+      const absVal = Math.abs(val);
+      for (const u of units) {
+        if (absVal >= u.f) {
+          const scaled = val / u.f;
+          if (scaled >= 100) return `${Math.round(scaled)}${u.p}`;
+          if (scaled >= 10) return `${scaled.toFixed(1)}${u.p}`;
+          return `${scaled.toPrecision(2)}${u.p}`;
+        }
       }
+      return val.toExponential(2);
     }
-    return val.toExponential(2);
-  }
 
-  function getInput(prefId, valId) {
-    return parseFloat(document.getElementById(prefId).value) * parseFloat(document.getElementById(valId).value);
-  }
+    function parseInput(prefId, valId) {
+      const pref = parseFloat(document.getElementById(prefId).value);
+      const val = parseFloat(document.getElementById(valId).value);
+      const inputElement = document.getElementById(valId);
 
-  function computeData() {
-    const vn = getInput('vn_pref', 'vn_val');
-    const inNoise = getInput('in_pref', 'in_val');
-    const T = parseFloat(document.getElementById('T').value);
-    const R = [], total = [], thermal = [], current = [];
-    const N = 300; // サンプリング数
-    for (let i = 0; i < N; i++) {
-      const r = Math.pow(10, i * (9 / (N - 1)));
-      R.push(r);
-      const t = Math.sqrt(4 * k * T * r);
-      const c = inNoise * r;
-      thermal.push(t);
-      current.push(c);
-      total.push(Math.sqrt(vn * vn + c * c + t * t));
-    }
-    let R_min = null, R_max = null;
-    total.forEach((v, i) => {
-      if (v <= Math.SQRT2 * thermal[i]) {
-        if (R_min === null) R_min = R[i];
-        R_max = R[i];
+      if (isNaN(pref) || isNaN(val)) {
+        showError(inputElement, "有効な数値を入力してください");
+        return null;
       }
+      if (val < 0) {
+        showError(inputElement, "負の値は不許可です");
+        return null;
+      }
+      return pref * val;
+    }
+
+    function showError(element, message) {
+      element.style.borderColor = "#e74c3c";
+      element.setAttribute("title", message);
+      setTimeout(() => {
+        element.style.borderColor = "";
+        element.removeAttribute("title");
+      }, 3000);
+    }
+
+    // === データ計算ロジック ===
+    function computeNoiseData() {
+      const vn = parseInput('vn_pref', 'vn_val');
+      const inNoise = parseInput('in_pref', 'in_val');
+      const T = parseFloat(document.getElementById('T').value);
+
+      if (vn === null || inNoise === null || isNaN(T) || T <= 0) {
+        return null;
+      }
+
+      const R = [];
+      const total = [];
+      const thermal = [];
+      const current = [];
+
+      for (let i = 0; i < SAMPLING_POINTS; i++) {
+        const r = Math.pow(10, i * (9 / (SAMPLING_POINTS - 1)));
+        R.push(r);
+        const t = Math.sqrt(4 * BOLTZMANN_CONSTANT * T * r);
+        const c = inNoise * r;
+        thermal.push(t);
+        current.push(c);
+        total.push(Math.sqrt(vn * vn + c * c + t * t));
+      }
+
+      // 推奨範囲：合成雑音 ≤ √2 × 熱雑音
+      let R_min = null, R_max = null;
+      total.forEach((v, i) => {
+        if (v <= SQRT2 * thermal[i]) {
+          if (R_min === null) R_min = R[i];
+          R_max = R[i];
+        }
+      });
+
+      const R_opt = vn / inNoise;
+
+      return { R, total, thermal, current, R_min, R_max, R_opt, vn };
+    }
+
+    // === チャート更新 ===
+    function updateChart() {
+      const data = computeNoiseData();
+      if (!data) return;
+
+      const { R, total, thermal, current, R_min, R_max, R_opt, vn } = data;
+
+      const chartData = {
+        labels: R,
+        datasets: [
+          {
+            label: '合成雑音',
+            data: total,
+            borderColor: 'black',
+            fill: false,
+            tension: 0.1,
+            pointRadius: 0,
+            borderWidth: 1.5
+          },
+          {
+            label: '熱雑音 √4kTR',
+            data: thermal,
+            borderDash: [5, 5],
+            borderColor: '#3498db',
+            fill: false,
+            tension: 0.1,
+            pointRadius: 0,
+            borderWidth: 1.5
+          },
+          {
+            label: '電流換算雑音 iₙ·R',
+            data: current,
+            borderDash: [5, 5],
+            borderColor: '#2ecc71',
+            fill: false,
+            tension: 0.1,
+            pointRadius: 0,
+            borderWidth: 1.5
+          },
+          {
+            label: `vₙ=${siPrefix(vn)}V/√Hz`,
+            data: R.map(() => vn),
+            borderDash: [2, 2],
+            borderColor: '#e74c3c',
+            fill: false,
+            pointRadius: 0,
+            borderWidth: 1.5
+          }
+        ]
+      };
+
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 10
+            }
+          },
+        tooltip: {
+          callbacks: {
+            // 新: 対数スケールの x 値は parsed.x から取得する
+            title: (context) => {
+              const xValue = context[0].parsed.x;
+              return `抵抗: ${siPrefix(xValue)} Ω`;
+            },
+            label: (context) => {
+              const val = context.parsed.y;
+              return `${context.dataset.label}: ${siPrefix(val)} V/√Hz`;
+            }
+          }
+        }
+        },
+        scales: {
+          x: {
+            type: 'logarithmic',
+            title: { display: true, text: '抵抗 [Ω]' },
+            ticks: {
+              callback: siPrefix,
+              maxTicksLimit: 10
+            },
+            grid: {
+              color: 'rgba(0,0,0,0.05)'
+            }
+          },
+          y: {
+            type: 'logarithmic',
+            title: { display: true, text: '電圧雑音密度 [V/√Hz]' },
+            ticks: {
+              callback: siPrefix,
+              maxTicksLimit: 10
+            },
+            grid: {
+              color: 'rgba(0,0,0,0.05)'
+            }
+          }
+        },
+        animation: {
+          duration: 300,
+          easing: 'easeOutQuart'
+        }
+      };
+
+      if (chart) {
+        chart.data = chartData;
+        chart.options = options;
+        chart.update();
+      } else {
+        chart = new Chart(document.getElementById('noiseChart'), {
+          type: 'line',
+          data: chartData,
+          options
+        });
+      }
+
+      // 結果表示
+      const resultsEl = document.getElementById('results');
+      let txt = `<strong>最適抵抗 Rₒₚₜ:</strong> ${siPrefix(R_opt)} Ω`;
+      if (R_min !== null && R_max !== null) {
+        txt += `<br><strong>推奨範囲:</strong> ${siPrefix(R_min)} Ω – ${siPrefix(R_max)} Ω`;
+      } else {
+        txt += `<br><small style="color:#7f8c8d;">推奨範囲：計算できません（データ不足）</small>`;
+      }
+      resultsEl.innerHTML = txt;
+    }
+
+    // === イベントリスナー（デバウンス付き）===
+    const debounce = (func, wait) => {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    };
+
+    // 各入力要素にデバウンス付きイベントを登録
+    ['vn_pref', 'vn_val', 'in_pref', 'in_val', 'T'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', debounce(updateChart, 300));
     });
-    const R_opt = vn / inNoise;
-    return { R, total, thermal, current, R_min, R_max, R_opt, vn };
-  }
 
-  const ctx = document.getElementById('noiseChart').getContext('2d');
-  let chart;
-  function updateChart() {
-    const { R, total, thermal, current, R_min, R_max, R_opt, vn } = computeData();
-    const data = {
-      labels: R,
-      datasets: [
-        { label: '合成雑音', data: total, borderColor: 'black', fill: false, tension: 0 },
-        { label: '熱雑音 √4kTR', data: thermal, borderDash: [5, 5], borderColor: 'blue', fill: false, tension: 0 },
-        { label: '電流換算雑音 iₙ·R', data: current, borderDash: [5, 5], borderColor: 'green', fill: false, tension: 0 },
-        { label: `vₙ=${siPrefix(vn)}V/√Hz`, data: R.map(() => vn), borderDash: [2, 2], borderColor: 'red', fill: false }
-      ]
-    };
-    const options = {
-      scales: {
-        x: { type: 'logarithmic', title: { display: true, text: '抵抗 [Ω]' }, ticks: { callback: siPrefix } },
-        y: { type: 'logarithmic', title: { display: true, text: '電圧雑音密度 [V/√Hz]' }, ticks: { callback: siPrefix } }
-      },
-      plugins: { legend: { position: 'top' } },
-      animation: false
-    };
-    if (chart) chart.destroy();
-    chart = new Chart(ctx, { type: 'line', data, options });
-    const res = document.getElementById('results');
-    let txt = `<strong>最適抵抗 Rₒₚₜ:</strong> ${siPrefix(R_opt)}Ω`;
-    if (R_min && R_max) txt += `<br><strong>推奨範囲:</strong> ${siPrefix(R_min)}Ω – ${siPrefix(R_max)}Ω`;
-    res.innerHTML = txt;
-  }
-
-  ['vn_pref','vn_val','in_pref','in_val','T'].forEach(id =>
-    document.getElementById(id).addEventListener('input', updateChart)
-  );
-  // 初期描画（DOMContentLoaded イベント及び即時実行）
-  document.addEventListener('DOMContentLoaded', updateChart);
-  updateChart();
+    // 初期描画
+    document.addEventListener('DOMContentLoaded', () => {
+      updateChart();
+    });
   </script>
 </body>
 </html>

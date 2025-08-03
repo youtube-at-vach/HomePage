@@ -3,160 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>信号レベルコンバータ</title>
+    <title>高機能 信号レベルコンバータ</title>
     <style>
-        body { font-family: sans-serif; margin: 20px; }
-        .row { display: flex; align-items: center; margin-bottom: 10px; }
-        .row label { width: 100px; }
-        .row input, .row select { margin-right: 5px; }
-        .row input[type="number"] { width: 100px; }
-        .notes { font-size: 0.9em; color: #555; margin-bottom: 15px; }
-        button { padding: 5px 10px; font-size: 1em; }
-        input.active { background-color: #e0f7fa; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .notes {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .settings-grid, .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .control-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        .control-group select, .control-group input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .row label {
+            width: 70px;
+            font-weight: 600;
+        }
+        .row .input-wrapper {
+            display: flex;
+            flex-grow: 1;
+        }
+        .row input[type="number"] {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-right: none;
+            border-radius: 5px 0 0 5px;
+            padding: 10px;
+            font-size: 1em;
+            outline: none;
+            text-align: right;
+        }
+        .row select {
+            border: 1px solid #ccc;
+            border-left: none;
+            border-radius: 0;
+            padding: 10px 5px;
+            background-color: #f9f9f9;
+        }
+        .row .unit {
+            padding-left: 10px;
+            font-weight: bold;
+            min-width: 30px;
+        }
+        .row input.active {
+            background-color: #e0f7fa;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+        .row input:read-only {
+            background-color: #f1f1f1;
+            color: #777;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 25px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #e74c3c;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #c0392b;
+        }
+        #customImpedanceWrapper { display: none; }
     </style>
 </head>
 <body>
-    <h1>信号レベルコンバータ</h1>
-    <p class="notes">
-        一つのフィールドをクリックしてアクティブにし、値を入力／選択後「変換」ボタンを押してください。<br>
-        Vrms/Vpp の接頭辞は自動的に最適化されます。<br>
-        <strong>dBm 計算に用いるインピーダンス：</strong>任意に選択できます。
-    </p>
-    <div class="row">
-        <label for="impedance">インピーダンス</label>
-        <select id="impedance">
-            <option value="50">50 Ω</option>
-            <option value="75">75 Ω</option>
-            <option value="600">600 Ω</option>
-            <option value="1000">1 kΩ</option>
-        </select>
-    </div>
-    <div class="row">
-        <label for="vrms">Vrms</label>
-        <input type="number" id="vrms" step="any" onfocus="setActive('vrms')" placeholder="入力">
-        <select id="vrmsPrefix" disabled>
-            <option value="1e-12">p</option>
-            <option value="1e-9">n</option>
-            <option value="1e-6">µ</option>
-            <option value="1e-3">m</option>
-            <option value="1">none</option>
-            <option value="1e3">k</option>
-            <option value="1e6">M</option>
-            <option value="1e9">G</option>
-        </select><span>V</span>
-    </div>
-    <div class="row">
-        <label for="vpp">Vpp</label>
-        <input type="number" id="vpp" step="any" onfocus="setActive('vpp')" placeholder="入力">
-        <select id="vppPrefix" disabled>
-            <option value="1e-12">p</option>
-            <option value="1e-9">n</option>
-            <option value="1e-6">µ</option>
-            <option value="1e-3">m</option>
-            <option value="1">none</option>
-            <option value="1e3">k</option>
-            <option value="1e6">M</option>
-            <option value="1e9">G</option>
-        </select><span>V</span>
-    </div>
-    <div class="row">
-        <label for="dBV">dBV</label>
-        <input type="number" id="dBV" step="any" onfocus="setActive('dBV')" placeholder="入力">
-    </div>
-    <div class="row">
-        <label for="dBu">dBu</label>
-        <input type="number" id="dBu" step="any" onfocus="setActive('dBu')" placeholder="入力">
-    </div>
-    <div class="row">
-        <label for="dBm">dBm</label>
-        <input type="number" id="dBm" step="any" onfocus="setActive('dBm')" placeholder="入力">
-    </div>
-    <div class="row">
-        <button onclick="onCalculate()">変換</button>
+    <div class="container">
+        <h1>高機能 信号レベルコンバータ</h1>
+        <p class="notes">
+            変換したい単位の入力欄をクリックし、値を入力してください。他の単位は自動で計算されます。
+        </p>
+
+        <div class="settings-grid">
+            <div class="control-group">
+                <label for="impedanceSelect">インピーダンス (Z)</label>
+                <select id="impedanceSelect">
+                    <option value="50">50 Ω</option>
+                    <option value="75">75 Ω</option>
+                    <option value="600">600 Ω</option>
+                    <option value="custom">カスタム...</option>
+                </select>
+                <div id="customImpedanceWrapper" style="margin-top: 10px;">
+                    <input type="number" id="customImpedance" value="50" step="any" min="0.001">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="waveform">波形</label>
+                <select id="waveform">
+                    <option value="sine" selected>正弦波 (Sine)</option>
+                    <option value="square">矩形波 (Square)</option>
+                    <option value="triangle">三角波 (Triangle)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="results-grid-container">
+            <div class="row">
+                <label for="vrms">Vrms</label>
+                <div class="input-wrapper">
+                    <input type="number" id="vrms" step="any">
+                    <select id="vrmsPrefix"></select>
+                </div>
+                <span class="unit">V</span>
+            </div>
+            <div class="row">
+                <label for="vpp">Vpp</label>
+                <div class="input-wrapper">
+                    <input type="number" id="vpp" step="any">
+                    <select id="vppPrefix"></select>
+                </div>
+                <span class="unit">V</span>
+            </div>
+            <div class="row">
+                <label for="dBV">dBV</label>
+                 <div class="input-wrapper">
+                    <input type="number" id="dBV" step="any">
+                </div>
+                <span class="unit"></span>
+            </div>
+            <div class="row">
+                <label for="dBu">dBu</label>
+                 <div class="input-wrapper">
+                    <input type="number" id="dBu" step="any">
+                </div>
+                <span class="unit"></span>
+            </div>
+            <div class="row">
+                <label for="dBm">dBm</label>
+                 <div class="input-wrapper">
+                    <input type="number" id="dBm" step="any">
+                </div>
+                <span class="unit"></span>
+            </div>
+             <div class="row">
+                <label for="power">Power</label>
+                <div class="input-wrapper">
+                    <input type="number" id="power" step="any">
+                    <select id="powerPrefix"></select>
+                </div>
+                <span class="unit">W</span>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button onclick="clearAll()">クリア</button>
+        </div>
     </div>
 
     <script>
-        let activeField = '';
-        const fields = ['vrms','vpp','dBV','dBu','dBm'];
-        const prefixes = [
-            {sym:'p', val:'1e-12'},
-            {sym:'n', val:'1e-9'},
-            {sym:'µ', val:'1e-6'},
-            {sym:'m', val:'1e-3'},
-            {sym:'none', val:'1'},
-            {sym:'k', val:'1e3'},
-            {sym:'M', val:'1e6'},
-            {sym:'G', val:'1e9'}
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            const fields = {
+                vrms: { hasPrefix: true },
+                vpp: { hasPrefix: true },
+                dBV: { hasPrefix: false },
+                dBu: { hasPrefix: false },
+                dBm: { hasPrefix: false },
+                power: { hasPrefix: true }
+            };
+            const prefixOptions = [
+                { sym: 'T', val: '1e12' }, { sym: 'G', val: '1e9' }, { sym: 'M', val: '1e6' },
+                { sym: 'k', val: '1e3' }, { sym: '', val: '1' }, { sym: 'm', val: '1e-3' },
+                { sym: 'µ', val: '1e-6' }, { sym: 'n', val: '1e-9' }, { sym: 'p', val: '1e-12' },
+                { sym: 'f', val: '1e-15'}
+            ];
+            
+            let activeField = null;
 
+            // --- 初期化処理 ---
+            function initialize() {
+                Object.keys(fields).forEach(id => {
+                    const el = document.getElementById(id);
+                    el.addEventListener('focus', () => setActive(id));
+                    el.addEventListener('input', () => calculateAndDisplay(id));
 
-        function setActive(f){
-            activeField = f;
-            updateStyles();
-        }
-        function updateStyles(){
-            fields.forEach(f=>{
-                const el=document.getElementById(f);
-                if(f===activeField){ el.classList.add('active'); el.readOnly=false; }
-                else { el.classList.remove('active'); el.readOnly=true; el.value=''; }
-            });
-            ['vrms','vpp'].forEach(f=>{
-                document.getElementById(f+'Prefix').disabled = (activeField!==f);
-            });
-        }
+                    if (fields[id].hasPrefix) {
+                        const prefixSelect = document.getElementById(id + 'Prefix');
+                        prefixOptions.forEach(p => {
+                            const option = document.createElement('option');
+                            option.value = p.val;
+                            option.textContent = p.sym;
+                            prefixSelect.appendChild(option);
+                        });
+                        prefixSelect.value = '1';
+                        prefixSelect.addEventListener('change', () => calculateAndDisplay(id));
+                    }
+                });
+                
+                document.getElementById('impedanceSelect').addEventListener('change', handleImpedanceChange);
+                document.getElementById('customImpedance').addEventListener('input', () => calculateAndDisplay(activeField));
+                document.getElementById('waveform').addEventListener('change', () => calculateAndDisplay(activeField));
 
-        function autoPrefix(val, selectId, inputId){
-            const abs = Math.abs(val);
-            let best = prefixes[0];
-            let minError = Infinity;
+                clearAll();
+            }
 
-            for (let i = 0; i < prefixes.length; i++) {
-                const scaleVal = parseFloat(prefixes[i].val); // ← ここ重要
-                const scaled = abs / scaleVal;
-                const error = Math.abs(Math.log10(scaled));
-                if (error < minError) {
-                    minError = error;
-                    best = prefixes[i];
+            function handleImpedanceChange(e) {
+                const wrapper = document.getElementById('customImpedanceWrapper');
+                wrapper.style.display = (e.target.value === 'custom') ? 'block' : 'none';
+                calculateAndDisplay(activeField);
+            }
+
+            function setActive(id) {
+                if (activeField === id) return;
+                activeField = id;
+
+                Object.keys(fields).forEach(fieldId => {
+                    const inputEl = document.getElementById(fieldId);
+                    if (fieldId === id) {
+                        inputEl.classList.add('active');
+                        inputEl.readOnly = false;
+                    } else {
+                        inputEl.classList.remove('active');
+                        inputEl.readOnly = true;
+                        inputEl.value = '';
+                        if(fields[fieldId].hasPrefix) document.getElementById(fieldId + 'Prefix').value = '1';
+                    }
+                });
+            }
+
+            window.clearAll = () => {
+                Object.keys(fields).forEach(id => {
+                    const inputEl = document.getElementById(id);
+                    inputEl.value = '';
+                    inputEl.readOnly = true;
+                    inputEl.classList.remove('active');
+                     if (fields[id].hasPrefix) {
+                        document.getElementById(id + 'Prefix').value = '1';
+                    }
+                });
+                activeField = null;
+            }
+
+            function getImpedance() {
+                const select = document.getElementById('impedanceSelect');
+                if (select.value === 'custom') {
+                    return parseFloat(document.getElementById('customImpedance').value) || 50;
                 }
+                return parseFloat(select.value);
             }
 
-            document.getElementById(selectId).value = best.val;
-            const scaled = val / parseFloat(best.val); // ← ここも修正
-            const displayVal = Math.abs(scaled) < 1e-3 || Math.abs(scaled) > 1e6
-                ? scaled.toExponential(3)
-                : scaled.toFixed(6).replace(/\.?0+$/, '');
-            document.getElementById(inputId).value = displayVal;
-        }
+            function calculateAndDisplay(sourceId) {
+                if (!sourceId) return;
+                
+                const sourceInput = document.getElementById(sourceId);
+                let sourceValue = parseFloat(sourceInput.value);
 
+                if (isNaN(sourceValue)) {
+                    // 他のフィールドをクリアするだけ
+                    Object.keys(fields).filter(id => id !== sourceId).forEach(id => {
+                        document.getElementById(id).value = '';
+                    });
+                    return;
+                }
 
+                if (fields[sourceId].hasPrefix) {
+                    const prefix = parseFloat(document.getElementById(sourceId + 'Prefix').value);
+                    sourceValue *= prefix;
+                }
 
-        function onCalculate(){
-            if(!activeField){ alert('フィールドを選択してください'); return; }
-            const Z = parseFloat(document.getElementById('impedance').value);
-            let vrms;
-            const dBV= parseFloat(document.getElementById('dBV').value);
-            const dBu= parseFloat(document.getElementById('dBu').value);
-            const dBm= parseFloat(document.getElementById('dBm').value);
-            const vppV= parseFloat(document.getElementById('vpp').value) * (parseFloat(document.getElementById('vppPrefix').value)||1);
-            const vrmsV= parseFloat(document.getElementById('vrms').value) * (parseFloat(document.getElementById('vrmsPrefix').value)||1);
+                const Z = getImpedance();
+                const waveform = document.getElementById('waveform').value;
+                const DBU_REF = 0.7746; // dBu reference voltage for 600Ω
+                let vrms;
 
-            switch(activeField){
-                case 'vrms': vrms = vrmsV; break;
-                case 'vpp': vrms = vppV/(2*Math.sqrt(2)); break;
-                case 'dBV': vrms = Math.pow(10, dBV/20); break;
-                case 'dBu': vrms = 0.775 * Math.pow(10, dBu/20); break;
-                case 'dBm': vrms = Math.pow(10, (dBm - (10*Math.log10(Z) - 30))/20); break;
+                // VppとVrmsの換算係数
+                const vpp_to_vrms_factor = {
+                    sine: 1 / (2 * Math.sqrt(2)),
+                    square: 1 / 2,
+                    triangle: 1 / (2 * Math.sqrt(3))
+                };
+                
+                // 1. 基準となるVrmsを計算
+                switch (sourceId) {
+                    case 'vrms':
+                        vrms = sourceValue;
+                        break;
+                    case 'vpp':
+                        vrms = sourceValue * vpp_to_vrms_factor[waveform];
+                        break;
+                    case 'dBV':
+                        vrms = Math.pow(10, sourceValue / 20);
+                        break;
+                    case 'dBu':
+                        vrms = DBU_REF * Math.pow(10, sourceValue / 20);
+                        break;
+                    case 'dBm':
+                        vrms = Math.sqrt(Z * Math.pow(10, sourceValue / 10) / 1000);
+                        break;
+                    case 'power':
+                        vrms = Math.sqrt(sourceValue * Z);
+                        break;
+                    default: return;
+                }
+                
+                if (!isFinite(vrms) || vrms < 0) return;
+
+                // 2. Vrmsから他のすべての値を計算
+                const calculations = {
+                    vrms: vrms,
+                    vpp: vrms / vpp_to_vrms_factor[waveform],
+                    dBV: 20 * Math.log10(vrms),
+                    dBu: 20 * Math.log10(vrms / DBU_REF),
+                    dBm: 10 * Math.log10((vrms * vrms / Z) * 1000),
+                    power: (vrms * vrms) / Z
+                };
+
+                // 3. 結果を表示
+                Object.keys(calculations).forEach(id => {
+                    if (id === sourceId) return; // 入力フィールドは更新しない
+                    
+                    const value = calculations[id];
+                    const el = document.getElementById(id);
+
+                    if (fields[id].hasPrefix) {
+                        autoPrefix(value, id, id + 'Prefix');
+                    } else {
+                        el.value = isFinite(value) ? value.toFixed(3) : '';
+                    }
+                });
             }
-            // 他のフィールド更新
-            autoPrefix(vrms,'vrmsPrefix','vrms');
-            autoPrefix(vrms*2*Math.sqrt(2),'vppPrefix','vpp');
-            document.getElementById('dBV').value = (20*Math.log10(vrms)).toFixed(2);
-            document.getElementById('dBu').value = (20*Math.log10(vrms/0.775)).toFixed(2);
-            const dbmOut = 20*Math.log10(vrms) - 10*Math.log10(Z) + 30;
-            document.getElementById('dBm').value = dbmOut.toFixed(2);
-        }
 
-        updateStyles();
+            function autoPrefix(value, inputId, prefixId) {
+                const inputEl = document.getElementById(inputId);
+                const prefixEl = document.getElementById(prefixId);
+
+                if (value === 0 || !isFinite(value)) {
+                    inputEl.value = '0';
+                    prefixEl.value = '1';
+                    return;
+                }
+                
+                const absValue = Math.abs(value);
+                let bestPrefix = prefixOptions[4]; // Default to 'none'
+
+                // 最適な接頭辞を見つける
+                if (absValue > 0) {
+                     let minError = Math.abs(Math.log10(absValue));
+                     for (const p of prefixOptions) {
+                        const scale = parseFloat(p.val);
+                        const scaledVal = absValue / scale;
+                        if (scaledVal >= 1) {
+                            const error = Math.abs(Math.log10(scaledVal));
+                             if (error < minError) {
+                                minError = error;
+                                bestPrefix = p;
+                            }
+                        }
+                     }
+                }
+
+                const scale = parseFloat(bestPrefix.val);
+                const scaledValue = value / scale;
+                
+                prefixEl.value = bestPrefix.val;
+                inputEl.value = Number(scaledValue.toPrecision(5)).toString();
+            }
+
+            initialize();
+        });
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高機能 信号レベルコンバータ (改)</title>
+    <title>高機能 信号レベルコンバータ (完成版)</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -125,7 +125,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>高機能 信号レベルコンバータ (改)</h1>
+        <h1>高機能 信号レベルコンバータ (完成版)</h1>
         <p class="notes">
             変換したい単位の入力欄をクリックし、値を入力してください。他の単位は自動で計算されます。
         </p>
@@ -216,11 +216,13 @@
                 dBm: { hasPrefix: false },
                 power: { hasPrefix: true }
             };
+            // ★ SI接頭辞を追加
             const prefixOptions = [
                 { sym: 'T', val: '1e12' }, { sym: 'G', val: '1e9' }, { sym: 'M', val: '1e6' },
                 { sym: 'k', val: '1e3' }, { sym: '', val: '1' }, { sym: 'm', val: '1e-3' },
                 { sym: 'µ', val: '1e-6' }, { sym: 'n', val: '1e-9' }, { sym: 'p', val: '1e-12' },
-                { sym: 'f', val: '1e-15'}
+                { sym: 'f', val: '1e-15'}, { sym: 'a', val: '1e-18'}, { sym: 'z', val: '1e-21'},
+                { sym: 'y', val: '1e-24'}, { sym: 'r', val: '1e-27'}
             ];
             
             let activeField = null;
@@ -310,7 +312,7 @@
 
                 const Z = getImpedance();
                 const waveform = document.getElementById('waveform').value;
-                const DBU_REF = 0.775; // 0dBu = 0.775V (standard reference)
+                const DBU_REF = 0.775;
                 let vrms;
 
                 const vpp_to_vrms_factor = {
@@ -354,7 +356,7 @@
                 });
             }
             
-            // ★ SI接頭辞の選択ロジックを修正
+            // ★ SI接頭辞の選択ロジックを改善
             function autoPrefix(value, inputId) {
                 const inputEl = document.getElementById(inputId);
                 const prefixEl = document.getElementById(inputId + 'Prefix');
@@ -366,36 +368,12 @@
                 }
 
                 const absValue = Math.abs(value);
-                let bestPrefix = prefixOptions.find(p => p.val === '1');
-                let minLogDiff = Math.abs(Math.log10(absValue));
-
-                for (const p of prefixOptions) {
-                    const scale = parseFloat(p.val);
-                    const scaledVal = absValue / scale;
-                    if(scaledVal < 1) continue; // 1未満になるような接頭辞は扱いにくいのでスキップ
-                    const logDiff = Math.abs(Math.log10(scaledVal));
-
-                    if (logDiff < minLogDiff) {
-                        minLogDiff = logDiff;
-                        bestPrefix = p;
-                    }
-                }
+                const sortedPrefixes = [...prefixOptions].sort((a, b) => parseFloat(b.val) - parseFloat(a.val));
                 
-                 // 1より小さい値の場合の処理
-                if (absValue < 1) {
-                    minLogDiff = Infinity; // リセット
-                     for (const p of prefixOptions) {
-                        const scale = parseFloat(p.val);
-                        if(scale >= 1) continue; // 1以上の接頭辞はスキップ
-                        
-                        const scaledVal = absValue / scale;
-                        const logDiff = Math.abs(Math.log10(scaledVal));
+                let bestPrefix = sortedPrefixes.find(p => absValue >= parseFloat(p.val));
 
-                        if (logDiff < minLogDiff) {
-                            minLogDiff = logDiff;
-                            bestPrefix = p;
-                        }
-                    }
+                if (!bestPrefix) {
+                    bestPrefix = sortedPrefixes[sortedPrefixes.length - 1];
                 }
 
                 const scale = parseFloat(bestPrefix.val);

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>オペアンプ 帰還容量⇄帯域・減衰計算プロトタイプ</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: 20px auto; padding: 0 20px; }
+    label { display: block; margin-top: 10px; }
+    input, select, button { padding: 4px 8px; margin-top: 4px; }
+    #chart-container { margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>オペアンプ 帰還容量⇄帯域・減衰計算</h1>
+  <label>帰還抵抗 R<sub>f</sub> (Ω)
+    <input type="number" id="Rf" value="1000" step="any">
+  </label>
+  <label>帰還容量 C<sub>f</sub>
+    <input type="number" id="Cf_value" value="1" step="any" style="width:80px;">
+    <select id="Cf_prefix">
+      <option value="-15">f (10⁻¹⁵)</option>
+      <option value="-12">p (10⁻¹²)</option>
+      <option value="-9">n (10⁻⁹)</option>
+      <option value="-6" selected>µ (10⁻⁶)</option>
+      <option value="-3">m (10⁻³)</option>
+      <option value="0">( ) (10⁰)</option>
+    </select>F
+  </label>
+  <label>計算モード
+    <select id="mode">
+      <option value="forward">順方向（fc→減衰）</option>
+      <option value="inverse">逆算（減衰→fc・Cf）</option>
+    </select>
+  </label>
+  <div id="forward-inputs">
+    <label>周波数リスト (Hz), カンマ区切り
+      <input type="text" id="freqList" value="20000,100000">
+    </label>
+  </div>
+  <div id="inverse-inputs" style="display:none;">
+    <label>目標周波数 f (Hz)
+      <input type="number" id="inv_f" value="100000">
+    </label>
+    <label>目標減衰量 (dB)
+      <input type="number" id="inv_attn" value="0.01" step="any">
+    </label>
+  </div>
+  <button id="calcBtn">計算</button>
+
+  <div id="results">
+    <h2>結果</h2>
+    <div id="summary"></div>
+    <table id="resultTable"></table>
+  </div>
+
+  <div id="chart-container">
+    <canvas id="bwChart"></canvas>
+  </div>
+
+  <script>
+    const RfInput = document.getElementById('Rf');
+    const CfValInput = document.getElementById('Cf_value');
+    const CfPreInput = document.getElementById('Cf_prefix');
+    const modeSelect = document.getElementById('mode');
+    const forwardInputs = document.getElementById('forward-inputs');
+    const inverseInputs = document.getElementById('inverse-inputs');
+    const calcBtn = document.getElementById('calcBtn');
+    const summaryDiv = document.getElementById('summary');
+    const table = document.getElementById('resultTable');
+    let chart;
+
+    modeSelect.addEventListener('change', () => {
+      summaryDiv.innerHTML = '';
+      table.innerHTML = '';
+      if (chart) { chart.destroy(); }
+      forwardInputs.style.display = modeSelect.value === 'forward' ? '' : 'none';
+      inverseInputs.style.display = modeSelect.value === 'inverse' ? '' : 'none';
+    });
+
+    function toValue(val, exp) { return val * Math.pow(10, exp); }
+    function calcFc(Rf, Cf) { return 1 / (2 * Math.PI * Rf * Cf); }
+    function attnDb(f, fc) { return -10 * Math.log10(1 + Math.pow(f / fc, 2)); }
+    function invFc(f, attn) {
+      const mag2 = Math.pow(10, -attn / 10);
+      const ratio2 = mag2 > 0 ? (1 / mag2 - 1) : Infinity;
+      return f / Math.sqrt(ratio2);
+    }
+    function formatSI(val) {
+      const abs = Math.abs(val);
+      if (abs >= 1e6) return (val / 1e6).toFixed(3) + ' MHz';
+      if (abs >= 1e3) return (val / 1e3).toFixed(3) + ' kHz';
+      if (abs >= 1)    return val.toFixed(3) + ' Hz';
+      if (abs >= 1e-3) return (val * 1e3).toFixed(3) + ' mHz';
+      return val.toExponential(3) + ' Hz';
+    }
+    function formatCapSI(val) {
+      const abs = Math.abs(val);
+      if (abs >= 1)    return val.toFixed(3) + ' F';
+      if (abs >= 1e-3) return (val * 1e3).toFixed(3) + ' mF';
+      if (abs >= 1e-6) return (val * 1e6).toFixed(3) + ' µF';
+      if (abs >= 1e-9) return (val * 1e9).toFixed(3) + ' nF';
+      if (abs >= 1e-12) return (val * 1e12).toFixed(3) + ' pF';
+      return (val * 1e15).toFixed(3) + ' fF';
+    }
+
+    calcBtn.onclick = () => {
+      const Rf = parseFloat(RfInput.value);
+      const Cf = toValue(parseFloat(CfValInput.value), parseInt(CfPreInput.value));
+      const fc = calcFc(Rf, Cf);
+
+      table.innerHTML = '';
+      const header = document.createElement('tr');
+
+      if (modeSelect.value === 'forward') {
+        summaryDiv.innerHTML = `<p>求められた帯域 fc (–3 dB)： ${formatSI(fc)}</p>`;
+        ['項目', '減衰量 (dB)'].forEach(text => {
+          const th = document.createElement('th'); th.textContent = text; header.appendChild(th);
+        });
+        table.appendChild(header);
+
+        // fc行
+        const rowFc = document.createElement('tr');
+        [`fc: ${formatSI(fc)}`, attnDb(fc, fc).toFixed(4)].forEach(val => {
+          const td = document.createElement('td'); td.textContent = val; rowFc.appendChild(td);
+        });
+        table.appendChild(rowFc);
+
+        // ユーザ周波数
+        const freqs = document.getElementById('freqList').value.split(',').map(s => parseFloat(s.trim()));
+        freqs.forEach(f => {
+          const row = document.createElement('tr');
+          const att = attnDb(f, fc);
+          [`${formatSI(f)}`, att.toFixed(4)].forEach(val => {
+            const td = document.createElement('td'); td.textContent = val; row.appendChild(td);
+          });
+          table.appendChild(row);
+        });
+      } else {
+        summaryDiv.innerHTML = `<p>逆算モード：目標減衰 ${parseFloat(document.getElementById('inv_attn').value)} dB @ ${formatSI(parseFloat(document.getElementById('inv_f').value))}</p>`;
+        ['方式', '値'].forEach(text => {
+          const th = document.createElement('th'); th.textContent = text; header.appendChild(th);
+        });
+        table.appendChild(header);
+
+        const f = parseFloat(document.getElementById('inv_f').value);
+        const att = parseFloat(document.getElementById('inv_attn').value);
+        const neededFc = invFc(f, att);
+        const neededCf = 1 / (2 * Math.PI * Rf * neededFc);
+        [['必要 fc', formatSI(neededFc)], ['必要 Cf', formatCapSI(neededCf)]].forEach(item => {
+          const row = document.createElement('tr');
+          item.forEach(val => {
+            const td = document.createElement('td'); td.textContent = val; row.appendChild(td);
+          });
+          table.appendChild(row);
+        });
+      }
+
+      // Chart生成は共通
+      const ctx = document.getElementById('bwChart').getContext('2d');
+      const freqs = Array.from({ length: 200 }, (_, i) =>
+        Math.pow(10, Math.log10(10) + (Math.log10(1e8) - Math.log10(10)) * (i / 199))
+      );
+      const data = freqs.map(f => attnDb(f, fc));
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: freqs, datasets: [{ label: '減衰量 (dB)', data }] },
+        options: {
+          scales: {
+            x: {
+              type: 'logarithmic', title: { display: true, text: '周波数' },
+              ticks: { callback: val => formatSI(val) }
+            },
+            y: { title: { display: true, text: '減衰量 (dB)' } }
+          }
+        }
+      });
+    };
+  </script>
+</body>
+</html>

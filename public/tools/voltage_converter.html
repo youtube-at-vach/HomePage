@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高機能 信号レベルコンバータ</title>
+    <title>高機能 信号レベルコンバータ (改)</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -125,7 +125,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>高機能 信号レベルコンバータ</h1>
+        <h1>高機能 信号レベルコンバータ (改)</h1>
         <p class="notes">
             変換したい単位の入力欄をクリックし、値を入力してください。他の単位は自動で計算されます。
         </p>
@@ -175,21 +175,21 @@
                  <div class="input-wrapper">
                     <input type="number" id="dBV" step="any">
                 </div>
-                <span class="unit"></span>
+                <span class="unit">dB</span>
             </div>
             <div class="row">
                 <label for="dBu">dBu</label>
                  <div class="input-wrapper">
                     <input type="number" id="dBu" step="any">
                 </div>
-                <span class="unit"></span>
+                <span class="unit">dB</span>
             </div>
             <div class="row">
                 <label for="dBm">dBm</label>
                  <div class="input-wrapper">
                     <input type="number" id="dBm" step="any">
                 </div>
-                <span class="unit"></span>
+                <span class="unit">dB</span>
             </div>
              <div class="row">
                 <label for="power">Power</label>
@@ -225,7 +225,6 @@
             
             let activeField = null;
 
-            // --- 初期化処理 ---
             function initialize() {
                 Object.keys(fields).forEach(id => {
                     const el = document.getElementById(id);
@@ -235,10 +234,7 @@
                     if (fields[id].hasPrefix) {
                         const prefixSelect = document.getElementById(id + 'Prefix');
                         prefixOptions.forEach(p => {
-                            const option = document.createElement('option');
-                            option.value = p.val;
-                            option.textContent = p.sym;
-                            prefixSelect.appendChild(option);
+                            prefixSelect.add(new Option(p.sym, p.val));
                         });
                         prefixSelect.value = '1';
                         prefixSelect.addEventListener('change', () => calculateAndDisplay(id));
@@ -255,7 +251,7 @@
             function handleImpedanceChange(e) {
                 const wrapper = document.getElementById('customImpedanceWrapper');
                 wrapper.style.display = (e.target.value === 'custom') ? 'block' : 'none';
-                calculateAndDisplay(activeField);
+                if (activeField) calculateAndDisplay(activeField);
             }
 
             function setActive(id) {
@@ -264,12 +260,9 @@
 
                 Object.keys(fields).forEach(fieldId => {
                     const inputEl = document.getElementById(fieldId);
-                    if (fieldId === id) {
-                        inputEl.classList.add('active');
-                        inputEl.readOnly = false;
-                    } else {
-                        inputEl.classList.remove('active');
-                        inputEl.readOnly = true;
+                    inputEl.classList.toggle('active', fieldId === id);
+                    inputEl.readOnly = (fieldId !== id);
+                    if (fieldId !== id) {
                         inputEl.value = '';
                         if(fields[fieldId].hasPrefix) document.getElementById(fieldId + 'Prefix').value = '1';
                     }
@@ -304,7 +297,6 @@
                 let sourceValue = parseFloat(sourceInput.value);
 
                 if (isNaN(sourceValue)) {
-                    // 他のフィールドをクリアするだけ
                     Object.keys(fields).filter(id => id !== sourceId).forEach(id => {
                         document.getElementById(id).value = '';
                     });
@@ -318,42 +310,27 @@
 
                 const Z = getImpedance();
                 const waveform = document.getElementById('waveform').value;
-                const DBU_REF = 0.7746; // dBu reference voltage for 600Ω
+                const DBU_REF = 0.775; // 0dBu = 0.775V (standard reference)
                 let vrms;
 
-                // VppとVrmsの換算係数
                 const vpp_to_vrms_factor = {
                     sine: 1 / (2 * Math.sqrt(2)),
                     square: 1 / 2,
                     triangle: 1 / (2 * Math.sqrt(3))
                 };
                 
-                // 1. 基準となるVrmsを計算
                 switch (sourceId) {
-                    case 'vrms':
-                        vrms = sourceValue;
-                        break;
-                    case 'vpp':
-                        vrms = sourceValue * vpp_to_vrms_factor[waveform];
-                        break;
-                    case 'dBV':
-                        vrms = Math.pow(10, sourceValue / 20);
-                        break;
-                    case 'dBu':
-                        vrms = DBU_REF * Math.pow(10, sourceValue / 20);
-                        break;
-                    case 'dBm':
-                        vrms = Math.sqrt(Z * Math.pow(10, sourceValue / 10) / 1000);
-                        break;
-                    case 'power':
-                        vrms = Math.sqrt(sourceValue * Z);
-                        break;
+                    case 'vrms': vrms = sourceValue; break;
+                    case 'vpp': vrms = sourceValue * vpp_to_vrms_factor[waveform]; break;
+                    case 'dBV': vrms = Math.pow(10, sourceValue / 20); break;
+                    case 'dBu': vrms = DBU_REF * Math.pow(10, sourceValue / 20); break;
+                    case 'dBm': vrms = Math.sqrt(Z * Math.pow(10, sourceValue / 10) / 1000); break;
+                    case 'power': vrms = Math.sqrt(sourceValue * Z); break;
                     default: return;
                 }
                 
                 if (!isFinite(vrms) || vrms < 0) return;
 
-                // 2. Vrmsから他のすべての値を計算
                 const calculations = {
                     vrms: vrms,
                     vpp: vrms / vpp_to_vrms_factor[waveform],
@@ -363,55 +340,69 @@
                     power: (vrms * vrms) / Z
                 };
 
-                // 3. 結果を表示
                 Object.keys(calculations).forEach(id => {
-                    if (id === sourceId) return; // 入力フィールドは更新しない
+                    if (id === sourceId) return;
                     
                     const value = calculations[id];
                     const el = document.getElementById(id);
 
                     if (fields[id].hasPrefix) {
-                        autoPrefix(value, id, id + 'Prefix');
+                        autoPrefix(value, id);
                     } else {
-                        el.value = isFinite(value) ? value.toFixed(3) : '';
+                        el.value = isFinite(value) ? value.toPrecision(6) : '';
                     }
                 });
             }
-
-            function autoPrefix(value, inputId, prefixId) {
+            
+            // ★ SI接頭辞の選択ロジックを修正
+            function autoPrefix(value, inputId) {
                 const inputEl = document.getElementById(inputId);
-                const prefixEl = document.getElementById(prefixId);
+                const prefixEl = document.getElementById(inputId + 'Prefix');
 
                 if (value === 0 || !isFinite(value)) {
                     inputEl.value = '0';
                     prefixEl.value = '1';
                     return;
                 }
-                
-                const absValue = Math.abs(value);
-                let bestPrefix = prefixOptions[4]; // Default to 'none'
 
-                // 最適な接頭辞を見つける
-                if (absValue > 0) {
-                     let minError = Math.abs(Math.log10(absValue));
+                const absValue = Math.abs(value);
+                let bestPrefix = prefixOptions.find(p => p.val === '1');
+                let minLogDiff = Math.abs(Math.log10(absValue));
+
+                for (const p of prefixOptions) {
+                    const scale = parseFloat(p.val);
+                    const scaledVal = absValue / scale;
+                    if(scaledVal < 1) continue; // 1未満になるような接頭辞は扱いにくいのでスキップ
+                    const logDiff = Math.abs(Math.log10(scaledVal));
+
+                    if (logDiff < minLogDiff) {
+                        minLogDiff = logDiff;
+                        bestPrefix = p;
+                    }
+                }
+                
+                 // 1より小さい値の場合の処理
+                if (absValue < 1) {
+                    minLogDiff = Infinity; // リセット
                      for (const p of prefixOptions) {
                         const scale = parseFloat(p.val);
+                        if(scale >= 1) continue; // 1以上の接頭辞はスキップ
+                        
                         const scaledVal = absValue / scale;
-                        if (scaledVal >= 1) {
-                            const error = Math.abs(Math.log10(scaledVal));
-                             if (error < minError) {
-                                minError = error;
-                                bestPrefix = p;
-                            }
+                        const logDiff = Math.abs(Math.log10(scaledVal));
+
+                        if (logDiff < minLogDiff) {
+                            minLogDiff = logDiff;
+                            bestPrefix = p;
                         }
-                     }
+                    }
                 }
 
                 const scale = parseFloat(bestPrefix.val);
                 const scaledValue = value / scale;
                 
                 prefixEl.value = bestPrefix.val;
-                inputEl.value = Number(scaledValue.toPrecision(5)).toString();
+                inputEl.value = Number(scaledValue.toPrecision(6)).toString();
             }
 
             initialize();

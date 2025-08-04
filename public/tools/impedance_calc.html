@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>インピーダンス対応 電圧計算機</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; background-color: #fdfdfd; }
+    h1 { font-size: 1.5em; }
+    h2 { margin-top: 1.5em; border-bottom: 1px solid #ccc; padding-bottom: 0.3em; }
+    .field { margin-bottom: 1.2em; }
+    label { display: block; margin-bottom: 0.4em; font-weight: bold; }
+    .input-group { display: flex; align-items: center; }
+    input, select { padding: 8px; font-size: 1em; margin-right: 4px; border: 1px solid #ccc; border-radius: 4px; }
+    .value-display { margin-left: 10px; font-size: 0.9em; color: #555; min-width: 120px; }
+    .ref { margin-top: 1em; font-size: 0.9em; color: #333; background-color: #f0f8ff; padding: 12px; border-radius: 4px; border: 1px solid #add8e6; }
+    .note { font-size: 0.8em; color: #777; margin-top: 0.5em; }
+  </style>
+</head>
+<body>
+  <h1>インピーダンス対応 電圧計算機</h1>
+  <p>信号源(Vout)か測定器(Vin)の値を入力すると、もう一方が自動計算されます。電圧値とdBV値は常に併記されます。</p>
+
+  <h2>信号源設定</h2>
+  <div class="field">
+    <label for="zout">出力インピーダンス Zout (Ω):</label>
+    <select id="zout">
+      <option value="50">50 Ω</option>
+      <option value="75">75 Ω</option>
+      <option value="600">600 Ω</option>
+      <option value="1000">1 kΩ</option>
+      <option value="10000">10 kΩ</option>
+      <option value="1000000">1 MΩ</option>
+      <option value="10000000">10 MΩ</option>
+      <option value="custom">カスタム</option>
+    </select>
+    <input type="number" id="zout_custom" placeholder="カスタム値 (Ω)" style="display:none; width: 150px;" />
+  </div>
+  <div class="field">
+    <label for="vout_val">出力電圧 Vout:</label>
+    <div class="input-group">
+      <input type="number" step="any" id="vout_val" placeholder="数値" style="width: 150px;" />
+      <select id="vout_unit">
+        <option value="V">V</option>
+        <option value="mV">mV</option>
+        <option value="uV">µV</option>
+        <option value="nV">nV</option>
+        <option value="pV">pV</option>
+        <option value="dBV">dBV</option>
+      </select>
+      <span id="vout_display" class="value-display"></span>
+    </div>
+    <p class="note">※整合負荷 (Zin = Zout) が接続された際の電圧値です。</p>
+  </div>
+
+  <h2>測定器設定</h2>
+  <div class="field">
+    <label for="zin">入力インピーダンス Zin (Ω):</label>
+    <select id="zin">
+      <option value="50">50 Ω</option>
+      <option value="75">75 Ω</option>
+      <option value="600">600 Ω</option>
+      <option value="1000">1 kΩ</option>
+      <option value="10000">10 kΩ</option>
+      <option value="1000000">1 MΩ</option>
+      <option value="10000000">10 MΩ</option>
+      <option value="custom">カスタム</option>
+    </select>
+    <input type="number" id="zin_custom" placeholder="カスタム値 (Ω)" style="display:none; width: 150px;" />
+  </div>
+  <div class="field">
+    <label for="vin_val">入力電圧 Vin:</label>
+    <div class="input-group">
+      <input type="number" step="any" id="vin_val" placeholder="数値" style="width: 150px;" />
+      <select id="vin_unit">
+        <option value="V">V</option>
+        <option value="mV">mV</option>
+        <option value="uV">µV</option>
+        <option value="nV">nV</option>
+        <option value="pV">pV</option>
+        <option value="dBV">dBV</option>
+      </select>
+      <span id="vin_display" class="value-display"></span>
+    </div>
+  </div>
+
+  <div class="ref" id="refs"></div>
+
+  <script>
+    (function() {
+      const SI_MAP = { 'V': 1, 'mV': 1e-3, 'uV': 1e-6, 'nV': 1e-9, 'pV': 1e-12 };
+      const DECIBEL_FACTOR = 20;
+
+      const dom = {
+        zout: document.getElementById('zout'),
+        zoutCustom: document.getElementById('zout_custom'),
+        voutVal: document.getElementById('vout_val'),
+        voutUnit: document.getElementById('vout_unit'),
+        voutDisplay: document.getElementById('vout_display'),
+        zin: document.getElementById('zin'),
+        zinCustom: document.getElementById('zin_custom'),
+        vinVal: document.getElementById('vin_val'),
+        vinUnit: document.getElementById('vin_unit'),
+        vinDisplay: document.getElementById('vin_display'),
+        refs: document.getElementById('refs'),
+      };
+
+      // 最後に編集された入力欄を追跡するためのフラグ
+      let lastEditedBy = 'source';
+
+      // --- ここからが改良されたスクリプトです ---
+
+      // ユーティリティ関数
+      const getImpedance = (selectEl, customInputEl) =>
+        selectEl.value === 'custom' ? parseFloat(customInputEl.value) : parseFloat(selectEl.value);
+
+      const showCustomInput = (selectEl, customInputEl) => {
+        const isCustom = selectEl.value === 'custom';
+        customInputEl.style.display = isCustom ? 'inline-block' : 'none';
+        if (isCustom && document.activeElement !== customInputEl) customInputEl.focus();
+      };
+
+      const toBaseValue = (value, unit) =>
+        unit === 'dBV' ? Math.pow(10, value / DECIBEL_FACTOR) : value * (SI_MAP[unit] || 1);
+
+      // [新規] 最適なSI接頭辞を選択するヘルパー関数
+      const selectBestUnit = (volts) => {
+        if (isNaN(volts) || volts === 0) return { value: '', unit: 'V' };
+        const absVolts = Math.abs(volts);
+        if (absVolts >= 1) return { value: volts, unit: 'V' };
+        if (absVolts >= 1e-3) return { value: volts / 1e-3, unit: 'mV' };
+        if (absVolts >= 1e-6) return { value: volts / 1e-6, unit: 'uV' };
+        if (absVolts >= 1e-9) return { value: volts / 1e-9, unit: 'nV' };
+        return { value: volts / 1e-12, unit: 'pV' };
+      };
+      
+      // 表示更新のための関数群
+      const updateAuxDisplay = (volts, unitEl, displayEl) => {
+        if (isNaN(volts) || volts <= 0) {
+          displayEl.textContent = '';
+          return;
+        }
+        if (unitEl.value === 'dBV') {
+          displayEl.textContent = `(${volts.toPrecision(4)} V)`;
+        } else {
+          const dbv = (DECIBEL_FACTOR * Math.log10(volts)).toFixed(2);
+          displayEl.textContent = `(${dbv} dBV)`;
+        }
+      };
+      
+      // [改良] 計算結果の表示を更新する関数（SI接頭辞自動選択機能付き）
+      const updateTargetDisplay = (volts, valEl, unitEl, displayEl) => {
+        if (isNaN(volts) || volts <= 0) {
+          valEl.value = '';
+          updateAuxDisplay(NaN, unitEl, displayEl);
+          return;
+        }
+
+        // ターゲット側の単位がdBVの場合は、その選択を維持する
+        if (unitEl.value === 'dBV') {
+          valEl.value = (DECIBEL_FACTOR * Math.log10(volts)).toPrecision(6);
+        } else {
+          // 最適なSI単位を自動で選択し、表示を更新する
+          const { value, unit } = selectBestUnit(volts);
+          valEl.value = value.toPrecision(6);
+          unitEl.value = unit;
+        }
+
+        updateAuxDisplay(volts, unitEl, displayEl);
+      };
+
+      const updateRefs = (voutInVolts) => {
+        if (isNaN(voutInVolts) || voutInVolts <= 0) {
+          dom.refs.innerHTML = '基準値を入力してください。';
+          return;
+        }
+        const openCircuitVoltage = voutInVolts * 2;
+        dom.refs.innerHTML = `<strong>参考:</strong> 信号源の開放電圧 (無負荷時) = <strong>${openCircuitVoltage.toPrecision(6)} V</strong>`;
+      };
+      
+      // メインの計算ロジック（この関数のロジックは変更なし）
+      const updateCalculations = () => {
+        const zout = getImpedance(dom.zout, dom.zoutCustom);
+        const zin = getImpedance(dom.zin, dom.zinCustom);
+
+        if (isNaN(zout) || isNaN(zin)) {
+          updateTargetDisplay(NaN, dom.voutVal, dom.voutUnit, dom.voutDisplay);
+          updateTargetDisplay(NaN, dom.vinVal, dom.vinUnit, dom.vinDisplay);
+          updateRefs(NaN);
+          return;
+        }
+
+        let voutInVolts, vinInVolts;
+        
+        if (lastEditedBy === 'source') {
+          const voutVal = parseFloat(dom.voutVal.value);
+          voutInVolts = toBaseValue(voutVal, dom.voutUnit.value);
+          vinInVolts = isNaN(voutInVolts) ? NaN : (voutInVolts * 2) * zin / (zout + zin);
+          
+          updateAuxDisplay(voutInVolts, dom.voutUnit, dom.voutDisplay);
+          updateTargetDisplay(vinInVolts, dom.vinVal, dom.vinUnit, dom.vinDisplay);
+
+        } else { // lastEditedBy === 'meter'
+          const vinVal = parseFloat(dom.vinVal.value);
+          vinInVolts = toBaseValue(vinVal, dom.vinUnit.value);
+          voutInVolts = isNaN(vinInVolts) ? NaN : (vinInVolts * (zout + zin) / zin) / 2;
+          
+          updateAuxDisplay(vinInVolts, dom.vinUnit, dom.vinDisplay);
+          updateTargetDisplay(voutInVolts, dom.voutVal, dom.voutUnit, dom.voutDisplay);
+        }
+
+        updateRefs(voutInVolts);
+      };
+
+      const debounce = (func, delay = 250) => {
+        let timeout;
+        return (...args) => {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func(...args), delay);
+        };
+      };
+      const debouncedUpdate = debounce(updateCalculations);
+
+      // イベントリスナー設定（変更なし）
+      dom.voutVal.addEventListener('input', () => { lastEditedBy = 'source'; debouncedUpdate(); });
+      dom.vinVal.addEventListener('input', () => { lastEditedBy = 'meter'; debouncedUpdate(); });
+
+      dom.voutUnit.addEventListener('change', () => { lastEditedBy = 'source'; updateCalculations(); });
+      dom.vinUnit.addEventListener('change', () => { lastEditedBy = 'meter'; updateCalculations(); });
+
+      [dom.zout, dom.zin].forEach(el => {
+        el.addEventListener('change', updateCalculations);
+      });
+      [dom.zoutCustom, dom.zinCustom].forEach(el => {
+          el.addEventListener('input', debouncedUpdate);
+      });
+
+      dom.zout.addEventListener('change', () => {
+        showCustomInput(dom.zout, dom.zoutCustom);
+        updateCalculations();
+      });
+      dom.zin.addEventListener('change', () => {
+        showCustomInput(dom.zin, dom.zinCustom);
+        updateCalculations();
+      });
+
+      [dom.voutVal, dom.vinVal, dom.zoutCustom, dom.zinCustom].forEach(el => {
+        el.addEventListener('focus', (e) => e.target.select());
+      });
+
+      // 初期化（変更なし）
+      showCustomInput(dom.zout, dom.zoutCustom);
+      showCustomInput(dom.zin, dom.zinCustom);
+      dom.voutVal.value = 1;
+      updateCalculations();
+    })();
+  </script>
+</body>
+</html>

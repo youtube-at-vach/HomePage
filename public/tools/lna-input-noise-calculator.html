@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>入力換算ノイズ電圧密度 計算機</title>
+  <style>
+    body { font-family: sans-serif; padding: 1em; line-height: 1.6; }
+    label { display: block; margin-top: 1em; }
+    input[type="number"] { width: 10em; }
+    .result { margin-top: 1.5em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>入力換算ノイズ電圧密度 計算機</h2>
+
+  <label>
+    出力ノイズ電圧密度 (V/√Hz):
+    <input id="outputNoiseV" type="number" step="any"> V/√Hz
+  </label>
+  <label>
+    または (dBV/√Hz):
+    <input id="outputNoiseDbv" type="number" step="any"> dBV/√Hz
+  </label>
+
+  <label>
+    アンプゲイン (dB):
+    <input id="gainDb" type="number" step="any" value="40">
+  </label>
+
+  <div class="result">
+    入力換算ノイズ電圧密度:<br>
+    → <span id="inputNoiseV"></span> V/√Hz<br>
+    → <span id="inputNoiseDbv"></span> dBV/√Hz
+  </div>
+
+  <script>
+    const outputNoiseV = document.getElementById('outputNoiseV');
+    const outputNoiseDbv = document.getElementById('outputNoiseDbv');
+    const gainDb = document.getElementById('gainDb');
+    const inputNoiseV = document.getElementById('inputNoiseV');
+    const inputNoiseDbv = document.getElementById('inputNoiseDbv');
+
+    function formatSI(value) {
+      const prefixes = [
+        { factor: 1e-15, symbol: 'f' },
+        { factor: 1e-12, symbol: 'p' },
+        { factor: 1e-9,  symbol: 'n' },
+        { factor: 1e-6,  symbol: 'µ' },
+        { factor: 1e-3,  symbol: 'm' },
+        { factor: 1,     symbol: ''  },
+        { factor: 1e3,   symbol: 'k' },
+        { factor: 1e6,   symbol: 'M' },
+      ];
+
+      for (const p of prefixes) {
+        const scaled = value / p.factor;
+        if (Math.abs(scaled) >= 1 && Math.abs(scaled) < 1000) {
+          return scaled.toFixed(3) + ' ' + p.symbol + 'V/√Hz';
+        }
+      }
+      return value.toExponential(3) + ' V/√Hz';
+    }
+
+    function updateFromV() {
+      const V = parseFloat(outputNoiseV.value);
+      if (!isNaN(V) && V > 0) {
+        outputNoiseDbv.value = (20 * Math.log10(V)).toFixed(2);
+      }
+      calculate();
+    }
+
+    function updateFromDbv() {
+      const dbv = parseFloat(outputNoiseDbv.value);
+      if (!isNaN(dbv)) {
+        outputNoiseV.value = (Math.pow(10, dbv / 20)).toExponential(6);
+      }
+      calculate();
+    }
+
+    function calculate() {
+      const outV = parseFloat(outputNoiseV.value);
+      const gain = parseFloat(gainDb.value);
+      if (isNaN(outV) || outV <= 0 || isNaN(gain)) {
+        inputNoiseV.textContent = '---';
+        inputNoiseDbv.textContent = '---';
+        return;
+      }
+
+      const gainLinear = Math.pow(10, gain / 20);
+      const inV = outV / gainLinear;
+      const inDbv = 20 * Math.log10(inV);
+
+      inputNoiseV.textContent = formatSI(inV);
+      inputNoiseDbv.textContent = inDbv.toFixed(2) + ' dBV/√Hz';
+    }
+
+    outputNoiseV.addEventListener('input', updateFromV);
+    outputNoiseDbv.addEventListener('input', updateFromDbv);
+    gainDb.addEventListener('input', calculate);
+  </script>
+</body>
+</html>

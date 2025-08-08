@@ -2,41 +2,115 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>入力換算ノイズ電圧密度 計算機</title>
   <style>
-    body { font-family: sans-serif; padding: 1em; line-height: 1.6; }
-    label { display: block; margin-top: 1em; }
-    input[type="number"] { width: 10em; }
-    .result { margin-top: 1.5em; font-weight: bold; }
+    :root {
+      --primary-color: #2c3e50;
+      --accent-color: #3498db;
+      --bg-color: #ecf0f1;
+      --input-bg: #ffffff;
+      --font-family: 'Segoe UI', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--primary-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1em;
+    }
+    .container {
+      background: #fff;
+      padding: 2em;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      margin: 0 0 1em;
+      text-align: center;
+      color: var(--accent-color);
+    }
+    .field {
+      margin-bottom: 1.5em;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-bottom: 0.5em;
+      font-weight: bold;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.75em;
+      font-size: 1em;
+      border: 1px solid #bdc3c7;
+      border-radius: 6px;
+      background: var(--input-bg);
+    }
+    .result {
+      margin-top: 1.5em;
+      padding: 1em;
+      background: #f8f9fa;
+      border-radius: 6px;
+      font-size: 0.95em;
+      line-height: 1.4;
+    }
+    .result span {
+      display: block;
+      margin-top: 0.5em;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
   </style>
 </head>
 <body>
-  <h2>入力換算ノイズ電圧密度 計算機</h2>
+  <div class="container">
+    <h2>入力換算ノイズ電圧密度</h2>
 
-  <label>
-    出力ノイズ電圧密度 (V/√Hz):
-    <input id="outputNoiseV" type="number" step="any"> V/√Hz
-  </label>
-  <label>
-    または (dBV/√Hz):
-    <input id="outputNoiseDbv" type="number" step="any"> dBV/√Hz
-  </label>
+    <div class="field">
+      <label for="outputValue">出力ノイズ電圧密度</label>
+      <div style="display:flex; gap:0.5em;">
+        <input id="outputValue" type="number" step="any" placeholder="数値">
+        <select id="outputUnit">
+          <option value="1e-15">fV/√Hz</option>
+          <option value="1e-12">pV/√Hz</option>
+          <option value="1e-9" selected>nV/√Hz</option>
+          <option value="1e-6">µV/√Hz</option>
+          <option value="1e-3">mV/√Hz</option>
+          <option value="1">V/√Hz</option>
+          <option value="dBV">dBV/√Hz</option>
+        </select>
+      </div>
+    </div>
 
-  <label>
-    アンプゲイン (dB):
-    <input id="gainDb" type="number" step="any" value="40">
-  </label>
+    <div class="field">
+      <label for="gainDb">アンプゲイン (dB)</label>
+      <input id="gainDb" type="number" step="any" value="40">
+    </div>
 
-  <div class="result">
-    入力換算ノイズ電圧密度:<br>
-    → <span id="inputNoiseV"></span> V/√Hz<br>
-    → <span id="inputNoiseDbv"></span> dBV/√Hz
+    <div class="result">
+      <div>出力ノイズ電圧密度:</div>
+      <span id="dispV"></span>
+      <span id="dispDbv"></span>
+      <div style="margin-top:1em;">入力換算ノイズ電圧密度:</div>
+      <span id="inputNoiseV"></span>
+      <span id="inputNoiseDbv"></span>
+    </div>
   </div>
 
   <script>
-    const outputNoiseV = document.getElementById('outputNoiseV');
-    const outputNoiseDbv = document.getElementById('outputNoiseDbv');
+    const outputValue = document.getElementById('outputValue');
+    const outputUnit = document.getElementById('outputUnit');
     const gainDb = document.getElementById('gainDb');
+    const dispV = document.getElementById('dispV');
+    const dispDbv = document.getElementById('dispDbv');
     const inputNoiseV = document.getElementById('inputNoiseV');
     const inputNoiseDbv = document.getElementById('inputNoiseDbv');
 
@@ -47,11 +121,8 @@
         { factor: 1e-9,  symbol: 'n' },
         { factor: 1e-6,  symbol: 'µ' },
         { factor: 1e-3,  symbol: 'm' },
-        { factor: 1,     symbol: ''  },
-        { factor: 1e3,   symbol: 'k' },
-        { factor: 1e6,   symbol: 'M' },
+        { factor: 1,     symbol: ''  }
       ];
-
       for (const p of prefixes) {
         const scaled = value / p.factor;
         if (Math.abs(scaled) >= 1 && Math.abs(scaled) < 1000) {
@@ -61,42 +132,33 @@
       return value.toExponential(3) + ' V/√Hz';
     }
 
-    function updateFromV() {
-      const V = parseFloat(outputNoiseV.value);
-      if (!isNaN(V) && V > 0) {
-        outputNoiseDbv.value = (20 * Math.log10(V)).toFixed(2);
-      }
-      calculate();
-    }
-
-    function updateFromDbv() {
-      const dbv = parseFloat(outputNoiseDbv.value);
-      if (!isNaN(dbv)) {
-        outputNoiseV.value = (Math.pow(10, dbv / 20)).toExponential(6);
-      }
-      calculate();
-    }
-
     function calculate() {
-      const outV = parseFloat(outputNoiseV.value);
+      const val = parseFloat(outputValue.value);
+      const unit = outputUnit.value;
       const gain = parseFloat(gainDb.value);
-      if (isNaN(outV) || outV <= 0 || isNaN(gain)) {
-        inputNoiseV.textContent = '---';
-        inputNoiseDbv.textContent = '---';
+      if (isNaN(val) || isNaN(gain)) {
+        dispV.textContent = dispDbv.textContent = inputNoiseV.textContent = inputNoiseDbv.textContent = '---';
         return;
       }
 
-      const gainLinear = Math.pow(10, gain / 20);
-      const inV = outV / gainLinear;
-      const inDbv = 20 * Math.log10(inV);
+      let outV = unit === 'dBV' ? Math.pow(10, val / 20) : val * parseFloat(unit);
+      const outDbv = 20 * Math.log10(outV);
 
+      dispV.textContent = formatSI(outV);
+      dispDbv.textContent = outDbv.toFixed(2) + ' dBV/√Hz';
+
+      const gainLin = Math.pow(10, gain / 20);
+      const inV = outV / gainLin;
+      const inDbv = 20 * Math.log10(inV);
       inputNoiseV.textContent = formatSI(inV);
       inputNoiseDbv.textContent = inDbv.toFixed(2) + ' dBV/√Hz';
     }
 
-    outputNoiseV.addEventListener('input', updateFromV);
-    outputNoiseDbv.addEventListener('input', updateFromDbv);
+    outputValue.addEventListener('input', calculate);
+    outputUnit.addEventListener('change', calculate);
     gainDb.addEventListener('input', calculate);
+
+    calculate();
   </script>
 </body>
 </html>

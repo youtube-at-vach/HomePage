@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://at-vach.web.app/sitemap.xml

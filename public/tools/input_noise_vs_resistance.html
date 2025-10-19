@@ -349,19 +349,33 @@
               padding: 10
             }
           },
-        tooltip: {
-          callbacks: {
-            // 新: 対数スケールの x 値は parsed.x から取得する
-            title: (context) => {
-              const xValue = context[0].parsed.x;
-              return `抵抗: ${siPrefix(xValue)} Ω`;
-            },
-            label: (context) => {
-              const val = context.parsed.y;
-              return `${context.dataset.label}: ${siPrefix(val)} V/√Hz`;
+          tooltip: {
+            callbacks: {
+              title: (context) => {
+                const xValue = context[0].parsed.x;
+                return `抵抗: ${siPrefix(xValue)} Ω`;
+              },
+              label: (context) => {
+                const val = context.parsed.y;
+                const label = context.dataset.label;
+                let text = `${label}: ${siPrefix(val)} V/√Hz`;
+
+                // === NF計算 ===
+                // 「合成雑音」系列の場合のみNFを計算
+                if (label === '合成雑音') {
+                  const T = parseFloat(document.getElementById('T').value);
+                  const k = 1.38e-23;
+                  const R = context.parsed.x;
+                  const v_thermal = Math.sqrt(4 * k * T * R);
+                  const NF = 20 * Math.log10(val / v_thermal);
+
+                  text += `（NF=${NF.toFixed(2)} dB）`;
+                }
+
+                return text;
+              }
             }
           }
-        }
         },
         scales: {
           x: {

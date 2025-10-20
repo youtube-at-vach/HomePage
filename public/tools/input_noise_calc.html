@@ -24,7 +24,8 @@
 <body>
   <div class="container">
     <h1>入力換算ノイズ電圧/電流密度計算機</h1>
-    <p>このツールは、2つの異なる抵抗値で測定したノイズ電圧から、入力換算電圧ノイズ密度 <code>e_n</code> と電流ノイズ密度 <code>i_n</code> を求めます。温度はKまたは℃で指定できます。</p>
+    <p>2つの抵抗値で測定したノイズ電圧から、入力換算電圧ノイズ密度 <code>e_n</code> と電流ノイズ密度 <code>i_n</code> を求めます。抵抗は mΩ〜MΩ、理想ショート(0Ω)も選択可能です。</p>
+
     <details>
       <summary>計算式の概要</summary>
       <p>次の2式を用いて入力ノイズを推定します。</p>
@@ -40,9 +41,11 @@ V₂² = eₙ² + (iₙR₂)² + 4kTR₂
       <div class="input-row">
         <input type="number" id="R1_val" value="100" step="any">
         <select id="R1_pref">
+          <option value="1e-3">mΩ</option>
           <option value="1">Ω</option>
           <option value="1e3">kΩ</option>
           <option value="1e6">MΩ</option>
+          <option value="0">0Ω (理想ショート)</option>
         </select>
       </div>
     </div>
@@ -50,11 +53,13 @@ V₂² = eₙ² + (iₙR₂)² + 4kTR₂
     <div class="field">
       <label for="R2_val">抵抗 R2:</label>
       <div class="input-row">
-        <input type="number" id="R2_val" value="1" step="any">
+        <input type="number" id="R2_val" value="10" step="any">
         <select id="R2_pref">
+          <option value="1e-3">mΩ</option>
           <option value="1">Ω</option>
           <option value="1e3">kΩ</option>
           <option value="1e6" selected>MΩ</option>
+          <option value="0">0Ω (理想ショート)</option>
         </select>
       </div>
     </div>
@@ -114,45 +119,43 @@ V₂² = eₙ² + (iₙR₂)² + 4kTR₂
       if (unit === 'nV') return val * 1e-9;
       return val;
     }
+
     function formatSI(value, unit) {
-      const pfx = [ ['G',1e9],['M',1e6],['k',1e3],['',1],['m',1e-3],['µ',1e-6],['n',1e-9],['p',1e-12],['f',1e-15] ];
+      const pfx = [['G',1e9],['M',1e6],['k',1e3],['',1],['m',1e-3],['µ',1e-6],['n',1e-9],['p',1e-12],['f',1e-15]];
       for (let [sym, val] of pfx) {
         if (Math.abs(value) >= val) return (value/val).toFixed(3)+' '+sym+unit;
       }
       return value.toExponential(3)+' '+unit;
     }
+
     function compute() {
       const k = 1.380649e-23;
-      const R1 = parseFloat(document.getElementById('R1_val').value) * parseFloat(document.getElementById('R1_pref').value);
-      const R2 = parseFloat(document.getElementById('R2_val').value) * parseFloat(document.getElementById('R2_pref').value);
+      let R1 = parseFloat(document.getElementById('R1_val').value) * parseFloat(document.getElementById('R1_pref').value);
+      let R2 = parseFloat(document.getElementById('R2_val').value) * parseFloat(document.getElementById('R2_pref').value);
       const V1 = toNumber(parseFloat(document.getElementById('V1_val').value), document.getElementById('V1_unit').value);
       const V2 = toNumber(parseFloat(document.getElementById('V2_val').value), document.getElementById('V2_unit').value);
       let T = parseFloat(document.getElementById('T_val').value);
       const Tunit = document.getElementById('T_unit').value;
       if (Tunit === 'C') T += 273.15;
 
-      if (R1<=0 || R2<=0 || isNaN(V1) || isNaN(V2) || isNaN(T)) {
-        return showError('入力値を正しく入力してください。');
-      }
+      if (isNaN(R1)) R1 = 0;
+      if (isNaN(R2)) R2 = 0;
+      if (isNaN(V1) || isNaN(V2) || isNaN(T)) return showError('入力値を正しく入力してください。');
 
       const eR1_sq = 4*k*T*R1;
       const eR2_sq = 4*k*T*R2;
       const V1_sq = V1*V1;
       const V2_sq = V2*V2;
+      const denominator = (R2*R2 - R1*R1);
+      if (denominator === 0) return showError('R1とR2が同一値です。');
 
       const numerator = V2_sq - V1_sq - (eR2_sq - eR1_sq);
-      const denominator = R2*R2 - R1*R1;
       const i_n_sq = numerator/denominator;
 
-      document.getElementById('error').style.display='none';
-      document.getElementById('warning').style.display='none';
-      document.getElementById('result').style.display='none';
+      hideAll();
 
       if (i_n_sq <= 0) {
-        const delta_min = ((4*k*T*(R2-R1)) - (V2_sq - V1_sq)) / (2*(V2 - V1));
-        const warn = document.getElementById('warning');
-        warn.innerHTML = `<strong>警告:</strong> (i_n)^2 が負です。推定最小オフセット: <strong>${formatSI(delta_min,'V')}</strong>`;
-        warn.style.display='block';
+        showWarning('(i_n)^2 が負です。測定誤差またはオフセットの可能性があります。');
         return;
       }
 
@@ -161,30 +164,44 @@ V₂² = eₙ² + (iₙR₂)² + 4kTR₂
       if (e_n_sq <= 0) return showError('電圧ノイズ(e_n)の計算結果が不正です。');
 
       const e_n = Math.sqrt(e_n_sq);
+      showResults(e_n, i_n, T, R1, R2, k);
+    }
+
+    function hideAll(){
+      document.getElementById('error').style.display='none';
+      document.getElementById('warning').style.display='none';
+      document.getElementById('result').style.display='none';
+    }
+
+    function showError(msg){const e=document.getElementById('error');e.textContent=msg;e.style.display='block';}
+    function showWarning(msg){const w=document.getElementById('warning');w.innerHTML='<strong>警告:</strong> '+msg;w.style.display='block';}
+
+    function showResults(e_n, i_n, T, R1, R2, k){
       document.getElementById('en_out').textContent = 'e_n (電圧ノイズ密度): ' + formatSI(e_n, 'V/√Hz');
       document.getElementById('in_out').textContent = 'i_n (電流ノイズ密度): ' + formatSI(i_n, 'A/√Hz');
       document.getElementById('temp_out').textContent = '温度: ' + T.toFixed(2) + ' K (' + (T-273.15).toFixed(2) + ' ℃)';
-      document.getElementById('result').style.display='block';
 
       const breakdownHTML = [R1, R2].map((R, idx) => {
         const e_th = Math.sqrt(4*k*T*R);
         const e_cur = i_n * R;
-        const e_tot = Math.sqrt(e_n*e_n + e_cur*e_cur + e_th*e_th);
+        const e_tot = Math.sqrt(e_n**2 + e_cur**2 + e_th**2);
         const label = idx === 0 ? 'R1' : 'R2';
+        const perc_en = (e_n**2 / e_tot**2 * 100).toFixed(1);
+        const perc_in = (e_cur**2 / e_tot**2 * 100).toFixed(1);
+        const perc_th = (e_th**2 / e_tot**2 * 100).toFixed(1);
         return `
-          <h3>ノイズ分解 (${label}=${formatSI(R, 'Ω')})</h3>
+          <h3>ノイズ分解 (${label}=${formatSI(R,'Ω')})</h3>
           <ul>
-            <li>電圧ノイズ: <strong>${formatSI(e_n, 'V/√Hz')}</strong></li>
-            <li>電流ノイズ寄与 (iₙ×${label}): <strong>${formatSI(e_cur, 'V/√Hz')}</strong></li>
-            <li>抵抗熱雑音 √(4kT${label}): <strong>${formatSI(e_th, 'V/√Hz')}</strong></li>
-            <li>合成ノイズ (理論値): <strong>${formatSI(e_tot, 'V/√Hz')}</strong></li>
-          </ul>
-        `;
+            <li>電圧ノイズ寄与: <strong>${formatSI(e_n,'V/√Hz')}</strong> (${perc_en}%)</li>
+            <li>電流ノイズ寄与 (iₙ×${label}): <strong>${formatSI(e_cur,'V/√Hz')}</strong> (${perc_in}%)</li>
+            <li>抵抗熱雑音寄与: <strong>${formatSI(e_th,'V/√Hz')}</strong> (${perc_th}%)</li>
+            <li>合成ノイズ(理論値): <strong>${formatSI(e_tot,'V/√Hz')}</strong></li>
+          </ul>`;
       }).join('');
 
       document.getElementById('breakdown_out').innerHTML = breakdownHTML;
+      document.getElementById('result').style.display='block';
     }
-    function showError(msg){const e=document.getElementById('error');e.textContent=msg;e.style.display='block';}
   </script>
 </body>
 </html>

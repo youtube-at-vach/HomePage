@@ -4,34 +4,34 @@
     <loc>https://vachan.dev/index.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/voltage_converter.html</loc>
+    <loc>https://vachan.dev/tools/signal_level_converter.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/opamp_feedback_calc.html</loc>
+    <loc>https://vachan.dev/tools/opamp_feedback_analyzer.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/noise_resistor_calculator.html</loc>
+    <loc>https://vachan.dev/tools/noise_to_resistor_equivalent.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/lna-input-noise-calculator.html</loc>
+    <loc>https://vachan.dev/tools/lna_input_noise_calculator.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/jfet_pair_optimizer_next.html</loc>
+    <loc>https://vachan.dev/tools/jfet_pair_optimizer_ga.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/jfet_pair_optimizer.html</loc>
+    <loc>https://vachan.dev/tools/jfet_pair_optimizer_basic.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/input_noise_vs_resistance.html</loc>
+    <loc>https://vachan.dev/tools/input_noise_vs_resistance_plotter.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/input_noise_calc2.html</loc>
+    <loc>https://vachan.dev/tools/multi_point_input_noise_calculator.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/input_noise_calc.html</loc>
+    <loc>https://vachan.dev/tools/two_point_input_noise_calculator.html</loc>
   </url>
   <url>
-    <loc>https://vachan.dev/tools/impedance_calc.html</loc>
+    <loc>https://vachan.dev/tools/impedance_mismatch_calculator.html</loc>
   </url>
   <url>
     <loc>https://vachan.dev/404.html</loc>

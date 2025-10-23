@@ -7,6 +7,19 @@
       "**/node_modules/**"
     ],
     // No SPA rewrites: serve static files directly; enable caching for assets
+    "redirects": [
+      { "source": "/tools/impedance_calc.html", "destination": "/tools/impedance_mismatch_calculator.html", "type": 301 },
+      { "source": "/tools/input_noise_calc.html", "destination": "/tools/two_point_input_noise_calculator.html", "type": 301 },
+      { "source": "/tools/input_noise_calc2.html", "destination": "/tools/multi_point_input_noise_calculator.html", "type": 301 },
+      { "source": "/tools/input_noise_vs_resistance.html", "destination": "/tools/input_noise_vs_resistance_plotter.html", "type": 301 },
+      { "source": "/tools/jfet_pair_optimizer.html", "destination": "/tools/jfet_pair_optimizer_basic.html", "type": 301 },
+      { "source": "/tools/jfet_pair_optimizer_next.html", "destination": "/tools/jfet_pair_optimizer_ga.html", "type": 301 },
+      { "source": "/tools/lna-input-noise-calculator.html", "destination": "/tools/lna_input_noise_calculator.html", "type": 301 },
+      { "source": "/tools/noise_resistor_calculator.html", "destination": "/tools/noise_to_resistor_equivalent.html", "type": 301 },
+      { "source": "/tools/opamp_feedback_calc.html", "destination": "/tools/opamp_feedback_analyzer.html", "type": 301 },
+      { "source": "/tools/resistor.html", "destination": "/tools/identical_resistor_network_optimizer.html", "type": 301 },
+      { "source": "/tools/voltage_converter.html", "destination": "/tools/signal_level_converter.html", "type": 301 }
+    ],
     "headers": [
       {
         "source": "**/*.{json,css,js,png,jpg,jpeg,svg}",

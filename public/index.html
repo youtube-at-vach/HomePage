@@ -13,8 +13,12 @@
     <a href="#main" class="skip-link">メインコンテンツへスキップ</a>
     <!-- ヘッダー -->
     <header>
-        <div class="container">
-	<h1>自作オーディオと電子回路設計のための技術ガイド＆ツール集</h1> 
+        <div class="container header-inner">
+            <div class="branding">
+                <span class="logo-mark">VACH</span>
+                <p class="site-title">自作オーディオと電子回路設計のための技術ガイド＆ツール集</p>
+                <p class="site-tagline">Cybernetic Audio Engineering Hub</p>
+            </div>
             <nav>
                 <ul>
                     <li><a href="#home">ホーム</a></li>
@@ -29,22 +33,64 @@
     <!-- メインコンテンツ -->
     <main id="main" class="container">
         <!-- ヒーローイメージ -->
-        <div class="hero-container">
-            <img src="images/hero.png" alt="ロボットと少年がマイク回路を調整するイラスト" class="hero-image">
-        </div>
-        <section id="home">
-            <h1>DIYオーディオ技術情報とツール</h1>
-            <p>バーチャ農ちゃんねるのYouTube動画で紹介した、MEMSマイク自作、プリアンプ設計、LTspiceシミュレーション、オーディオ測定などの技術情報や、設計に役立つ計算ツールを公開しています。電子工作やDIYオーディオに興味のある方に向けた、実践的なノウハウを提供します。</p>
+        <section id="home" class="hero-section">
+            <div class="hero-backdrop" aria-hidden="true"></div>
+            <div class="hero-grid">
+                <div class="hero-text">
+                    <span class="neon-label">Cyber Audio Engineering</span>
+                    <h1>自作オーディオと電子回路設計のための技術ガイド＆ツール集</h1>
+                    <p class="hero-lead">バーチャ農ちゃんねるが蓄積したMEMSマイク自作、プリアンプ設計、LTspiceシミュレーション、高調波歪測定などの知見を、最前線のDIYエンジニアリング・ラボとして集約しました。</p>
+                    <div class="hero-actions">
+                        <a href="#tools" class="button">ツール一覧を見る</a>
+                        <a href="#resources" class="button ghost">リソースへ</a>
+                    </div>
+                    <ul class="hero-highlights">
+                        <li>MEMSマイク自作とDCプリアンプ設計のノウハウを体系化</li>
+                        <li>ノイズ解析や歪測定を加速するサイバーテーマのツール群</li>
+                        <li>AIとLTspiceを駆使した実践的な電子回路の最適化手法</li>
+                    </ul>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-image-frame">
+                        <img src="images/hero.png" alt="ロボットと少年がマイク回路を調整するイラスト" class="hero-image">
+                        <span class="hero-image-glow" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="overview-section neon-section">
+            <div class="section-header">
+                <h2>DIYオーディオ技術情報とツール</h2>
+                <p>バーチャ農ちゃんねるのYouTube動画で紹介した、MEMSマイク自作、プリアンプ設計、LTspiceシミュレーション、オーディオ測定などの技術情報や、設計に役立つ計算ツールを公開しています。電子工作やDIYオーディオに興味のある方に向けた、実践的なノウハウを提供します。</p>
+            </div>
+            <div class="highlight-grid">
+                <article class="highlight-card">
+                    <span class="card-icon" aria-hidden="true">⚡</span>
+                    <h3>ハイゲイン・アナログ設計</h3>
+                    <p>低雑音プリアンプやJFET差動回路の実装に役立つ、精密な設計データと測定ノウハウを凝縮。</p>
+                </article>
+                <article class="highlight-card">
+                    <span class="card-icon" aria-hidden="true">🧭</span>
+                    <h3>シミュレーション最適化</h3>
+                    <p>LTspiceモデルの管理からノイズ計算、フィードバック解析まで、回路検証を効率化する計算群。</p>
+                </article>
+                <article class="highlight-card">
+                    <span class="card-icon" aria-hidden="true">🤖</span>
+                    <h3>AI×電子工作リサーチ</h3>
+                    <p>AI調査記事と自動化ツールで、最先端のオーディオエンジニアリング・トレンドをキャッチアップ。</p>
+                </article>
+            </div>
         </section>
         <!-- LTSpice JFETモデルシミュレータ セクション -->
-        <section id="simulator">
+        <section id="simulator" class="neon-section">
             <h2>LTSpice JFETモデルシミュレータ</h2>
             <p>シミュレーション用JFETモデルを管理・編集できるオンラインツールです。自作回路のシミュレーションにお役立てください。</p>
             <a href="https://spice-model-manager-72390409021.asia-northeast2.run.app/" target="_blank" rel="noopener noreferrer">
                 <img src="images/spicemodel1.png" alt="LTSpice JFETモデルシミュレータ" class="simulator-image">
             </a>
         </section>
-        <section id="tools">
+        <section id="tools" class="neon-section">
             <h2>ツール</h2>
             <div class="tool-categories">
                 <div class="tool-category">
@@ -88,7 +134,7 @@
                 </div>
             </div>
         </section>
-        <section id="resources">
+        <section id="resources" class="neon-section">
             <h2>リソース／ダウンロード</h2>
             <section id="download-resources">
                 <h3>ダウンロード可能なリソース</h3>
@@ -104,7 +150,7 @@
                 </ul>
             </section>
         </section>
-        <section id="ai-articles">
+        <section id="ai-articles" class="neon-section">
             <h2>AIによる調査記事</h2>
             <ul id="ai-articles-list">
                 <li>読み込み中…</li>
@@ -114,7 +160,7 @@
                 <div id="ai-article-content"></div>
             </div>
         </section>
-        <section id="contact">
+        <section id="contact" class="neon-section">
             <h2>YouTubeチャンネル＆お問い合わせ</h2>
             <p>最新動画はYouTubeで随時公開中！チャンネル登録＆通知オンで新着を見逃さずチェックしてください。ご質問・ご要望はコメント欄またはサイト下部のお問い合わせフォームからお気軽にどうぞ。</p>
             <a href="https://www.youtube.com/@va-ch" target="_blank" rel="noopener noreferrer" class="button">YouTubeチャンネルへ移動</a>

@@ -1,33 +1,46 @@
-| Part     | Value     | Type / Notes                                         |
-|----------|-----------|------------------------------------------------------|
-| C1       | 1000u     | POLARIZED CAPACITOR, 1000uF                          |
-| C2       | 100u      | MURATA ECAS 16V                                      |
-| C3, C4   | 47u       | POLARIZED CAPACITOR                                  |
-| C20-C30  | 0.1u      | CERAMIC CAPACITOR                                    |
-| C31-C34  | 220p      | CERAMIC CAPACITOR                                    |
-| J10-J29  | CPH3910   | Dual Nch FET, SC-59                                  |
-| JMP1,2   | 0         | 0Ω Jumper Resistor, 1/4W                             |
-| JP1      | —         | 2x4 PIN HEADER                                       |
-| JP2      | —         | 2x1 PIN HEADER                                       |
-| R1       | 100       | Resistor, 1/4W, 1%, Ins Amp GAINSET (40dB)           |
-| R10-R13  | 1k        | Resistor, 1/4W, 0.1%                                 |
-| R14,R15  | 1k        | Resistor, 1/4W, 1%                                   |
-| R20,R21  | 1k        | Resistor, 1/4W, 1% (OPTION)                          |
-| R22      | 100       | Guard Load Resistor, 1/4W, 1%                        |
-| R51      | 2k        | Zener Bias Resistor, 1/4W, 1%                        |
-| RA1-4    | 100       | Gain A Resistor, 1/2W, 1%                            |
-| RB1      | 0.1       | Gain B Resistor (60dB), 1/4W, 1%                     |
-| RB2      | 1         | Gain B Resistor (40dB), 1/4W, 1%                     |
-| RB3      | 10        | Gain B Resistor (20dB), 1/4W, 1%                     |
-| RB4      | 100       | Gain B Resistor (12dB), 1/4W, 1%                     |
-| RD1-4    | 200       | Id Bias Resistor, 1/2W                               |
-| RD51     | 2k        | Id Bias Resistor, 1/4W, 1%                           |
-| RD52     | 1k        | Id Bias Resistor, 1/4W, 1%                           |
-| T1, T2   | 2SA1359   | PNP Transistor, TO-126                               |
-| U20,U21  | OPA1612   | Precision OpAmp, DIP-8                               |
-| U22      | TL072     | General-purpose OpAmp, DIP-8                         |
-| U23      | SSM2019   | Instrumentation Amp, DIP-8                           |
-| VR1      | 10k       | Trim Potentiometer 3296W                             |
-| VR2,VR3  | 100k      | Trim Potentiometer 3296W (OPTION)                    |
-| ZD1      | 4.7V      | Zener Diode                                          |
+こちらは、あなたの部品表をウェブ上で見やすい**Markdown形式**に整えたものです👇
 
+---
+
+## LNA5 部品表（BOM）
+
+| Qty | Reference(s)                 | Value       | Footprint                 | メモ                           | 入手先<br>(A=秋月 / M=モノタロウ / D=Digikey) | 準備     | チェック |
+| --: | ---------------------------- | ----------- | ------------------------- | ---------------------------- | ----------------------------------- | ------ | ---- |
+|   2 | C1, C9                       | 47p         | C_0603_1608Metric         | 1608 SMD                     | A                                   | A      | OK   |
+|   1 | C2                           | 0.01u       | C_0805_2012Metric         | 2012 SMD                     | A                                   | A確認    | OK   |
+|  10 | C3, C6–C8, C10–C13, C22, C23 | 0.1u        | C_1210_3225Metric         | 3225 SMD ECHU                | A                                   | A      | OK   |
+|   1 | C4                           | 100u        | EIA7343                   | 村田 ECAS                      | A                                   | A      | OK   |
+|   1 | C5                           | 1000u       | CP_Radial_D10mm_P5mm      | OS-CON                       | A                                   | A      | OK   |
+|   4 | C14, C15, C20, C21           | C           | C_Disc_D7.5mm_P5mm        | マイカ／フィルム／スチコンなど              | A / D                               | D      | OK   |
+|   2 | C16, C17                     | 1u          | C_Disc_D7.5mm_P5mm        | カップリング WIMA 63V 1uF          | D                                   | D      | OK   |
+|   2 | C18, C19                     | 47u         | CP_Radial_D8mm_P3.5mm     | ハイブリッドコンデンサ                  | A                                   | A      | OK   |
+|   1 | D1                           | 4.7V        | D_DO-41_SOD81             | ツェナー 0.5W〜（5.1V可）            | A                                   | 手持ち    | OK   |
+|  32 | J1–J32                       | Q_NJFET_SDG | SC-59                     | CPH3910, 2SK2394, 2SK3557 推奨 | D                                   | D      | OK   |
+|   4 | JUMP1–JUMP4                  | 0Ω          | R_Axial_DIN0204           | ジャンパ抵抗                       | A                                   | 手持ち    | OK   |
+|   2 | Q1, Q2                       | Q_PNP_ECB   | TO-126-3                  | 2SA1359など PD0.6W以上           | A                                   | A      | OK   |
+|   1 | RA1                          | 0.1Ω        | R_2512_6332Metric         | ゲインセットA 80dB                 | A                                   | A      | OK   |
+|   1 | RA2                          | 1Ω          | R_2512_6332Metric         | ゲインセットA 60dB                 | A                                   | A      | OK   |
+|   1 | RA3                          | 10Ω         | R_2512_6332Metric         | ゲインセットA 40dB                 | A                                   | A      | OK   |
+|   4 | RA4, RC7, RC8, RG1, RGD1     | 100Ω        | R_0603_1608Metric         | ゲインセットA 20dB                 | M / D                               | 手持ち    | OK   |
+|   4 | RB1, RB2, RD1, RD2           | 500Ω        | R_2512_6332Metric         | ゲインセットB・ドレイン電流               | A                                   | A      | OK   |
+|   7 | RC1–RC6, RG2                 | 1k          | R_0603_1608Metric         | 高精度抵抗 0.1％                   | A                                   | A      | OK   |
+|   2 | RC9, RC10                    | 10k         | R_0603_1608Metric         | 1608 SMD                     | M / D                               | D      | OK   |
+|   2 | RC11, RC12                   | 1M          | R_0805_2012Metric         | 高精度抵抗 0.1％                   | A                                   | A      | OK   |
+|   1 | RC13                         | OPT         | R_0805_2012Metric         | 1MΩなど                        | A                                   | A      | OK   |
+|   2 | RD3, RD4                     | R           | R_0603_1608Metric         | RD3=2kΩ, RD4=1kΩ             | A                                   | 手持ち    | OK   |
+|   1 | RR1                          | 2k          | R_0603_1608Metric         | ツェナーバイアス用                    | A                                   | 手持ち    | OK   |
+|   1 | RV1                          | R_POT_TRIM  | Pot_Bourns_3296W_Vertical | Bourns 3296W 10k             | A                                   | A      | OK   |
+|   1 | SW1                          | SW_DIP_x04  | KHS42                     | 4接点 DIPスイッチ                  | A                                   | A      | OK   |
+|   1 | SW2                          | DC=ON       | KHS22                     | 2接点                          | A                                   | A      | OK   |
+|   1 | SW3                          | SW          | KHS22                     | 2接点                          | A                                   | A      | OK   |
+|   2 | U1, U2                       | OPA1612     | DIP-8                     | NFJ OPA1612DIP化基板            | A                                   | 手持ち＋注文 | OK   |
+|   1 | U3                           | TL072       | DIP-8                     | OPA2140でも可                   | A                                   | 手持ち    | OK   |
+|   1 | U4                           | SSM2019     | DIP-8                     | SSM2017でも可                   | A                                   | 手持ち    | OK   |
+
+---
+
+### 💡補足
+
+* **SMDサイズ表記**は KiCad フットプリントに準拠しています。
+* **ゲイン設定抵抗（RA, RB, RC群）**は実験条件により変更可。
+* **チェック欄**が「OK」の項目はすでに入手済みまたは準備完了品です。

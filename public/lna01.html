@@ -108,7 +108,7 @@
     <h2>第5版 LNA-01 差動超低ノイズアンプ基板</h2>
     <p class="lead">Spinelli &amp; Haberman (2024) の並列構成をさらに発展させ、最大 32 個の JFET を束ねた<strong>第5版 LNA-01</strong>が完成しました。差動式超低ノイズアンプとして世界記録級の <strong>0.35 nV/√Hz</strong> に迫る、あるいは凌駕するポテンシャルを引き出すためのレイアウトとガード設計を徹底。試作機での測定では 32 個並列構成時に <strong>0.32 nV/√Hz @ 1 kHz</strong> を確認しており、誰が見てもワクワクする基板になりました。</p>
     <div class="hero-highlight">
-      <strong>ポイント:</strong> ノイズを極限まで追い込むためのシンメトリックな差動パス、熱結合を意識したJFETアレイ、そして一目で構造が分かる 3D レイアウト。Spinelli &amp; Haberman を敬礼しつつ、その先の世界記録を狙います。
+      <strong>ポイント:</strong> ノイズを極限まで追い込むためのJFETアレイ、そして一目で構造が分かる 3D レイアウト。Spinelli &amp; Haberman を敬礼しつつ、その先の世界記録を狙います。
     </div>
     <div class="board-gallery">
       <figure>
@@ -116,11 +116,11 @@
         <figcaption>第5版 LNA-01 3D ビュー</figcaption>
       </figure>
       <figure>
-        <img src="images/lna1/lna1_top.png" alt="LNA-01 第5版 表面レイアウト">
+        <img src="images/lna1/LNA5_TOP.png" alt="LNA-01 第5版 表面レイアウト">
         <figcaption>第5版 LNA-01 トップレイヤー</figcaption>
       </figure>
       <figure>
-        <img src="images/lna1/lna1_bottom.png" alt="LNA-01 第5版 裏面レイアウト">
+        <img src="images/lna1/LNA5_BOTTOM.png" alt="LNA-01 第5版 裏面レイアウト">
         <figcaption>第5版 LNA-01 ボトムレイヤー</figcaption>
       </figure>
     </div>
@@ -133,7 +133,7 @@
         <h3>32 並列 JFET コア</h3>
         <ul>
           <li>CPH3910 / 2SK2394 / 2SK3557 を推奨。</li>
-          <li>16 並列構成でも 0.49 nV/√Hz をマーク。</li>
+          <li>ゲイン60dBにおいて 0.49 nV/√Hz をマーク。</li>
           <li>熱密度を均一化するための左右対称配列。</li>
         </ul>
       </div>
@@ -141,15 +141,13 @@
         <h3>差動&アンバランス同時出力</h3>
         <ul>
           <li>前段ゲインは 20 dB〜80 dB を 20 dB ステップで選択。</li>
-          <li>後段ゲインは 0 dB〜40 dB をアナログで連続可変。</li>
+          <li>後段ゲインは 0 dB, 20 dB, 40 dB をステップで選択。</li>
           <li>差動 100 Ω バッファを標準搭載、アンバランス出力も同時使用可能。</li>
         </ul>
       </div>
       <div class="spec-card">
         <h3>測定が楽しくなるギミック</h3>
         <ul>
-          <li>V<sub>MON</sub>、I<sub>MON</sub> テストポイントで内部監視。</li>
-          <li>前段と後段を個別にシャットダウン可能。</li>
           <li>ガードリングと多層シールドで低リークを徹底。</li>
         </ul>
       </div>
@@ -180,7 +178,6 @@
         <ul>
           <li>JFET のペアリングでさらにノイズを追い込めます。</li>
           <li>基板上のガード面は必ずクリーンな基準電位に。</li>
-          <li>熱漂遊対策にフェンスガードと空冷を併用するのがベスト。</li>
         </ul>
       </div>
     </div>
@@ -190,8 +187,17 @@
     <h2>入力換算ノイズと既存オペアンプの比較</h2>
     <p class="lead">測定結果をもとに超低ノイズオペアンプの代表格と並べた散布図です。チャートでは 60 dB ゲイン設定時の保守的な測定値を採用しており、LNA-01 第5版（32 並列構成）は 0.49 nV/√Hz・25 fA/√Hz というインパクトのある位置にプロットされています。既存のモンスター級オペアンプと比較しても圧倒的に低い電流ノイズを示しています。</p>
     <div class="chart">
-      <img src="images/lna1/LNA01vsopamp.png" alt="LNA01 と超低ノイズオペアンプの比較チャート">
+      <img src="images/lna1/LNA01andOPAMP.png" alt="LNA01 と超低ノイズオペアンプの比較チャート">
     </div>
+  </section>
+
+  <section>
+    <h2>図面</h2>
+    <p>図面については以下からダウンロードできます。</p>
+    <ul>
+      <li><a href="images/lna1/LNA5_S.pdf">回路図</a></li>
+      <li><a href="images/lna1/LNA5_B.pdf">ボード配線図</a></li>
+    </ul>
   </section>
 
   <section>

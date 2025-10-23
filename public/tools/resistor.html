@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>同じ抵抗値回路計算機</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input { margin: 5px; padding: 5px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        table { border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        pre { background: #f8f8f8; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>同じ抵抗値Rを使ってターゲット抵抗Rtに近い回路を探索</h1>
+    <p>直列(+)と並列(||)の組み合わせで最適トポロジーを自動探索します。</p>
+    
+    <label>R (Ω): <input id="R" type="number" value="1000" min="1"></label><br>
+    <label>ターゲット Rt (Ω): <input id="Rt" type="number" value="1234.56" min="0.001" step="0.001"></label><br>
+    <label>最大本数 N: <input id="N" type="number" value="12" min="1" max="18"></label><br>
+    <label>許容精度 (ppm): <input id="tol" type="number" value="200" min="1"></label><br>
+    <button onclick="compute()">計算開始</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function gcd(a, b) {
+            a = Math.abs(a); b = Math.abs(b);
+            while (b !== 0) { let t = b; b = a % b; a = t; }
+            return a;
+        }
+
+        class Fraction {
+            constructor(num, den) {
+                if (den === 0) throw new Error("Zero denominator");
+                let g = gcd(num, den);
+                this.num = Math.round(num / g);
+                this.den = Math.round(den / g);
+                if (this.den < 0) { this.num = -this.num; this.den = -this.den; }
+            }
+            add(other) {
+                return new Fraction(this.num * other.den + other.num * this.den, this.den * other.den);
+            }
+            mul(other) {
+                return new Fraction(this.num * other.num, this.den * other.den);
+            }
+            div(other) {
+                return new Fraction(this.num * other.den, this.den * other.num);
+            }
+            value() { return this.num / this.den; }
+            toString() { return `${this.num}/${this.den}`; }
+        }
+
+        function buildDesc(circuits, key, k) {
+            let c = circuits[k].get(key);
+            if (!c.way) return "R";
+            let { type, sub1, sub2 } = c.way;
+            let left = buildDesc(circuits, sub1.key, sub1.k);
+            let right = buildDesc(circuits, sub2.key, sub2.k);
+            let op = type === 'p' ? ' || ' : ' + ';
+            return `(${left}${op}${right})`;
+        }
+
+        function compute() {
+            let R = parseFloat(document.getElementById('R').value);
+            let Rt = parseFloat(document.getElementById('Rt').value);
+            let maxN = parseInt(document.getElementById('N').value);
+            let tol_ppm = parseFloat(document.getElementById('tol').value);
+            let tol = tol_ppm * 1e-6;
+            let g_target = R / Rt;
+
+            let circuits = new Array(maxN + 1).fill(0).map(() => new Map());
+
+            // Initialize single resistor
+            let f1 = new Fraction(1, 1);
+            circuits[1].set(f1.toString(), { frac: f1, way: null });
+
+            for (let total = 2; total <= maxN; total++) {
+                for (let k1 = 1; k1 <= Math.floor(total / 2); k1++) {
+                    let k2 = total - k1;
+                    let keys1 = Array.from(circuits[k1].keys()).sort();
+                    let keys2 = Array.from(circuits[k2].keys()).sort();
+
+                    // Parallel
+                    for (let key1 of keys1) {
+                        let c1 = circuits[k1].get(key1);
+                        for (let key2 of keys2) {
+                            if (k1 === k2 && key1 > key2) continue;
+                            let c2 = circuits[k2].get(key2);
+                            let g = c1.frac.add(c2.frac);
+                            let str = g.toString();
+                            if (!circuits[total].has(str)) {
+                                circuits[total].set(str, {
+                                    frac: g,
+                                    way: { type: 'p', sub1: { k: k1, key: key1 }, sub2: { k: k2, key: key2 } }
+                                });
+                            }
+                        }
+                    }
+
+                    // Series
+                    for (let key1 of keys1) {
+                        let c1 = circuits[k1].get(key1);
+                        for (let key2 of keys2) {
+                            if (k1 === k2 && key1 > key2) continue;
+                            let c2 = circuits[k2].get(key2);
+                            let sum_g = c1.frac.add(c2.frac);
+                            let g = c1.frac.mul(c2.frac).div(sum_g);
+                            let str = g.toString();
+                            if (!circuits[total].has(str)) {
+                                circuits[total].set(str, {
+                                    frac: g,
+                                    way: { type: 's', sub1: { k: k1, key: key1 }, sub2: { k: k2, key: key2 } }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Collect all
+            let bests = [];
+            for (let k = 1; k <= maxN; k++) {
+                for (let [key, c] of circuits[k]) {
+                    let g_val = c.frac.value();
+                    let S = R / g_val;
+                    let error_rel = Math.abs(S - Rt) / Rt;
+                    let error_ppm = error_rel * 1e6;
+                    let desc = buildDesc(circuits, key, k);
+                    bests.push({ k, S, error_ppm, desc });
+                }
+            }
+            bests.sort((a, b) => a.error_ppm - b.error_ppm || a.k - b.k);
+
+            let goods = bests.filter(b => b.error_ppm <= tol_ppm);
+            let res = document.getElementById('result');
+            let html = '';
+
+            if (goods.length > 0) {
+                html += `<h3>許容範囲(${tol_ppm} ppm)内の解: ${goods.length}個</h3>
+                <table>
+                    <tr><th>本数</th><th>誤差 (ppm)</th><th>合成抵抗 (Ω)</th><th>回路式</th></tr>`;
+                for (let i = 0; i < Math.min(20, goods.length); i++) {
+                    let b = goods[i];
+                    html += `<tr>
+                        <td>${b.k}</td>
+                        <td>${b.error_ppm.toFixed(2)}</td>
+                        <td>${b.S.toFixed(6)}</td>
+                        <td style="font-family: monospace;">${b.desc}</td>
+                    </tr>`;
+                }
+                html += '</table>';
+                if (goods.length > 20) html += `<p>... さらに${goods.length - 20}個</p>`;
+            } else {
+                html += `<p style="color:red;">許容範囲内の解なし (最適誤差: ${bests[0].error_ppm.toFixed(2)} ppm)</p>`;
+            }
+
+            // Always show top 3 best
+            html += '<h4>全体最適 (上位3位)</h4><table><tr><th>本数</th><th>誤差 (ppm)</th><th>合成抵抗 (Ω)</th><th>回路式</th></tr>';
+            for (let i = 0; i < Math.min(3, bests.length); i++) {
+                let b = bests[i];
+                html += `<tr>
+                    <td>${b.k}</td>
+                    <td>${b.error_ppm.toFixed(2)}</td>
+                    <td>${b.S.toFixed(6)}</td>
+                    <td style="font-family: monospace;">${b.desc}</td>
+                </tr>`;
+            }
+            html += '</table>';
+
+            res.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

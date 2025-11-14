@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced 2D Acoustic FDTD Simulation — Fixed & Improved v2</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; 
+            margin: 0; 
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%); 
+            color: #eee; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden;
+        }
+        #sidebar { 
+            width: 400px; 
+            background: rgba(27, 27, 43, 0.95); 
+            padding: 20px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .panel { 
+            background: rgba(40, 40, 60, 0.8); 
+            padding: 16px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .panel h3 { 
+            margin: 0 0 12px 0; 
+            font-size: 16px; 
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
+            padding-bottom: 8px; 
+            color: #ffffff;
+        }
+        canvas { 
+            background: rgba(20, 20, 30, 0.9); 
+            border-radius: 12px; 
+            display: block; 
+            image-rendering: pixelated; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        label { 
+            display: inline-block; 
+            margin-right: 8px; 
+            font-size: 13px; 
+            color: #ddd; 
+            font-weight: 500;
+        }
+        input[type=range] { 
+            vertical-align: middle; 
+            width: 140px; 
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #2b6cff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(43, 108, 255, 0.4);
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #2b6cff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(43, 108, 255, 0.4);
+        }
+        .spin { width: 70px; padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: #fff; }
+        button { 
+            background: linear-gradient(135deg, #2b6cff 0%, #1e4fd1 100%); 
+            color: white; 
+            border: none; 
+            padding: 10px 16px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            width: 100%; 
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(43, 108, 255, 0.3);
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(43, 108, 255, 0.4); }
+        button.secondary { background: linear-gradient(135deg, #444 0%, #333 100%); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+        button.secondary:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+        .control-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 6px;}
+        .control-group label { flex-basis: 40%; }
+        #main-content { flex-grow: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        #footer { margin-top: 12px; font-size: 12px; color: #aaa; text-align: center; opacity: 0.8; }
+        select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            padding: 6px 8px;
+            font-size: 13px;
+        }
+        select:focus { outline: none; border-color: #2b6cff; box-shadow: 0 0 0 2px rgba(43,108,255,0.2); }
+        .value-display { color: #2b6cff; font-weight: 600; min-width: 50px; text-align: right; }
+        .tooltip { position: relative; cursor: help; }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .tooltip:hover::after { opacity: 1; }
+        #waveform-canvas { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 600px; height: 100px; background: rgba(20, 20, 30, 0.8); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        #observation-canvas { position: absolute; top: 20px; right: 20px; width: 300px; height: 150px; background: rgba(20, 20, 30, 0.8); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .preset-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+        .preset-buttons button { padding: 8px 12px; font-size: 12px; }
+        .status-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #666; margin-left: 8px; }
+        .status-indicator.active { background: #2b6cff; box-shadow: 0 0 8px rgba(43,108,255,0.6); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .pulse-animation { animation: pulse 2s infinite; }
+        .interference-pattern { position: absolute; top: 10px; right: 10px; background: rgba(0, 0, 0, 0.7); padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #2b6cff; }
+        .observation-info { position: absolute; top: 180px; right: 20px; background: rgba(0, 0, 0, 0.8); padding: 12px; border-radius: 8px; font-size: 12px; color: #fff; min-width: 300px; }
+        .observation-info h4 { margin: 0 0 8px 0; color: #ff6b35; font-size: 14px; }
+        .observation-info .metric { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .observation-info .metric-value { color: #2b6cff; font-weight: 600; }
+        .row { display: flex; gap: 8px; align-items: center; }
+        .stack { display: grid; grid-template-columns: 1fr 1fr; gap: 8px;}
+        .small { font-size: 11px; opacity: .8; }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <div class="panel">
+            <h3>シミュレーション制御 <span class="status-indicator" id="status-indicator"></span></h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button id="run" class="pulse-animation">開始</button>
+                <button id="pause" class="secondary">停止</button>
+            </div>
+            <div style="margin-top: 12px;" class="stack">
+                <button id="reset" class="secondary">リセット</button>
+                <button id="step" class="secondary">1ステップ</button>
+            </div>
+            <div class="small">ショートカット: Space(開始/停止) / R(リセット) / Z(元に戻す) / Y(やり直し)</div>
+        </div>
+
+        <div class="panel">
+            <h3>設定</h3>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="グリッドの解像度を変更">解像度</label>
+                <select id="res">
+                    <option value="64">軽い (64x64)</option>
+                    <option value="128" selected>中 (128x128)</option>
+                    <option value="200">重い (200x200)</option>
+                    <option value="256">超高 (256x256)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="境界での音波の吸収率">吸収層強度</label>
+                <span class="row">
+                    <input id="damp" type="range" min="0" max="1" step="0.01" value="0.7">
+                    <input id="dampSpin" class="spin" type="number" min="0" max="1" step="0.01" value="0.70">
+                </span>
+                <span id="dampVal" class="value-display">0.70</span>
+            </div>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="シミュレーション速度（1フレームあたりの反復数）">速度</label>
+                <span class="row">
+                    <input id="speed" type="range" min="1" max="10" step="1" value="3">
+                    <input id="speedSpin" class="spin" type="number" min="1" max="10" step="1" value="3">
+                </span>
+                <span id="speedVal" class="value-display">3</span>
+            </div>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="音波の可視化色">カラーマップ</label>
+                <select id="colormap">
+                    <option value="diverging" selected>Red/Blue</option>
+                    <option value="viridis">Viridis</option>
+                    <option value="grayscale">Grayscale</option>
+                    <option value="plasma">Plasma</option>
+                    <option value="heatmap">Heatmap</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>音源</h3>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="音の周波数">周波数 (Hz)</label>
+                <span class="row">
+                    <input id="freq" type="range" min="100" max="8000" step="10" value="1500">
+                    <input id="freqSpin" class="spin" type="number" min="100" max="8000" step="10" value="1500">
+                </span>
+                <span id="freqVal" class="value-display">1500</span>
+            </div>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="音の大きさ">振幅</label>
+                <span class="row">
+                    <input id="amp" type="range" min="0.1" max="3" step="0.1" value="1">
+                    <input id="ampSpin" class="spin" type="number" min="0.1" max="3" step="0.1" value="1.0">
+                </span>
+                <span id="ampVal" class="value-display">1.0</span>
+            </div>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="音源の種類">ソースタイプ</label>
+                <select id="sourcetype">
+                    <option value="tone" selected>連続正弦波</option>
+                    <option value="pulse">短パルス</option>
+                    <option value="sweep">周波数スイープ</option>
+                    <option value="noise">ホワイトノイズ</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="実際の音を再生">オーディオ出力</label>
+                <input type="checkbox" id="audio-output">
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>描画ツール</h3>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="描画モード">モード</label>
+                <select id="drawmode">
+                    <option value="wall" selected>壁</option>
+                    <option value="erase">消しゴム</option>
+                    <option value="source">ソース配置</option>
+                    <option value="observer">観測地点</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="ブラシ半径（セル単位）">ブラシ</label>
+                <span class="row">
+                    <input id="brush" type="range" min="1" max="12" step="1" value="1">
+                    <input id="brushSpin" class="spin" type="number" min="1" max="12" step="1" value="1">
+                </span>
+                <span id="brushVal" class="value-display">1</span>
+            </div>
+            <div class="control-group">
+                <label class="tooltip" data-tooltip="図形プリセット">プリセット</label>
+                <select id="preset-shape">
+                    <option value="none" selected>なし</option>
+                    <option value="rect">四角形</option>
+                    <option value="circle">円</option>
+                    <option value="triangle">三角形</option>
+                </select>
+            </div>
+            <div class="stack" style="margin-top: 12px;">
+                <button id="undo" class="secondary">元に戻す</button>
+                <button id="redo" class="secondary">やり直し</button>
+            </div>
+            <div class="stack" style="margin-top: 8px;">
+                <button id="clear" class="secondary">壁をクリア</button>
+                <button id="clear-sources" class="secondary">ソースをクリア</button>
+            </div>
+            <div style="margin-top: 8px;">
+                <button id="clear-observers" class="secondary">観測地点をクリア</button>
+            </div>
+            <div class="small">右クリック: 一時的に消しゴム / 障害物セルにはソース・観測点を置けません</div>
+        </div>
+
+        <div class="panel">
+            <h3>プリセットシナリオ</h3>
+            <div class="preset-buttons">
+                <button id="preset-empty">空間</button>
+                <button id="preset-room">部屋</button>
+                <button id="preset-maze">迷路</button>
+                <button id="preset-waveguide">導波管</button>
+                <button id="preset-resonator">共振器</button>
+                <button id="preset-obstacles">障害物</button>
+                <button id="preset-interference">干渉管</button>
+                <button id="preset-shotgun">ショットガンマイク</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>データ</h3>
+            <div class="stack">
+                <button id="export" class="secondary">壁を保存</button>
+                <button id="import" class="secondary">壁を読込</button>
+                <button id="screenshot" class="secondary">スクリーンショット</button>
+                <button id="record" class="secondary">録画開始</button>
+            </div>
+            <input type="file" id="import-file" style="display: none" accept=".json">
+        </div>
+    </div>
+
+    <div id="main-content">
+        <canvas id="canvas" width="640" height="640"></canvas>
+        <canvas id="waveform-canvas" width="600" height="100"></canvas>
+        <canvas id="observation-canvas" width="300" height="150"></canvas>
+        <div class="observation-info" id="observation-info" style="display: none;">
+            <h4>観測地点情報</h4>
+            <div class="metric"><span>位置:</span><span class="metric-value" id="observer-position">-</span></div>
+            <div class="metric"><span>音圧レベル:</span><span class="metric-value" id="sound-pressure-level">0.0 dB</span></div>
+            <div class="metric"><span>瞬時振幅:</span><span class="metric-value" id="instantaneous-amplitude">0.00</span></div>
+            <div class="metric"><span>RMS値:</span><span class="metric-value" id="rms-value">0.00</span></div>
+            <div class="metric"><span>推定周波数:</span><span class="metric-value" id="observed-frequency">- Hz</span></div>
+        </div>
+        <div id="footer">
+            描画モードを選択し、左ドラッグで描画・消去。音源はクリックで配置。右クリックで一時的に消しゴム。<br>
+            観測地点モードでクリックすると観測地点を配置／選択。<br>
+            キーボードショートカット: Space(開始/停止) R(リセット) Z(元に戻す) Y(やり直し)
+        </div>
+        <div class="interference-pattern" id="interference-info" style="display: none;">干渉パターン可視化中</div>
+    </div>
+
+    <script>
+        // ====== Advanced 2D FDTD Acoustic Simulation (Fixed v2) ======
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const waveformCanvas = document.getElementById('waveform-canvas');
+        const waveformCtx = waveformCanvas.getContext('2d');
+        const observationCanvas = document.getElementById('observation-canvas');
+        const observationCtx = observationCanvas.getContext('2d');
+        
+        // --- Grid / Fields ---
+        let Nx = 128, Ny = 128;
+        let gridW = canvas.width, gridH = canvas.height;
+        let cellW = gridW / Nx, cellH = gridH / Ny;
+        
+        let p = null, pOld = null, pNew = null;
+        let obstacle = null;
+        let sources = [];
+        let observers = [];
+        let running = false;
+        let stepsPerFrame = 2;
+        let simulationSpeed = 3;
+        
+        const cAir = 343.0;              // speed of sound (m/s)
+        let domainSize = 0.30;           // 30 cm
+        let dx = domainSize / Nx;
+        let dt = dx / (cAir * Math.SQRT2) * 0.6;
+        
+        // Audio context
+        let audioContext = null;
+        let audioEnabled = false;
+        let oscillator = null;
+        let gainNode = null;
+        
+        // Observation data
+        const MAX_OBSERVATION_HISTORY = 600;
+        let currentObserver = null;
+        
+        // UI elements
+        const resEl = document.getElementById('res');
+        const freqEl = document.getElementById('freq');
+        const freqSpin = document.getElementById('freqSpin');
+        const freqVal = document.getElementById('freqVal');
+        const ampEl = document.getElementById('amp');
+        const ampSpin = document.getElementById('ampSpin');
+        const ampVal = document.getElementById('ampVal');
+        const speedEl = document.getElementById('speed');
+        const speedSpin = document.getElementById('speedSpin');
+        const speedVal = document.getElementById('speedVal');
+        const runBtn = document.getElementById('run');
+        const pauseBtn = document.getElementById('pause');
+        const stepBtn = document.getElementById('step');
+        const clearBtn = document.getElementById('clear');
+        const clearSourcesBtn = document.getElementById('clear-sources');
+        const clearObserversBtn = document.getElementById('clear-observers');
+        const resetBtn = document.getElementById('reset');
+        const drawMode = document.getElementById('drawmode');
+        const brushEl = document.getElementById('brush');
+        const brushSpin = document.getElementById('brushSpin');
+        const brushVal = document.getElementById('brushVal');
+        const sourceType = document.getElementById('sourcetype');
+        const dampEl = document.getElementById('damp');
+        const dampSpin = document.getElementById('dampSpin');
+        const dampVal = document.getElementById('dampVal');
+        const colormapEl = document.getElementById('colormap');
+        const presetShapeEl = document.getElementById('preset-shape');
+        const exportBtn = document.getElementById('export');
+        const importBtn = document.getElementById('import');
+        const importFileEl = document.getElementById('import-file');
+        const screenshotBtn = document.getElementById('screenshot');
+        const recordBtn = document.getElementById('record');
+        const audioOutputEl = document.getElementById('audio-output');
+        const statusIndicator = document.getElementById('status-indicator');
+        const interferenceInfo = document.getElementById('interference-info');
+        const observationInfo = document.getElementById('observation-info');
+        
+        const undoBtn = document.getElementById('undo');
+        const redoBtn = document.getElementById('redo');
+        
+        // --- History (undo/redo) now includes obstacles + sources + observers ---
+        let undoStack = [];
+        let redoStack = [];
+        const MAX_HISTORY = 50;
+        
+        function cloneState() {
+            return {
+                obstacle: new Uint8Array(obstacle),
+                sources: JSON.parse(JSON.stringify(sources)),
+                observers: JSON.parse(JSON.stringify(observers)),
+                currentObserverIndex: currentObserver ? observers.indexOf(currentObserver) : -1
+            };
+        }
+        function restoreState(state) {
+            obstacle.set(state.obstacle);
+            sources = JSON.parse(JSON.stringify(state.sources));
+            observers = JSON.parse(JSON.stringify(state.observers));
+            currentObserver = (state.currentObserverIndex >= 0 && observers[state.currentObserverIndex]) ? observers[state.currentObserverIndex] : null;
+            if (currentObserver) observationInfo.style.display = 'block'; else observationInfo.style.display = 'none';
+        }
+        function updateUndoRedoButtons() {
+            undoBtn.disabled = undoStack.length === 0;
+            redoBtn.disabled = redoStack.length === 0;
+        }
+        function pushUndo() {
+            redoStack = [];
+            undoStack.push(cloneState());
+            if (undoStack.length > MAX_HISTORY) undoStack.shift();
+            updateUndoRedoButtons();
+        }
+        undoBtn.addEventListener('click', () => {
+            if (undoStack.length === 0) return;
+            const prev = undoStack.pop();
+            redoStack.push(cloneState());
+            restoreState(prev);
+            if (!running) drawField();
+            updateUndoRedoButtons();
+        });
+        redoBtn.addEventListener('click', () => {
+            if (redoStack.length === 0) return;
+            const next = redoStack.pop();
+            undoStack.push(cloneState());
+            restoreState(next);
+            if (!running) drawField();
+            updateUndoRedoButtons();
+        });
+        
+        // --- Allocation ---
+        function idx(i,j) { return i + j*Nx; }
+        function allocFields() {
+            p = new Float32Array(Nx*Ny).fill(0);
+            pOld = new Float32Array(Nx*Ny).fill(0);
+            pNew = new Float32Array(Nx*Ny).fill(0);
+            obstacle = new Uint8Array(Nx*Ny).fill(0);
+            cellW = canvas.width / Nx;
+            cellH = canvas.height / Ny;
+            dx = domainSize / Nx;
+            dt = dx / (cAir * Math.SQRT2) * 0.6;
+            updateSimulationSpeed();
+        }
+        function updateSimulationSpeed() {
+            if (Nx <= 64) stepsPerFrame = simulationSpeed * 2;
+            else if (Nx <= 128) stepsPerFrame = simulationSpeed;
+            else stepsPerFrame = Math.max(1, Math.floor(simulationSpeed / 2));
+        }
+        allocFields();
+        
+        // --- Damping ---
+        function makeDampingMask(strength=0.7) {
+            const mask = new Float32Array(Nx*Ny).fill(1.0);
+            const thickness = Math.max(8, Math.floor(0.08 * Math.max(Nx,Ny)));
+            for (let j=0;j<Ny;j++){
+                for (let i=0;i<Nx;i++){
+                    let di = Math.min(i, Nx-1-i);
+                    let dj = Math.min(j, Ny-1-j);
+                    let edge = Math.min(di,dj);
+                    if (edge < thickness) {
+                        const r = (thickness - edge)/thickness;
+                        mask[idx(i,j)] = 1.0 - strength * (r*r);
+                    }
+                }
+            }
+            return mask;
+        }
+        let baseDampStrength = Number(dampEl.value);
+        let dampMask = makeDampingMask(baseDampStrength);
+        
+        // --- Simulation step ---
+        function stepForward(tGlobal) {
+            const omega = 2*Math.PI*Number(freqEl.value);
+            const amp = Number(ampEl.value);
+            const sourceTypeVal = sourceType.value;
+            const coef = (cAir*cAir) * (dt*dt);
+            
+            for (let j=1;j<Ny-1;j++){
+                let base = j * Nx;
+                for (let i=1;i<Nx-1;i++){
+                    const k = base + i;
+                    if (obstacle[k]) { pNew[k] = 0; continue; }
+                    const lap = (p[k+1] + p[k-1] + p[k+Nx] + p[k-Nx] - 4*p[k]) / (dx*dx);
+                    pNew[k] = 2*p[k] - pOld[k] + coef * lap;
+                }
+            }
+            // Sources
+            for (let s of sources){
+                const k = idx(s.i,s.j);
+                if (sourceTypeVal === 'tone') {
+                    pNew[k] += amp * Math.sin(omega * tGlobal);
+                } else if (sourceTypeVal === 'pulse') {
+                    const tau = 1.5e-4;
+                    const dtPhysical = tGlobal - s.t0;
+                    pNew[k] += amp * Math.exp(- (dtPhysical*dtPhysical) / (tau*tau));
+                } else if (sourceTypeVal === 'sweep') {
+                    const sweepRate = 1000;
+                    const f = Number(freqEl.value) + sweepRate * tGlobal;
+                    pNew[k] += amp * Math.sin(2*Math.PI*f * tGlobal);
+                } else if (sourceTypeVal === 'noise') {
+                    pNew[k] += amp * (Math.random() * 2 - 1);
+                }
+            }
+            // Absorbing boundary
+            for (let j=0;j<Ny;j++){
+                for (let i=0;i<Nx;i++){
+                    const k = idx(i,j);
+                    pNew[k] *= dampMask[k];
+                }
+            }
+            // Swap
+            const tmp = pOld; pOld = p; p = pNew; pNew = tmp;
+            
+            // Observation
+            updateObservationData();
+        }
+        
+        // --- Observation ---
+        function updateObservationData() {
+            if (observers.length === 0) return;
+            for (let obs of observers) {
+                const k = idx(obs.i, obs.j);
+                const pressure = p[k];
+                if (!obs.history) obs.history = [];
+                obs.history.push(pressure);
+                if (obs.history.length > MAX_OBSERVATION_HISTORY) obs.history.shift();
+                // RMS
+                let sumSquares = 0;
+                for (let v of obs.history) sumSquares += v*v;
+                obs.rms = Math.sqrt(sumSquares / obs.history.length);
+                // dB (relative to 20µPa, rough)
+                const refPressure = 20e-6;
+                obs.soundPressureLevel = 20 * Math.log10(Math.abs(pressure) / refPressure + 1e-10);
+                // Instantaneous
+                obs.instantaneousAmplitude = pressure;
+                // crude freq estimation (zero-crossings over recent 200 samples)
+                const N = Math.min(200, obs.history.length);
+                if (N > 5) {
+                    let crossings = 0;
+                    for (let i=obs.history.length-N+1; i<obs.history.length; i++) {
+                        const a = obs.history[i-1], b = obs.history[i];
+                        if ((a <= 0 && b > 0) || (a >= 0 && b < 0)) crossings++;
+                    }
+                    // Each 2 zero-crossings ~ 1 period
+                    const duration = (N-1) * dt;
+                    const periods = crossings / 2;
+                    obs.estimatedFrequency = (periods > 0 && duration > 0) ? (periods / duration) : 0;
+                } else {
+                    obs.estimatedFrequency = 0;
+                }
+            }
+            if (currentObserver) updateObservationInfo();
+        }
+        function updateObservationInfo() {
+            if (!currentObserver) return;
+            document.getElementById('observer-position').textContent = `(${currentObserver.i}, ${currentObserver.j})`;
+            document.getElementById('sound-pressure-level').textContent = currentObserver.soundPressureLevel.toFixed(1) + ' dB';
+            document.getElementById('instantaneous-amplitude').textContent = currentObserver.instantaneousAmplitude.toFixed(3);
+            document.getElementById('rms-value').textContent = currentObserver.rms.toFixed(3);
+            document.getElementById('observed-frequency').textContent = (currentObserver.estimatedFrequency || 0).toFixed(1) + ' Hz';
+        }
+        
+        // --- Colormap ---
+        function colorMap(v){
+            const cmap = colormapEl.value;
+            const t = Math.max(-1, Math.min(1, v));
+            switch(cmap) {
+                case 'diverging': {
+                    if (t > 0){
+                        const R = Math.min(255, Math.floor(80 + 175 * t));
+                        const G = Math.floor(80 * (1 - t));
+                        const B = Math.floor(80 * (1 - t));
+                        return [R,G,B];
+                    } else {
+                        const tt = -t;
+                        const R = Math.floor(80 * (1 - tt));
+                        const G = Math.floor(80 * (1 - tt));
+                        const B = Math.min(255, Math.floor(80 + 175 * tt));
+                        return [R,G,B];
+                    }
+                }
+                case 'viridis': {
+                    const cc = (t + 1) / 2;
+                    const R = Math.floor(255 * Math.sqrt(cc));
+                    const G = Math.floor(255 * cc*cc*cc);
+                    const B = Math.floor(255 * (0.5 * Math.sin(cc * Math.PI)));
+                    return [R, G, B];
+                }
+                case 'plasma': {
+                    const pp = (t + 1) / 2;
+                    const R = Math.floor(255 * Math.sin(pp * Math.PI));
+                    const G = Math.floor(255 * Math.sin(pp * Math.PI + Math.PI/3));
+                    const B = Math.floor(255 * Math.sin(pp * Math.PI + 2*Math.PI/3));
+                    return [R, G, B];
+                }
+                case 'heatmap': {
+                    const h = (t + 1) / 2;
+                    const R = Math.min(255, Math.floor(255 * h));
+                    const G = Math.floor(255 * h * h);
+                    const B = Math.floor(255 * h * h * h);
+                    return [R, G, B];
+                }
+                default: {
+                    const l = Math.floor(255 * (t+1)/2);
+                    return [l,l,l];
+                }
+            }
+        }
+        
+        // --- Drawing ---
+        function drawField() {
+            const image = ctx.createImageData(canvas.width, canvas.height);
+            const data = image.data;
+            // Scale
+            let maxVal = 1e-6;
+            for (let k=0;k<Nx*Ny;k++){
+                const v = Math.abs(p[k]);
+                if (v > maxVal) maxVal = v;
+            }
+            for (let j=0;j<Ny;j++){
+                for (let i=0;i<Nx;i++){
+                    const k = idx(i,j);
+                    const x0 = Math.floor(i * cellW);
+                    const y0 = Math.floor(j * cellH);
+                    const x1 = Math.floor((i+1) * cellW);
+                    const y1 = Math.floor((j+1) * cellH);
+                    const val = p[k] / maxVal;
+                    const col = colorMap(val);
+                    for (let yy=y0; yy<y1; yy++){
+                        for (let xx=x0; xx<x1; xx++){
+                            const idxPix = (yy*canvas.width + xx) * 4;
+                            data[idxPix]   = col[0];
+                            data[idxPix+1] = col[1];
+                            data[idxPix+2] = col[2];
+                            data[idxPix+3] = 255;
+                        }
+                    }
+                    if (obstacle[k]) {
+                        for (let yy=y0; yy<y1; yy++){
+                            for (let xx=x0; xx<x1; xx++){
+                                const idxPix = (yy*canvas.width + xx) * 4;
+                                data[idxPix]   = 30;
+                                data[idxPix+1] = 30;
+                                data[idxPix+2] = 30;
+                                data[idxPix+3] = 255;
+                            }
+                        }
+                    }
+                }
+            }
+            ctx.putImageData(image,0,0);
+            drawSources();
+            drawObservers();
+            drawWaveform();
+            drawObservationWaveform();
+            drawInterferencePattern();
+        }
+        function drawSources() {
+            ctx.fillStyle = '#2b6cff';
+            for (let s of sources) {
+                const x = s.i * cellW + cellW/2;
+                const y = s.j * cellH + cellH/2;
+                ctx.beginPath(); ctx.arc(x, y, Math.max(4, cellW/3), 0, 2*Math.PI); ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, Math.max(6, cellW/2), 0, 2*Math.PI); ctx.stroke();
+            }
+        }
+        function drawObservers() {
+            for (let obs of observers) {
+                const x = obs.i * cellW + cellW/2;
+                const y = obs.j * cellH + cellH/2;
+                ctx.strokeStyle = '#ff6b35'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y, Math.max(8, cellW/2), 0, 2*Math.PI); ctx.stroke();
+                ctx.fillStyle = currentObserver === obs ? '#ff6b35' : 'rgba(255, 107, 53, 0.5)';
+                ctx.beginPath(); ctx.arc(x, y, 3, 0, 2*Math.PI); ctx.fill();
+            }
+        }
+        function drawWaveform() {
+            waveformCtx.fillStyle = 'rgba(20, 20, 30, 0.8)';
+            waveformCtx.fillRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+            if (sources.length > 0) {
+                waveformCtx.strokeStyle = '#2b6cff';
+                waveformCtx.lineWidth = 2; waveformCtx.beginPath();
+                const centerY = waveformCanvas.height / 2;
+                const amplitude = 30;
+                for (let x = 0; x < waveformCanvas.width; x++) {
+                    const t = (x / waveformCanvas.width) * 0.01;
+                    const omega = 2*Math.PI*Number(freqEl.value);
+                    const y = centerY + amplitude * Math.sin(omega * t) * Math.exp(-t*100);
+                    if (x === 0) waveformCtx.moveTo(x, y); else waveformCtx.lineTo(x, y);
+                }
+                waveformCtx.stroke();
+            }
+            waveformCtx.fillStyle = '#666'; waveformCtx.font = '12px Inter'; waveformCtx.fillText('Source Waveform', 10, 20);
+        }
+        function drawObservationWaveform() {
+            observationCtx.fillStyle = 'rgba(20, 20, 30, 0.8)';
+            observationCtx.fillRect(0, 0, observationCanvas.width, observationCanvas.height);
+            if (currentObserver && currentObserver.history && currentObserver.history.length) {
+                const history = currentObserver.history;
+                const centerY = observationCanvas.height / 2;
+                const maxAmplitude = 50;
+                observationCtx.strokeStyle = '#ff6b35'; observationCtx.lineWidth = 2; observationCtx.beginPath();
+                const start = Math.max(0, history.length - observationCanvas.width);
+                for (let i = start; i < history.length; i++) {
+                    const x = ((i - start) / (history.length - start)) * observationCanvas.width;
+                    const y = centerY - (history[i] * maxAmplitude);
+                    if (i === start) observationCtx.moveTo(x, y); else observationCtx.lineTo(x, y);
+                }
+                observationCtx.stroke();
+                observationCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; observationCtx.lineWidth = 1;
+                observationCtx.beginPath(); observationCtx.moveTo(0, centerY); observationCtx.lineTo(observationCanvas.width, centerY); observationCtx.stroke();
+            }
+            observationCtx.fillStyle = '#666'; observationCtx.font = '12px Inter'; observationCtx.fillText('Observed Waveform', 10, 20);
+        }
+        function drawInterferencePattern() {
+            if (sources.length >= 2) {
+                interferenceInfo.style.display = 'block';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+                for (let i = 0; i < sources.length - 1; i++) {
+                    for (let j = i + 1; j < sources.length; j++) {
+                        const s1 = sources[i], s2 = sources[j];
+                        const x1 = s1.i * cellW + cellW/2, y1 = s1.j * cellH + cellH/2;
+                        const x2 = s2.i * cellW + cellW/2, y2 = s2.j * cellH + cellH/2;
+                        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+                    }
+                }
+                ctx.setLineDash([]);
+            } else {
+                interferenceInfo.style.display = 'none';
+            }
+        }
+        
+        // --- Main loop ---
+        let tSim = 0;
+        function loop(){
+            if (!running) return;
+            for (let s=0; s<stepsPerFrame; s++){
+                stepForward(tSim);
+                tSim += dt;
+            }
+            drawField();
+            requestAnimationFrame(loop);
+        }
+        
+        // --- Pointer / Drawing ---
+        let isMouseDown = false;
+        let lastCell = null;
+        let startCell = null;
+        let eraseOverride = false;
+        
+        function inBounds(i,j){ return (i>=0 && i<Nx && j>=0 && j<Ny); }
+        
+        canvas.addEventListener('contextmenu', (e)=> e.preventDefault());
+        canvas.addEventListener('pointerdown', (ev) => {
+            ev.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = ev.clientX - rect.left;
+            const y = ev.clientY - rect.top;
+            const i = Math.floor(x / cellW);
+            const j = Math.floor(y / cellH);
+            isMouseDown = true;
+            lastCell = [i,j];
+            startCell = [i,j];
+            eraseOverride = (ev.button === 2); // right click = erase
+            if (presetShapeEl.value === 'none') {
+                pushUndo();
+                handleDraw(i,j, ev);
+            }
+        });
+        canvas.addEventListener('pointermove', (ev) => {
+            if (!isMouseDown || presetShapeEl.value !== 'none') return;
+            const rect = canvas.getBoundingClientRect();
+            const x = ev.clientX - rect.left;
+            const y = ev.clientY - rect.top;
+            const i = Math.floor(x / cellW);
+            const j = Math.floor(y / cellH);
+            if (i === lastCell?.[0] && j === lastCell?.[1]) return;
+            lastCell = [i,j];
+            handleDraw(i,j, ev);
+        });
+        canvas.addEventListener('pointerup', (ev) => {
+            if (presetShapeEl.value !== 'none') {
+                pushUndo();
+                const rect = canvas.getBoundingClientRect();
+                const x = ev.clientX - rect.left;
+                const y = ev.clientY - rect.top;
+                const i = Math.floor(x / cellW);
+                const j = Math.floor(y / cellH);
+                drawPreset(startCell[0], startCell[1], i, j, drawMode.value);
+            }
+            isMouseDown = false; lastCell = null; startCell = null; eraseOverride = false;
+            if (!running) drawField();
+        });
+        canvas.addEventListener('click', (ev) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = ev.clientX - rect.left;
+            const y = ev.clientY - rect.top;
+            const i = Math.floor(x / cellW);
+            const j = Math.floor(y / cellH);
+            const k = idx(i,j);
+            if (drawMode.value === 'source'){
+                if (obstacle[k]) return; // don't place inside wall
+                sources.push({i:i, j:j, t0:tSim});
+                if (!running) drawField();
+            } else if (drawMode.value === 'observer'){
+                if (obstacle[k]) return;
+                let existing = observers.find(o => o.i===i && o.j===j);
+                if (existing) currentObserver = existing;
+                else {
+                    const newObserver = {i:i, j:j, history:[], rms:0, soundPressureLevel:0, instantaneousAmplitude:0, estimatedFrequency:0};
+                    observers.push(newObserver);
+                    currentObserver = newObserver;
+                }
+                observationInfo.style.display = 'block';
+                updateObservationInfo();
+                if (!running) drawField();
+            }
+        });
+        
+        function paintDisc(ii,jj,value,radius){
+            for (let dj=-radius; dj<=radius; dj++){
+                for (let di=-radius; di<=radius; di++){
+                    const i = ii+di, j = jj+dj;
+                    if (!inBounds(i,j)) continue;
+                    if (di*di + dj*dj <= radius*radius) {
+                        obstacle[idx(i,j)] = value;
+                    }
+                }
+            }
+        }
+        
+        function handleDraw(i,j, ev) {
+            if (!inBounds(i,j)) return;
+            const mode = drawMode.value;
+            const brushR = Math.max(0, (parseInt(brushEl.value)|0) - 1);
+            const erase = eraseOverride || (mode === 'erase');
+            if (mode === 'wall' || mode === 'erase'){
+                paintDisc(i,j, erase ? 0 : 1, brushR);
+            }
+            if (!running) drawField();
+        }
+        
+        function drawPreset(i0, j0, i1, j1, mode) {
+            const shape = presetShapeEl.value;
+            const value = (mode === 'erase') ? 0 : 1;
+            switch(shape) {
+                case 'rect': {
+                    const iMin = Math.min(i0, i1);
+                    const iMax = Math.max(i0, i1);
+                    const jMin = Math.min(j0, j1);
+                    const jMax = Math.max(j0, j1);
+                    for (let j = jMin; j <= jMax; j++) {
+                        for (let i = iMin; i <= iMax; i++) {
+                            if (inBounds(i,j)) obstacle[idx(i,j)] = value;
+                        }
+                    }
+                    break;
+                }
+                case 'circle': {
+                    const ci = Math.floor((i0+i1)/2);
+                    const cj = Math.floor((j0+j1)/2);
+                    const ri = Math.abs(i1-i0)/2;
+                    const rj = Math.abs(j1-j0)/2;
+                    if (ri === 0 || rj === 0) return;
+                    for (let j = 0; j < Ny; j++) {
+                        for (let i = 0; i < Nx; i++) {
+                            if (((i-ci)/ri)**2 + ((j-cj)/rj)**2 < 1) {
+                                if (inBounds(i,j)) obstacle[idx(i,j)] = value;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case 'triangle': {
+                    const ti0 = i0, ti1 = i1, tj0 = j0, tj1 = j1;
+                    const tcx = (ti0 + ti1) / 2;
+                    const tcy = Math.min(tj0, tj1);
+                    const base = Math.abs(ti1 - ti0);
+                    const height = Math.abs(tj1 - tj0);
+                    if (height === 0 || base === 0) {
+                        const iMin = Math.min(i0, i1);
+                        const iMax = Math.max(i0, i1);
+                        const jMin = Math.min(j0, j1);
+                        const jMax = Math.max(j0, j1);
+                        for (let j = jMin; j <= jMax; j++) {
+                            for (let i = iMin; i <= iMax; i++) if (inBounds(i,j)) obstacle[idx(i, j)] = value;
+                        }
+                        return;
+                    }
+                    for (let j = Math.min(tj0, tj1); j <= Math.max(tj0, tj1); j++) {
+                        const y = j - tcy;
+                        const width = base * (1 - Math.abs(y) / height);
+                        const iStart = Math.floor(tcx - width/2);
+                        const iEnd   = Math.floor(tcx + width/2);
+                        for (let i = iStart; i <= iEnd; i++) if (inBounds(i,j)) obstacle[idx(i, j)] = value;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        // --- Presets (updated intereference-tube and shotgun) ---
+        const presetEmptyBtn = document.getElementById('preset-empty');
+        const presetRoomBtn = document.getElementById('preset-room');
+        const presetMazeBtn = document.getElementById('preset-maze');
+        const presetWaveguideBtn = document.getElementById('preset-waveguide');
+        const presetResonatorBtn = document.getElementById('preset-resonator');
+        const presetObstaclesBtn = document.getElementById('preset-obstacles');
+        const presetInterferenceBtn = document.getElementById('preset-interference');
+        const presetShotgunBtn = document.getElementById('preset-shotgun');
+        
+        presetEmptyBtn.addEventListener('click', () => {
+            pushUndo();
+            obstacle.fill(0);
+            sources.length = 0;
+            observers.length = 0;
+            currentObserver = null;
+            observationInfo.style.display = 'none';
+            if (!running) drawField();
+        });
+        presetRoomBtn.addEventListener('click', () => {
+            pushUndo();
+            obstacle.fill(0);
+            const thickness = Math.max(2, Math.floor(Nx * 0.1));
+            for (let j=0;j<Ny;j++){
+                for (let i=0;i<Nx;i++){
+                    if (i < thickness || i >= Nx-thickness || j < thickness || j >= Ny-thickness) obstacle[idx(i,j)] = 1;
+                }
+            }
+            if (!running) drawField();
+        });
+        presetMazeBtn.addEventListener('click', () => {
+            pushUndo();
+            obstacle.fill(0);
+            const cellSize = Math.max(4, Math.floor(Nx / 16));
+            for (let j=0;j<Ny;j+=cellSize){
+                for (let i=0;i<Nx;i+=cellSize){
+                    if ((Math.floor(i/cellSize) + Math.floor(j/cellSize)) % 2 === 0) {
+                        for (let dj=0; dj<cellSize-1; dj++){
+                            for (let di=0; di<cellSize-1; di++){
+                                const ii = i+di, jj = j+dj;
+                                if (ii < Nx && jj < Ny) obstacle[idx(ii, jj)] = 1;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!running) drawField();
+        });
+        presetWaveguideBtn.addEventListener('click', () => {
+            pushUndo();
+            obstacle.fill(0);
+            const thickness = Math.max(3, Math.floor(Ny * 0.2));
+            for (let j=0;j<thickness;j++){
+                for (let i=0;i<Nx;i++){
+                    obstacle[idx(i,j)] = 1;
+                    obstacle[idx(i,Ny-1-j)] = 1;
+                }
+            }
+            if (!running) drawField();
+        });
+        presetResonatorBtn.addEventListener('click', () => {
+            pushUndo();
+            obstacle.fill(0);
+            const centerX = Math.floor(Nx/2);
+            const centerY = Math.floor(Ny/2);
+            const radius = Math.floor(Math.min(Nx,Ny) * 0.3);
+            for (let j=0;j<Ny;j++){
+                for (let i=0;i<Nx;i++){
+                    const dist = Math.hypot(i-centerX, j-centerY);
+                    if (Math.abs(dist - radius) < 2) obstacle[idx(i,j)] = 1;
+                }
+            }
+            if (!running) drawField();
+        });
+        presetObstaclesBtn.addEventListener('click', () => {
+            pushUndo();
+            obstacle.fill(0);
+            const numObstacles = 8;
+            for (let k=0;k<numObstacles;k++){
+                const x = Math.floor(Math.random() * Nx);
+                const y = Math.floor(Math.random() * Ny);
+                const size = Math.floor(Math.random() * 8) + 3;
+                for (let j=Math.max(0,y-size); j<Math.min(Ny,y+size); j++){
+                    for (let i=Math.max(0,x-size); i<Math.min(Nx,x+size); i++){
+                        if (Math.hypot(i-x, j-y) < size) obstacle[idx(i,j)] = 1;
+                    }
+                }
+            }
+            if (!running) drawField();
+        });
+
+        // ===== Updated: Interference tube (slotted) =====
+        presetInterferenceBtn.addEventListener('click', () => {
+            // Interference tube (slotted tube) preset
+            pushUndo();
+            obstacle.fill(0); sources.length = 0; observers.length = 0; currentObserver = null;
+            const centerY = Math.floor(Ny / 2);
+
+            // ---- Tube geometry ----
+            const startX = Math.floor(Nx * 0.12);
+            const tubeLength = Math.floor(Nx * 0.70);
+            const wallTh = 2;                                  // wall thickness (cells)
+            const tubeHalf = Math.max(5, Math.floor(Ny * 0.06)); // inner half-height
+            const topWallY0 = centerY - tubeHalf - wallTh + 1;
+            const botWallY0 = centerY + tubeHalf;
+
+            // Draw straight tube walls
+            for (let x = startX; x < startX + tubeLength; x++) {
+                for (let t = 0; t < wallTh; t++) {
+                    if (inBounds(x, topWallY0 + t)) obstacle[idx(x, topWallY0 + t)] = 1;
+                    if (inBounds(x, botWallY0 + t)) obstacle[idx(x, botWallY0 + t)] = 1;
+                }
+            }
+            // Close rear end (behind mic) and leave front open
+            for (let y = topWallY0; y <= botWallY0 + wallTh - 1; y++) {
+                const capX = startX - 2;
+                if (inBounds(capX, y)) obstacle[idx(capX, y)] = 1;
+            }
+
+            // ---- Side slots (periodic openings) ----
+            const slotPitch = Math.max(6, Math.floor(tubeLength / 22)); // ~22 slots
+            const slotLen = 2;      // along x
+            const slotW = wallTh;   // through wall thickness
+            for (let n = 0, x = startX + Math.floor(slotPitch/2); x < startX + tubeLength - 2; x += slotPitch, n++) {
+                // alternate top/bottom to mimic real interference tubes
+                const onTop = (n % 2 === 0);
+                for (let dx = 0; dx < slotLen; dx++) {
+                    for (let t = 0; t < slotW; t++) {
+                        const yy = onTop ? (topWallY0 + t) : (botWallY0 + t);
+                        if (inBounds(x + dx, yy)) obstacle[idx(x + dx, yy)] = 0; // open a slot
+                    }
+                }
+            }
+
+            // ---- Plane wave source (on-axis) ----
+            const srcX = startX + tubeLength + 6;
+            for (let y = 2; y < Ny - 2; y += 2) {
+                sources.push({ i: Math.min(Nx - 2, srcX), j: y, t0: 0 });
+            }
+
+            // ---- Observers ----
+            const mic = { i: Math.max(1, startX + 3), j: centerY, history:[], rms:0, soundPressureLevel:0, instantaneousAmplitude:0, estimatedFrequency:0 };
+            const onAxisFar = { i: Math.min(Nx - 3, startX + tubeLength + 12), j: centerY, history:[], rms:0, soundPressureLevel:0, instantaneousAmplitude:0, estimatedFrequency:0 };
+            observers.push(mic, onAxisFar);
+            currentObserver = mic;
+            observationInfo.style.display = 'block';
+
+            if (!running) drawField();
+        });
+
+        // ===== Updated: Shotgun microphone (tapered slotted tube + off-axis plane wave) =====
+        presetShotgunBtn.addEventListener('click', () => {
+            // Shotgun microphone (tapered slotted tube) preset
+            pushUndo();
+            obstacle.fill(0); sources.length = 0; observers.length = 0; currentObserver = null;
+            const centerY = Math.floor(Ny / 2);
+
+            // ---- Tube geometry with taper ----
+            const startX = Math.floor(Nx * 0.10);
+            const tubeLength = Math.floor(Nx * 0.78);
+            const wallTh = 2;
+            const tubeHalf = Math.max(5, Math.floor(Ny * 0.055));
+            const topWallY0 = centerY - tubeHalf - wallTh + 1;
+            const botWallY0 = centerY + tubeHalf;
+
+            // Draw walls
+            for (let x = startX; x < startX + tubeLength; x++) {
+                for (let t = 0; t < wallTh; t++) {
+                    if (inBounds(x, topWallY0 + t)) obstacle[idx(x, topWallY0 + t)] = 1;
+                    if (inBounds(x, botWallY0 + t)) obstacle[idx(x, botWallY0 + t)] = 1;
+                }
+            }
+            // Rear cap
+            for (let y = topWallY0; y <= botWallY0 + wallTh - 1; y++) {
+                const capX = startX - 2;
+                if (inBounds(capX, y)) obstacle[idx(capX, y)] = 1;
+            }
+
+            // ---- Tapered slots: denser near the rear, sparser near the front ----
+            const slotsCount = 26;
+            for (let s = 0; s < slotsCount; s++) {
+                // normalized position 0..1 from rear->front
+                const u = s / (slotsCount - 1);
+                // exponential spacing (denser at the back)
+                const x = Math.floor(startX + 4 + u*u * (tubeLength - 8));
+                const onTop = (s % 2 === 0);
+                const localSlotLen = 2 + (u < 0.3 ? 1 : 0);        // slightly longer at the back
+                for (let dx = 0; dx < localSlotLen; dx++) {
+                    for (let t = 0; t < wallTh; t++) {
+                        const yy = onTop ? (topWallY0 + t) : (botWallY0 + t);
+                        if (inBounds(x + dx, yy)) obstacle[idx(x + dx, yy)] = 0;
+                    }
+                }
+            }
+
+            // ---- Plane waves: on-axis and 30° off-axis ----
+            function addPlaneWaveLine(x0, y0, x1, y1, step=2) {
+                const dx = x1 - x0, dy = y1 - y0;
+                const L = Math.max(Math.abs(dx), Math.abs(dy));
+                for (let t = 0; t <= L; t += step) {
+                    const i = Math.floor(x0 + (dx * t) / L);
+                    const j = Math.floor(y0 + (dy * t) / L);
+                    if (inBounds(i, j)) sources.push({ i, j, t0: 0 });
+                }
+            }
+            // On-axis from front
+            addPlaneWaveLine(startX + tubeLength + 6, 1, startX + tubeLength + 6, Ny - 2, 2);
+            // 30° off-axis: approximate by diagonal line source
+            addPlaneWaveLine(startX + tubeLength + 12, Math.floor(Ny * 0.15), startX + tubeLength - 10, Math.floor(Ny * 0.85), 3);
+
+            // ---- Observers ----
+            const mic = { i: Math.max(1, startX + 4), j: centerY, history:[], rms:0, soundPressureLevel:0, instantaneousAmplitude:0, estimatedFrequency:0 };
+            const offAxis = { i: Math.floor(startX + tubeLength * 0.6), j: Math.floor(centerY - tubeHalf*1.8), history:[], rms:0, soundPressureLevel:0, instantaneousAmplitude:0, estimatedFrequency:0 };
+            observers.push(mic, offAxis);
+            currentObserver = mic;
+            observationInfo.style.display = 'block';
+
+            if (!running) drawField();
+        });
+        
+        // --- Controls ---
+        function syncRangeSpin(rangeEl, spinEl, displayEl, toFixed=0){
+            const sync = (v)=> { rangeEl.value = v; spinEl.value = v; if (displayEl) displayEl.textContent = (+v).toFixed(toFixed); };
+            rangeEl.addEventListener('input', ()=> sync(rangeEl.value));
+            spinEl.addEventListener('input', ()=> sync(spinEl.value));
+            // init
+            sync(rangeEl.value);
+        }
+        syncRangeSpin(freqEl, freqSpin, freqVal, 0);
+        syncRangeSpin(ampEl, ampSpin, ampVal, 1);
+        syncRangeSpin(speedEl, speedSpin, speedVal, 0);
+        syncRangeSpin(dampEl, dampSpin, dampVal, 2);
+        syncRangeSpin(brushEl, brushSpin, brushVal, 0);
+        
+        speedEl.addEventListener('input', () => { simulationSpeed = Number(speedEl.value); updateSimulationSpeed(); });
+        speedSpin.addEventListener('input', () => { simulationSpeed = Number(speedSpin.value); updateSimulationSpeed(); });
+        dampEl.addEventListener('input', () => { baseDampStrength = Number(dampEl.value); dampMask = makeDampingMask(baseDampStrength); });
+        dampSpin.addEventListener('input', () => { baseDampStrength = Number(dampSpin.value); dampMask = makeDampingMask(baseDampStrength); });
+        resEl.addEventListener('change', () => { Nx = Number(resEl.value); Ny = Nx; restartSimulation(); });
+        
+        // Audio
+        audioOutputEl.addEventListener('change', () => {
+            audioEnabled = audioOutputEl.checked;
+            if (audioEnabled) initAudio();
+            else stopAudio();
+        });
+
+        async function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+
+            // 既存のオシレータがあれば止めてから作り直す
+            if (oscillator) {
+                try { oscillator.stop(); } catch (e) {}
+                try { oscillator.disconnect(); } catch (e) {}
+                oscillator = null;
+            }
+            if (gainNode) {
+                try { gainNode.disconnect(); } catch (e) {}
+                gainNode = null;
+            }
+
+            oscillator = audioContext.createOscillator();
+            gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(Number(freqEl.value), audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+
+            oscillator.start();
+            updateAudioVolume();
+        }
+
+        function updateAudioFrequency() {
+            if (oscillator && audioEnabled) {
+                oscillator.frequency.setValueAtTime(Number(freqEl.value), audioContext.currentTime);
+            }
+        }
+
+        function updateAudioVolume() {
+            if (gainNode) {
+                const g = (audioEnabled && running) ? Number(ampEl.value) * 0.1 : 0.0;
+                gainNode.gain.setValueAtTime(g, audioContext.currentTime);
+            }
+        }
+
+        function stopAudio() {
+            if (gainNode) {
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            }
+            if (oscillator) {
+                try { oscillator.stop(); } catch (e) {}
+                try { oscillator.disconnect(); } catch (e) {}
+                oscillator = null;
+            }
+            if (gainNode) {
+                try { gainNode.disconnect(); } catch (e) {}
+                gainNode = null;
+            }
+        }
+        
+        freqEl.addEventListener('input', ()=> { updateAudioFrequency(); });
+        freqSpin.addEventListener('input', ()=> { updateAudioFrequency(); });
+        ampEl.addEventListener('input', ()=> updateAudioVolume());
+        ampSpin.addEventListener('input', ()=> updateAudioVolume());
+        
+        clearObserversBtn.addEventListener('click', () => {
+            pushUndo();
+            observers = [];
+            currentObserver = null;
+            observationInfo.style.display = 'none';
+            if (!running) drawField();
+        });
+
+        clearSourcesBtn.addEventListener('click', () => {
+            pushUndo();
+            sources = [];
+            if (!running) drawField();
+        });
+
+        clearBtn.addEventListener('click', () => {
+            pushUndo();
+            obstacle.fill(0);
+            if (!running) drawField();
+        });
+        
+        // Run/Pause/Step/Reset
+        runBtn.addEventListener('click', () => {
+            if (!running){
+                running = true;
+                statusIndicator.classList.add('active');
+                updateAudioVolume();
+                requestAnimationFrame(loop);
+            }
+        });
+        pauseBtn.addEventListener('click', () => {
+            running = false; statusIndicator.classList.remove('active'); updateAudioVolume();
+        });
+        stepBtn.addEventListener('click', () => {
+            if (!running) {
+                stepForward(tSim);
+                tSim += dt;
+                drawField();
+            }
+        });
+        resetBtn.addEventListener('click', () => {
+            p.fill(0); pOld.fill(0); pNew.fill(0); sources = []; observers = []; currentObserver = null; tSim = 0;
+            undoStack = []; redoStack = []; updateUndoRedoButtons();
+            statusIndicator.classList.remove('active'); observationInfo.style.display = 'none';
+            updateAudioVolume();
+            if (!running) drawField();
+        });
+        
+        // Export/Import/Screenshot/Record
+        exportBtn.addEventListener('click', () => {
+            const data = { resolution: { Nx, Ny }, obstacles: Array.from(obstacle), sources, observers, timestamp: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `acoustic_simulation_${Date.now()}.json`; a.click(); URL.revokeObjectURL(url);
+        });
+        importBtn.addEventListener('click', () => importFileEl.click());
+        importFileEl.addEventListener('change', (event) => {
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.resolution && data.obstacles) {
+                        pushUndo();
+                        Nx = data.resolution.Nx; Ny = data.resolution.Ny;
+                        const resOption = Array.from(resEl.options).find(o => +o.value === Nx);
+                        if(resOption) resEl.value = resOption.value;
+                        restartSimulation();
+                        obstacle = new Uint8Array(data.obstacles);
+                        if (data.sources) sources = data.sources;
+                        if (data.observers) {
+                            observers = data.observers;
+                            currentObserver = observers[0] || null;
+                            observationInfo.style.display = currentObserver ? 'block' : 'none';
+                        }
+                        if (!running) drawField();
+                    } else alert('Invalid simulation file format.');
+                } catch (err) { alert('Error reading simulation file: ' + err.message); }
+            };
+            reader.readAsText(file);
+        });
+        screenshotBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `acoustic_simulation_${Date.now()}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+        let mediaRecorder = null, isRecording = false;
+        recordBtn.addEventListener('click', async () => {
+            if (!isRecording) {
+                try {
+                    const stream = canvas.captureStream(30);
+                    mediaRecorder = new MediaRecorder(stream, {mimeType: 'video/webm'});
+                    const chunks = [];
+                    mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(chunks, {type: 'video/webm'});
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a'); a.href = url; a.download = `acoustic_simulation_${Date.now()}.webm`; a.click(); URL.revokeObjectURL(url);
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordBtn.textContent = '録画停止';
+                    recordBtn.style.background = 'linear-gradient(135deg, #ff4444 0%, #cc0000 100%)';
+                } catch (err) { alert('録画を開始できません: ' + err.message); }
+            } else {
+                if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+                isRecording = false;
+                recordBtn.textContent = '録画開始';
+                recordBtn.style.background = 'linear-gradient(135deg, #444 0%, #333 100%)';
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (ev) => {
+            // 入力中・セレクト中などはショートカット無効
+            const target = ev.target;
+            const tag = target.tagName.toLowerCase();
+            const isEditable =
+                target.isContentEditable ||
+                tag === 'input' ||
+                tag === 'textarea' ||
+                tag === 'select';
+
+            if (isEditable) return;
+
+            const key = ev.key.toLowerCase();
+
+            if (key === ' ' || ev.code === 'Space') {
+                ev.preventDefault();
+                if (running) pauseBtn.click(); else runBtn.click();
+            } else if (key === 'r') {
+                ev.preventDefault();
+                resetBtn.click();
+            } else if (key === 'z' && !ev.shiftKey) {
+                ev.preventDefault();
+                undoBtn.click();
+            } else if (key === 'y' || (key === 'z' && ev.shiftKey)) {
+                ev.preventDefault();
+                redoBtn.click();
+            } else if (ev.ctrlKey && ev.code === 'KeyR') {
+                ev.preventDefault();
+                resetBtn.click();
+            } else if (ev.ctrlKey && ev.code === 'KeyZ') {
+                ev.preventDefault();
+                undoBtn.click();
+            } else if (ev.ctrlKey && ev.code === 'KeyY') {
+                ev.preventDefault();
+                redoBtn.click();
+            }
+        });
+
+        
+        function restartSimulation(){
+            allocFields();
+            dampMask = makeDampingMask(baseDampStrength);
+            p.fill(0); pOld.fill(0); pNew.fill(0);
+            sources = [];
+            observers = [];
+            currentObserver = null;
+            tSim = 0;
+            undoStack = [];
+            redoStack = [];
+            updateUndoRedoButtons();
+            if (!running) drawField();
+        }
+        
+        // --- Initialize ---
+        updateUndoRedoButtons();
+        drawField();
+        sources.push({i: Math.floor(Nx/2), j: Math.floor(Ny/2), t0: 0});
+        if (!running) drawField();
+    </script>
+</body>
+</html>

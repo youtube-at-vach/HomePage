@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>2D Acoustic FDTD Simulation v2</title>
+<style>
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin: 0; background:#111; color:#eee; display:flex; height:100vh; }
+  #sidebar { width: 320px; background:#1b1b1b; padding: 12px; overflow-y: auto; display:flex; flex-direction:column; gap:12px; }
+  .panel { background:#282828; padding:12px; border-radius:8px; }
+  .panel h3 { margin:0 0 10px 0; font-size:16px; border-bottom:1px solid #444; padding-bottom:6px; }
+  canvas { background: #222; border-radius:8px; display:block; image-rendering: pixelated; }
+  label { display:inline-block; margin-right:6px; font-size:13px; color:#ddd; }
+  input[type=range] { vertical-align:middle; width: 120px; }
+  button { background:#2b6cff; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; width:100%; }
+  button.secondary { background:#444; }
+  .control-group { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .control-group label { flex-basis: 40%; }
+  #main-content { flex-grow:1; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  #footer { margin-top:8px; font-size:12px; color:#aaa; text-align:center; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="panel">
+    <h3>シミュレーション制御</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <button id="run">開始</button>
+      <button id="pause" class="secondary">停止</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>設定</h3>
+    <div class="control-group">
+      <label>解像度</label>
+      <select id="res">
+        <option value="64">軽い (64x64)</option>
+        <option value="128" selected>中 (128x128)</option>
+        <option value="200">重い (200x200)</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>吸収層強度</label>
+      <input id="damp" type="range" min="0" max="1" step="0.01" value="0.7">
+      <span id="dampVal">0.70</span>
+    </div>
+     <div class="control-group">
+      <label>カラーマップ</label>
+      <select id="colormap">
+        <option value="diverging" selected>Red/Blue</option>
+        <option value="viridis">Viridis</option>
+        <option value="grayscale">Grayscale</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>音源</h3>
+    <div class="control-group">
+      <label>周波数 (Hz)</label>
+      <input id="freq" type="range" min="200" max="8000" step="10" value="1500">
+      <span id="freqVal">1500</span>
+    </div>
+    <div class="control-group">
+      <label>振幅</label>
+      <input id="amp" type="range" min="0.2" max="2" step="0.1" value="1">
+      <span id="ampVal">1.0</span>
+    </div>
+    <div class="control-group">
+      <label>ソースタイプ</label>
+      <select id="sourcetype">
+        <option value="tone">連続正弦波</option>
+        <option value="pulse">短パルス</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>描画ツール</h3>
+    <div class="control-group">
+      <label>モード</label>
+      <select id="drawmode">
+        <option value="wall" selected>壁</option>
+        <option value="erase">消しゴム</option>
+        <option value="source">ソース配置</option>
+      </select>
+    </div>
+    <div class="control-group">
+        <label>プリセット</label>
+        <select id="preset-shape">
+            <option value="none" selected>なし</option>
+            <option value="rect">四角形</option>
+            <option value="circle">円</option>
+        </select>
+    </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+                <button id="undo" class="secondary">元に戻す</button>
+                <button id="redo" class="secondary">やり直す</button>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+                <button id="clear" class="secondary">壁をクリア</button>
+                <button id="reset" class="secondary">場をリセット</button>
+            </div>    <div style="margin-top: 12px;">
+        <button id="export" class="secondary">壁を保存</button>
+        <button id="import" class="secondary">壁を読込</button>
+        <input type="file" id="import-file" style="display:none" accept=".json">
+    </div>
+  </div>
+</div>
+
+<div id="main-content">
+  <canvas id="canvas" width="640" height="640"></canvas>
+  <div id="footer">
+    描画モードを選択し、左ドラッグで描画・消去。音源はクリックで配置。
+  </div>
+</div>
+
+<script>
+
+/* ====== 簡易 2D FDTD 波動デモ (教育 / 遊び用) ======
+   - 圧力 p の2次時間差分：
+     p_new = 2p - p_old + (c*dt)^2 * laplacian(p)
+   - 壁は簡易的に Dirichlet (p = 0) で扱っています（教育用の近似）。
+   - 吸収層（スポンジ）で端の反射を和らげます。
+   - 安定化のため CFL をチェックして dt を決めます。
+*/
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let Nx = 128, Ny = 128; // grid
+let gridW = canvas.width, gridH = canvas.height;
+let cellW = gridW / Nx, cellH = gridH / Ny;
+
+let p = null, pOld = null, pNew = null; // 圧力場
+let obstacle = null; // 0: free, 1: wall
+let sources = []; // {i,j, type, t0}
+let running = false;
+let lastTime = 0;
+let stepsPerFrame = 2;
+
+const c = 343.0; // m/s (scale is arbitrary; we map domain size -> physical length)
+let domainSize = 0.30; // meters (both x and y) : adjust if you want
+let dx = domainSize / Nx;
+let dt = dx / (c * Math.SQRT2) * 0.6; // CFL safety factor
+
+// UI elements
+const resEl = document.getElementById('res');
+const freqEl = document.getElementById('freq');
+const freqVal = document.getElementById('freqVal');
+const ampEl = document.getElementById('amp');
+const ampVal = document.getElementById('ampVal');
+const runBtn = document.getElementById('run');
+const pauseBtn = document.getElementById('pause');
+const clearBtn = document.getElementById('clear');
+const resetBtn = document.getElementById('reset');
+const drawMode = document.getElementById('drawmode');
+const sourceType = document.getElementById('sourcetype');
+const dampEl = document.getElementById('damp');
+const dampVal = document.getElementById('dampVal');
+const colormapEl = document.getElementById('colormap');
+const presetShapeEl = document.getElementById('preset-shape');
+const exportBtn = document.getElementById('export');
+const importBtn = document.getElementById('import');
+const importFileEl = document.getElementById('import-file');
+
+
+
+const undoBtn = document.getElementById('undo');
+const redoBtn = document.getElementById('redo');
+
+let undoStack = [];
+let redoStack = [];
+const MAX_HISTORY = 50;
+
+function updateUndoRedoButtons() {
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = redoStack.length === 0;
+}
+
+function saveStateForUndo() {
+    redoStack = []; // Clear redo stack on new action
+    undoStack.push(new Uint8Array(obstacle));
+    if (undoStack.length > MAX_HISTORY) {
+        undoStack.shift(); // Keep history size limited
+    }
+    updateUndoRedoButtons();
+}
+
+undoBtn.addEventListener('click', () => {
+    if (undoStack.length > 0) {
+        const prevState = undoStack.pop();
+        redoStack.push(new Uint8Array(obstacle));
+        obstacle.set(prevState);
+        if (!running) drawField();
+        updateUndoRedoButtons();
+    }
+});
+
+redoBtn.addEventListener('click', () => {
+    if (redoStack.length > 0) {
+        const nextState = redoStack.pop();
+        undoStack.push(new Uint8Array(obstacle));
+        obstacle.set(nextState);
+        if (!running) drawField();
+        updateUndoRedoButtons();
+    }
+});
+
+freqEl.addEventListener('input', ()=> freqVal.textContent = freqEl.value);
+ampEl.addEventListener('input', ()=> ampVal.textContent = Number(ampEl.value).toFixed(1));
+dampEl.addEventListener('input', ()=> {
+    dampVal.textContent = Number(dampEl.value).toFixed(2);
+    baseDampStrength = Number(dampEl.value);
+    dampMask = makeDampingMask(baseDampStrength);
+});
+resEl.addEventListener('change', ()=> {
+  Nx = Number(resEl.value);
+  Ny = Nx;
+  restartSimulation();
+});
+
+function allocFields() {
+  p = new Float32Array(Nx*Ny).fill(0);
+  pOld = new Float32Array(Nx*Ny).fill(0);
+  pNew = new Float32Array(Nx*Ny).fill(0);
+  obstacle = new Uint8Array(Nx*Ny).fill(0);
+  cellW = canvas.width / Nx;
+  cellH = canvas.height / Ny;
+  dx = domainSize / Nx;
+  dt = dx / (c * Math.SQRT2) * 0.6;
+  // stepsPerFrame adjust for speed
+  if (Nx <= 64) stepsPerFrame = 6;
+  else if (Nx <= 128) stepsPerFrame = 3;
+  else stepsPerFrame = 1;
+}
+
+allocFields();
+
+// helper to index
+function idx(i,j){ return i + j*Nx; }
+
+// simple sponge damping profile at boundary
+function makeDampingMask(strength=0.7) {
+  const mask = new Float32Array(Nx*Ny).fill(1.0);
+  const thickness = Math.max(8, Math.floor(0.08 * Math.max(Nx,Ny))); // cells
+  for (let j=0;j<Ny;j++){
+    for (let i=0;i<Nx;i++){
+      let d = 0;
+      d = Math.min(d,0);
+      let di = Math.min(i, Nx-1-i);
+      let dj = Math.min(j, Ny-1-j);
+      let edge = Math.min(di,dj);
+      if (edge < thickness) {
+        const r = (thickness - edge)/thickness; // 0..1
+        mask[idx(i,j)] = 1.0 - strength * (r*r);
+      }
+    }
+  }
+  return mask;
+}
+let baseDampStrength = Number(dampEl.value);
+let dampMask = makeDampingMask(baseDampStrength);
+
+// Laplacian 5-point
+function laplacianAt(i,j, arr){
+  const im1 = (i>0) ? i-1 : i;
+  const ip1 = (i<Nx-1) ? i+1 : i;
+  const jm1 = (j>0) ? j-1 : j;
+  const jp1 = (j<Ny-1) ? j+1 : j;
+  return (arr[idx(ip1,j)] + arr[idx(im1,j)] + arr[idx(i,jp1)] + arr[idx(i,jm1)] - 4*arr[idx(i,j)]) / (dx*dx);
+}
+
+// update one time step
+function stepForward(tGlobal) {
+  const omega = 2*Math.PI*Number(freqEl.value);
+  const amp = Number(ampEl.value);
+  const sourceTypeVal = sourceType.value;
+
+  // simple finite difference 2nd order time
+  const coef = (c*c) * (dt*dt);
+  for (let j=1;j<Ny-1;j++){
+    let base = j * Nx;
+    for (let i=1;i<Nx-1;i++){
+      const k = base + i;
+      if (obstacle[k]) { // wall: Dirichlet approx -> keep p=0 (simple)
+        pNew[k] = 0;
+        continue;
+      }
+      const lap = (p[k+1] + p[k-1] + p[k+Nx] + p[k-Nx] - 4*p[k]) / (dx*dx);
+      pNew[k] = 2*p[k] - pOld[k] + coef * lap;
+    }
+  }
+
+  // apply sources
+  for (let s of sources){
+    const k = idx(s.i,s.j);
+    if (sourceTypeVal === 'tone') {
+      // continuous tone: sinusoidal injection
+      const val = amp * Math.sin(omega * tGlobal);
+      pNew[k] += val;
+    } else {
+      // pulse: gaussian short pulse
+      const tau = 1.5e-4; // pulse width
+      const dtPhysical = tGlobal - s.t0;
+      const pulse = amp * Math.exp(- (dtPhysical*dtPhysical) / (tau*tau));
+      pNew[k] += pulse;
+    }
+  }
+
+  // damping sponge
+  for (let j=0;j<Ny;j++){
+    for (let i=0;i<Nx;i++){
+      const k = idx(i,j);
+      pNew[k] *= dampMask[k];
+    }
+  }
+
+  // rotate buffers
+  const tmp = pOld; pOld = p; p = pNew; pNew = tmp;
+}
+
+// simple color mapping for pressure
+function drawField() {
+  const image = ctx.createImageData(canvas.width, canvas.height);
+  const data = image.data;
+  // find max abs for normalization (avoid one large spike dominating)
+  let maxVal = 1e-6;
+  for (let k=0;k<Nx*Ny;k++){
+    const v = Math.abs(p[k]);
+    if (v > maxVal) maxVal = v;
+  }
+  // map each cell to pixels
+  for (let j=0;j<Ny;j++){
+    for (let i=0;i<Nx;i++){
+      const k = idx(i,j);
+      // cell rectangle in canvas
+      const x0 = Math.floor(i * cellW);
+      const y0 = Math.floor(j * cellH);
+      const x1 = Math.floor((i+1) * cellW);
+      const y1 = Math.floor((j+1) * cellH);
+
+      // color based on normalized value (-1..1)
+      const val = p[k] / maxVal;
+      const col = colorMap(val);
+
+      for (let yy=y0; yy<y1; yy++){
+        for (let xx=x0; xx<x1; xx++){
+          const idxPix = (yy*canvas.width + xx) * 4;
+          data[idxPix] = col[0];
+          data[idxPix+1] = col[1];
+          data[idxPix+2] = col[2];
+          data[idxPix+3] = 255;
+        }
+      }
+      // draw obstacle overlay
+      if (obstacle[k]) {
+        for (let yy=y0; yy<y1; yy++){
+          for (let xx=x0; xx<x1; xx++){
+            const idxPix = (yy*canvas.width + xx) * 4;
+            data[idxPix] = 30;
+            data[idxPix+1] = 30;
+            data[idxPix+2] = 30;
+            data[idxPix+3] = 255;
+          }
+        }
+      }
+    }
+  }
+  ctx.putImageData(image,0,0);
+}
+
+// colormap: val in -1..1 -> rgb
+function colorMap(v){
+    const cmap = colormapEl.value;
+    const t = Math.max(-1, Math.min(1, v));
+
+    if (cmap === 'diverging') {
+        if (t > 0){
+            const r = Math.min(255, Math.floor(80 + 175 * t));
+            const g = Math.floor(80 * (1 - t));
+            const b = Math.floor(80 * (1 - t));
+            return [r,g,b];
+        } else {
+            const tt = -t;
+            const r = Math.floor(80 * (1 - tt));
+            const g = Math.floor(80 * (1 - tt));
+            const b = Math.min(255, Math.floor(80 + 175 * tt));
+            return [r,g,b];
+        }
+    } else if (cmap === 'viridis') {
+        // Viridis colormap (simplified)
+        const c = (t + 1) / 2; // 0 to 1
+        const r = Math.floor(255 * Math.sqrt(c));
+        const g = Math.floor(255 * c*c*c);
+        const b = Math.floor(255 * (0.5 * Math.sin(c * Math.PI)));
+        return [r, g, b];
+    } else { // grayscale
+        const l = Math.floor(255 * (t+1)/2);
+        return [l,l,l];
+    }
+}
+
+
+// main loop
+let tSim = 0;
+function loop(now){
+  if (!running) return;
+  // advance physical time by stepsPerFrame steps
+  for (let s=0; s<stepsPerFrame; s++){
+    stepForward(tSim);
+    tSim += dt;
+  }
+  drawField();
+  requestAnimationFrame(loop);
+}
+
+// canvas interaction for drawing walls and sources
+let isMouseDown = false;
+let lastCell = null;
+let startCell = null;
+
+canvas.addEventListener('pointerdown', (ev)=>{
+  ev.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const x = ev.clientX - rect.left;
+  const y = ev.clientY - rect.top;
+  const i = Math.floor(x / cellW);
+  const j = Math.floor(y / cellH);
+  isMouseDown = true;
+  lastCell = [i,j];
+  startCell = [i,j];
+
+  if (presetShapeEl.value === 'none') {
+      saveStateForUndo();
+      handleDraw(i,j, ev);
+  }
+});
+
+canvas.addEventListener('pointermove', (ev)=>{
+  if (!isMouseDown || presetShapeEl.value !== 'none') return;
+  const rect = canvas.getBoundingClientRect();
+  const x = ev.clientX - rect.left;
+  const y = ev.clientY - rect.top;
+  const i = Math.floor(x / cellW);
+  const j = Math.floor(y / cellH);
+  if (i === lastCell?.[0] && j === lastCell?.[1]) return;
+  lastCell = [i,j];
+  handleDraw(i,j, ev);
+});
+
+canvas.addEventListener('pointerup', (ev)=>{
+    if (presetShapeEl.value !== 'none') {
+        saveStateForUndo();
+        const rect = canvas.getBoundingClientRect();
+        const x = ev.clientX - rect.left;
+        const y = ev.clientY - rect.top;
+        const i = Math.floor(x / cellW);
+        const j = Math.floor(y / cellH);
+        drawPreset(startCell[0], startCell[1], i, j, drawMode.value);
+    }
+    isMouseDown = false;
+    lastCell = null;
+    startCell = null;
+    if (!running) drawField(); // Redraw to show the new shape
+});
+
+
+canvas.addEventListener('click', (ev)=>{
+  if (drawMode.value === 'source'){
+    const rect = canvas.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
+    const y = ev.clientY - rect.top;
+    const i = Math.floor(x / cellW);
+    const j = Math.floor(y / cellH);
+    // add source
+    sources.push({i:i, j:j, t0:tSim});
+  }
+});
+
+function handleDraw(i,j, ev){
+  if (i<0 || i>=Nx || j<0 || j>=Ny) return;
+  const k = idx(i,j);
+  const mode = drawMode.value;
+
+  if (mode === 'wall'){
+    obstacle[k] = 1;
+  } else if (mode === 'erase'){
+    obstacle[k] = 0;
+  }
+}
+
+function drawPreset(i0, j0, i1, j1, mode) {
+    const shape = presetShapeEl.value;
+    const value = (mode === 'erase') ? 0 : 1;
+
+    if (shape === 'rect') {
+        const iMin = Math.min(i0, i1);
+        const iMax = Math.max(i0, i1);
+        const jMin = Math.min(j0, j1);
+        const jMax = Math.max(j0, j1);
+        for (let j = jMin; j <= jMax; j++) {
+            for (let i = iMin; i <= iMax; i++) {
+                if (i<0 || i>=Nx || j<0 || j>=Ny) continue;
+                obstacle[idx(i,j)] = value;
+            }
+        }
+    } else if (shape === 'circle') {
+        const ci = Math.floor((i0+i1)/2);
+        const cj = Math.floor((j0+j1)/2);
+        const ri = Math.abs(i1-i0)/2;
+        const rj = Math.abs(j1-j0)/2;
+        if (ri === 0 || rj === 0) return; // Avoid division by zero
+        for (let j = 0; j < Ny; j++) {
+            for (let i = 0; i < Nx; i++) {
+                if (((i-ci)/ri)**2 + ((j-cj)/rj)**2 < 1) {
+                    if (i<0 || i>=Nx || j<0 || j>=Ny) continue;
+                    obstacle[idx(i,j)] = value;
+                }
+            }
+        }
+    }
+}
+
+
+// controls
+runBtn.addEventListener('click', ()=>{
+  if (!running){
+    running = true;
+    if(tSim === 0) { // Start from beginning if reset
+        p.fill(0);
+        pOld.fill(0);
+        pNew.fill(0);
+    }
+    requestAnimationFrame(loop);
+  }
+});
+pauseBtn.addEventListener('click', ()=> running=false);
+clearBtn.addEventListener('click', ()=> {
+  saveStateForUndo();
+  obstacle.fill(0);
+  if (!running) drawField();
+});
+resetBtn.addEventListener('click', ()=> {
+  p.fill(0); pOld.fill(0); pNew.fill(0); sources.length = 0; tSim = 0;
+  undoStack = [];
+  redoStack = [];
+  updateUndoRedoButtons();
+  if (!running) drawField();
+});
+
+exportBtn.addEventListener('click', () => {
+    const data = {
+        resolution: { Nx, Ny },
+        obstacles: Array.from(obstacle)
+    };
+    const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'acoustic_walls.json';
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+importBtn.addEventListener('click', () => importFileEl.click());
+importFileEl.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.resolution && data.obstacles) {
+                saveStateForUndo();
+                Nx = data.resolution.Nx;
+                Ny = data.resolution.Ny;
+                // Find the correct resolution option and set it
+                const resOption = Array.from(resEl.options).find(o => o.value == Nx);
+                if(resOption) resEl.value = resOption.value;
+                
+                restartSimulation();
+                obstacle = new Uint8Array(data.obstacles);
+                if (!running) drawField();
+            } else {
+                alert('Invalid wall file format.');
+            }
+        } catch (err) {
+            alert('Error reading wall file: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+});
+
+
+// initial draw
+drawField();
+
+// small helper to restart on resolution change
+function restartSimulation(){
+  allocFields();
+  dampMask = makeDampingMask(baseDampStrength);
+  p.fill(0); pOld.fill(0); pNew.fill(0);
+  sources.length = 0;
+  tSim = 0;
+  undoStack = [];
+  redoStack = [];
+  updateUndoRedoButtons();
+  if (!running) drawField();
+}
+
+updateUndoRedoButtons();
+</script>
+</body>
+</html>

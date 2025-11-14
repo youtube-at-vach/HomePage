@@ -160,10 +160,22 @@
                 <button id="run" class="pulse-animation">開始</button>
                 <button id="pause" class="secondary">停止</button>
             </div>
-            <div style="margin-top: 12px;" class="stack">
-                <button id="reset" class="secondary">リセット</button>
+            <div class="stack" style="margin-top: 12px;">
+                <button id="reset-field" class="secondary">音場リセット</button>
+                <button id="reset" class="secondary">全リセット</button>
                 <button id="step" class="secondary">1ステップ</button>
             </div>
+
+            <!-- 自動リセット設定 -->
+            <div class="control-group small" style="margin-top: 8px;">
+                <label class="tooltip" data-tooltip="指定時間ごとに音場だけリセットして再スタート">自動リセット</label>
+                <span class="row">
+                    <input type="checkbox" id="auto-reset">
+                    <input id="auto-reset-interval" class="spin" type="number" min="0.01" step="0.01" value="0.50">
+                    <span>秒</span>
+                </span>
+            </div>
+
             <div class="small">ショートカット: Space(開始/停止) / R(リセット) / Z(元に戻す) / Y(やり直し)</div>
         </div>
 
@@ -348,6 +360,15 @@
         let running = false;
         let stepsPerFrame = 2;
         let simulationSpeed = 3;
+
+        // 自動リセット関連
+        let autoResetEnabled = false;
+        let autoResetInterval = 0.5; // [秒]
+
+        // プリセット図形プレビュー用
+        let previewActive = false;
+        let previewStart = null; // [i0, j0]
+        let previewEnd = null;   // [i1, j1]
         
         const cAir = 343.0;              // speed of sound (m/s)
         let domainSize = 0.30;           // 30 cm
@@ -404,6 +425,10 @@
         
         const undoBtn = document.getElementById('undo');
         const redoBtn = document.getElementById('redo');
+
+        const resetFieldBtn = document.getElementById('reset-field');
+        const autoResetEl = document.getElementById('auto-reset');
+        const autoResetIntervalEl = document.getElementById('auto-reset-interval');
         
         // --- History (undo/redo) now includes obstacles + sources + observers ---
         let undoStack = [];
@@ -678,7 +703,9 @@
             drawWaveform();
             drawObservationWaveform();
             drawInterferencePattern();
+            drawShapePreview(); // プリセット図形プレビュー
         }
+
         function drawSources() {
             ctx.fillStyle = '#2b6cff';
             for (let s of sources) {
@@ -753,6 +780,50 @@
                 interferenceInfo.style.display = 'none';
             }
         }
+
+        // 図形プレビュー描画
+        function drawShapePreview() {
+            if (!previewActive || !previewStart || !previewEnd) return;
+            const shape = presetShapeEl.value;
+            if (shape === 'none') return;
+
+            const [i0, j0] = previewStart;
+            const [i1, j1] = previewEnd;
+
+            const x0 = Math.min(i0, i1) * cellW;
+            const y0 = Math.min(j0, j1) * cellH;
+            const x1 = (Math.max(i0, i1) + 1) * cellW;
+            const y1 = (Math.max(j0, j1) + 1) * cellH;
+
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 1.5;
+
+            if (shape === 'rect') {
+                ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
+            } else if (shape === 'circle') {
+                const cx = (x0 + x1) / 2;
+                const cy = (y0 + y1) / 2;
+                const rx = (x1 - x0) / 2;
+                const ry = (y1 - y0) / 2;
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI);
+                ctx.stroke();
+            } else if (shape === 'triangle') {
+                const cx = (x0 + x1) / 2;
+                const yTop = y0;
+                const yBottom = y1;
+                ctx.beginPath();
+                ctx.moveTo(cx, yTop);
+                ctx.lineTo(x0, yBottom);
+                ctx.lineTo(x1, yBottom);
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
         
         // --- Main loop ---
         let tSim = 0;
@@ -761,6 +832,11 @@
             for (let s=0; s<stepsPerFrame; s++){
                 stepForward(tSim);
                 tSim += dt;
+
+                // 一定時間ごと自動リセット（音場のみ）
+                if (autoResetEnabled && tSim >= autoResetInterval) {
+                    resetFieldOnly();
+                }
             }
             drawField();
             requestAnimationFrame(loop);
@@ -786,13 +862,22 @@
             lastCell = [i,j];
             startCell = [i,j];
             eraseOverride = (ev.button === 2); // right click = erase
-            if (presetShapeEl.value === 'none') {
+
+            if (presetShapeEl.value !== 'none' && (drawMode.value === 'wall' || drawMode.value === 'erase')) {
+                // 図形プリセットのプレビュー開始
+                previewActive = true;
+                previewStart = [i, j];
+                previewEnd = [i, j];
+                if (!running) drawField();
+            } else if (presetShapeEl.value === 'none') {
+                // 通常のブラシ描画
                 pushUndo();
                 handleDraw(i,j, ev);
             }
         });
         canvas.addEventListener('pointermove', (ev) => {
-            if (!isMouseDown || presetShapeEl.value !== 'none') return;
+            if (!isMouseDown) return;
+
             const rect = canvas.getBoundingClientRect();
             const x = ev.clientX - rect.left;
             const y = ev.clientY - rect.top;
@@ -800,19 +885,38 @@
             const j = Math.floor(y / cellH);
             if (i === lastCell?.[0] && j === lastCell?.[1]) return;
             lastCell = [i,j];
-            handleDraw(i,j, ev);
+
+            if (presetShapeEl.value === 'none') {
+                // 通常ブラシ
+                handleDraw(i,j, ev);
+            } else if (previewActive) {
+                // プレビュー更新
+                previewEnd = [i, j];
+                if (!running) drawField();
+            }
         });
         canvas.addEventListener('pointerup', (ev) => {
-            if (presetShapeEl.value !== 'none') {
+            if (presetShapeEl.value !== 'none' && (drawMode.value === 'wall' || drawMode.value === 'erase')) {
+                // 図形確定描画（壁／消しゴムモードのみ）
                 pushUndo();
                 const rect = canvas.getBoundingClientRect();
                 const x = ev.clientX - rect.left;
                 const y = ev.clientY - rect.top;
                 const i = Math.floor(x / cellW);
                 const j = Math.floor(y / cellH);
-                drawPreset(startCell[0], startCell[1], i, j, drawMode.value);
+                if (startCell) {
+                    drawPreset(startCell[0], startCell[1], i, j, drawMode.value);
+                }
             }
-            isMouseDown = false; lastCell = null; startCell = null; eraseOverride = false;
+
+            previewActive = false;
+            previewStart = null;
+            previewEnd = null;
+
+            isMouseDown = false; 
+            lastCell = null; 
+            startCell = null; 
+            eraseOverride = false;
             if (!running) drawField();
         });
         canvas.addEventListener('click', (ev) => {
@@ -1256,6 +1360,41 @@
             if (!running) drawField();
         });
         
+        // 音場だけリセット
+        function resetFieldOnly() {
+            // 音圧場だけ初期化
+            p.fill(0);
+            pOld.fill(0);
+            pNew.fill(0);
+            tSim = 0;
+
+            // 観測履歴もクリア
+            for (let obs of observers) {
+                obs.history = [];
+                obs.rms = 0;
+                obs.soundPressureLevel = 0;
+                obs.instantaneousAmplitude = 0;
+                obs.estimatedFrequency = 0;
+            }
+
+            if (!running) drawField();
+        }
+
+        resetFieldBtn.addEventListener('click', () => {
+            resetFieldOnly();
+        });
+
+        autoResetEl.addEventListener('change', () => {
+            autoResetEnabled = autoResetEl.checked;
+        });
+
+        autoResetIntervalEl.addEventListener('input', () => {
+            const v = Number(autoResetIntervalEl.value);
+            if (!isNaN(v) && v > 0) {
+                autoResetInterval = v;
+            }
+        });
+        
         // Run/Pause/Step/Reset
         runBtn.addEventListener('click', () => {
             if (!running){
@@ -1387,6 +1526,23 @@
             }
         });
 
+        // プリセット図形の有効／無効制御
+        function updatePresetShapeAvailability() {
+            const mode = drawMode.value;
+            if (mode === 'wall' || mode === 'erase') {
+                presetShapeEl.disabled = false;
+            } else {
+                // source / observer の場合はプリセット無効＆プレビューもオフ
+                presetShapeEl.value = 'none';
+                presetShapeEl.disabled = true;
+                previewActive = false;
+                previewStart = null;
+                previewEnd = null;
+                if (!running) drawField();
+            }
+        }
+        drawMode.addEventListener('change', updatePresetShapeAvailability);
+        updatePresetShapeAvailability();
         
         function restartSimulation(){
             allocFields();

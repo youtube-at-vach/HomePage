@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>2つの単一指向性マイク指向性シミュレータ</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background: #0f172a;
+            color: #e5e7eb;
+        }
+        #sidebar {
+            width: 360px;
+            padding: 16px 20px;
+            background: #020617;
+            box-shadow: 4px 0 16px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        #main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {
+            background: #020617;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 18px;
+            margin: 0 0 8px;
+        }
+        h2 {
+            font-size: 14px;
+            margin: 14px 0 4px;
+        }
+        .control {
+            margin-bottom: 10px;
+        }
+        .control label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+        .control input[type="range"] {
+            width: 100%;
+        }
+        .value {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .row {
+            display: flex;
+            gap: 8px;
+        }
+        .row input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 3px 4px;
+            border-radius: 4px;
+            border: 1px solid #4b5563;
+            background: #020617;
+            color: #e5e7eb;
+        }
+        button.preset {
+            margin-right: 4px;
+            margin-top: 2px;
+            padding: 2px 6px;
+            font-size: 11px;
+            background: #1f2937;
+            color: #e5e7eb;
+            border-radius: 4px;
+            border: 1px solid #4b5563;
+            cursor: pointer;
+        }
+        button.preset:hover {
+            background: #374151;
+        }
+        .note {
+            font-size: 11px;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+        a {
+            color: #93c5fd;
+        }
+
+        /* 出力モード用UI */
+        .mode-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 6px;
+        }
+        .mode-option {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+        }
+        .mode-option input[type="radio"] {
+            margin: 0;
+        }
+        .mode-option span {
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #4b5563;
+            background: #020617;
+            margin-left: 4px;
+        }
+        .mode-option input[type="radio"]:checked + span {
+            background: #1f2937;
+            border-color: #93c5fd;
+            color: #e5e7eb;
+        }
+
+        .link-row {
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+        .link-row input {
+            margin-right: 4px;
+        }
+    </style>
+</head>
+<body>
+<div id="sidebar">
+    <h1>2つの単一指向性マイクの指向性</h1>
+    <div class="note">
+        前方（0° = 下 = 南）を向いた <b>2つの単一指向性マイク</b> を距離 <b>D</b> だけ離し、<br>
+        選択した出力（P₁, P₂, P₁ − P₂, P₁ + P₂）の指向性を描きます。<br>
+        単一指向性の基本形は <b>D(θ) = α + β cosθ</b> です（θ は前方からの角度）。
+    </div>
+
+    <h2>1. マイクの基本指向性 D(θ) = α + β cosθ</h2>
+
+    <div class="control link-row">
+        <label>
+            <input type="checkbox" id="linkPattern" checked>
+            前後のマイクで α, β をリンクする
+        </label>
+    </div>
+
+    <div class="row control">
+        <div style="flex:1;">
+            <label for="alpha1">前マイク α₁</label>
+            <input id="alpha1" type="number" step="0.05" value="0.5">
+        </div>
+        <div style="flex:1;">
+            <label for="beta1">前マイク β₁</label>
+            <input id="beta1" type="number" step="0.05" value="0.5">
+        </div>
+    </div>
+    <div class="row control">
+        <div style="flex:1;">
+            <label for="alpha2">後マイク α₂</label>
+            <input id="alpha2" type="number" step="0.05" value="0.5">
+        </div>
+        <div style="flex:1;">
+            <label for="beta2">後マイク β₂</label>
+            <input id="beta2" type="number" step="0.05" value="0.5">
+        </div>
+    </div>
+
+    <div class="control">
+        <button class="preset" data-alpha="1" data-beta="0">OMNI</button>
+        <button class="preset" data-alpha="0.5" data-beta="0.5">Cardioid</button>
+        <button class="preset" data-alpha="0" data-beta="1">Figure-8</button>
+        <button class="preset" data-alpha="0.25" data-beta="0.75">Hyper-ish</button>
+    </div>
+    <div class="note">
+        例：<br>
+        ・OMNI … α=1, β=0<br>
+        ・Cardioid … α=0.5, β=0.5<br>
+        ・Figure-8 … α=0, β=1
+    </div>
+
+    <h2>2. 出力モード</h2>
+    <div class="control">
+        <label>表示する出力</label>
+        <div class="mode-group">
+            <label class="mode-option">
+                <input type="radio" name="mode" value="p1">
+                <span>前マイク単独 P₁</span>
+            </label>
+            <label class="mode-option">
+                <input type="radio" name="mode" value="p2">
+                <span>後マイク単独 P₂</span>
+            </label>
+            <label class="mode-option">
+                <input type="radio" name="mode" value="diff" checked>
+                <span>差動 P₁ − P₂</span>
+            </label>
+            <label class="mode-option">
+                <input type="radio" name="mode" value="sum">
+                <span>和 P₁ + P₂</span>
+            </label>
+        </div>
+    </div>
+
+    <h2>3. マイク間隔 D</h2>
+    <div class="control">
+        <label for="D">D（マイク間隔, mm）</label>
+        <input id="D" type="range" min="0" max="200" step="1" value="20">
+        <div class="value" id="D_value"></div>
+    </div>
+
+    <h2>4. 周波数 f</h2>
+    <div class="control">
+        <label for="freq">f（周波数, Hz）</label>
+        <input id="freq" type="range" min="100" max="48000" step="50" value="3000">
+        <div class="value" id="freq_value"></div>
+    </div>
+
+    <h2>5. 現在の状態</h2>
+    <div class="note" id="status"></div>
+
+    <h2>補足</h2>
+    <div class="note">
+        ・<b>0° は下（南）</b>、角度は反時計回りです。<br>
+        　0°: 下 / 90°: 右 / 180°: 上 / 270°: 左<br>
+        ・プロットは |出力| を最大値で正規化したものです。<br>
+        ・前後の α, β をリンク解除すると、かなり変則的なパターンも試せます。
+    </div>
+</div>
+
+<div id="main">
+    <canvas id="polarCanvas" width="640" height="640"></canvas>
+</div>
+
+<script>
+const C_SOUND = 343.0; // m/s
+
+const canvas = document.getElementById('polarCanvas');
+const ctx = canvas.getContext('2d');
+
+const alpha1Input = document.getElementById('alpha1');
+const beta1Input  = document.getElementById('beta1');
+const alpha2Input = document.getElementById('alpha2');
+const beta2Input  = document.getElementById('beta2');
+const linkPatternInput = document.getElementById('linkPattern');
+
+const DSlider    = document.getElementById('D');
+const FSlider    = document.getElementById('freq');
+const DValue     = document.getElementById('D_value');
+const FValue     = document.getElementById('freq_value');
+const statusEl   = document.getElementById('status');
+const modeInputs = document.querySelectorAll('input[name="mode"]');
+
+// プリセットボタン
+document.querySelectorAll('button.preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const a = btn.dataset.alpha;
+        const b = btn.dataset.beta;
+        alpha1Input.value = a;
+        beta1Input.value  = b;
+        alpha2Input.value = a;
+        beta2Input.value  = b;
+        update();
+    });
+});
+
+// 入力イベント
+[ DSlider, FSlider,
+  alpha1Input, beta1Input,
+  alpha2Input, beta2Input
+].forEach(el => {
+    el.addEventListener('input', update);
+});
+modeInputs.forEach(el => {
+    el.addEventListener('change', update);
+});
+linkPatternInput.addEventListener('change', update);
+
+// 単一マイクの基本指向性
+function cardioidBase(theta, alpha, beta) {
+    // D(θ) = α + β cosθ
+    // θ: 0〜2π, 0 は前方（下 = 南）、反時計回り
+    return alpha + beta * Math.cos(theta);
+}
+
+// パターン計算
+// mode: "p1" | "p2" | "diff" | "sum"
+function computePattern(D_m, f, alpha1, beta1, alpha2, beta2, mode = 'diff', nTheta = 720) {
+    const lam = C_SOUND / f;
+    const k = 2 * Math.PI / lam;
+    const thetaArr = [];
+    const mags = [];
+
+    let maxMag = 0;
+
+    for (let i = 0; i < nTheta; i++) {
+        // θ: 0〜2π, 0 は前方（下 = 南）、反時計回り
+        const theta = 2 * Math.PI * i / nTheta;
+        thetaArr.push(theta);
+
+        const g1 = cardioidBase(theta, alpha1, beta1);
+        const g2 = cardioidBase(theta, alpha2, beta2);
+
+        // マイクは前後方向（0°軸 = 下↔上）に ±D/2 だけ離れているとする
+        const phase1 =  k * ( D_m / 2) * Math.cos(theta);
+        const phase2 =  k * (-D_m / 2) * Math.cos(theta);
+
+        const P1_re = g1 * Math.cos(phase1);
+        const P1_im = g1 * Math.sin(phase1);
+        const P2_re = g2 * Math.cos(phase2);
+        const P2_im = g2 * Math.sin(phase2);
+
+        let Out_re, Out_im;
+        switch (mode) {
+            case 'p1':
+                Out_re = P1_re;
+                Out_im = P1_im;
+                break;
+            case 'p2':
+                Out_re = P2_re;
+                Out_im = P2_im;
+                break;
+            case 'sum':
+                Out_re = P1_re + P2_re;
+                Out_im = P1_im + P2_im;
+                break;
+            case 'diff':
+            default:
+                Out_re = P1_re - P2_re;
+                Out_im = P1_im - P2_im;
+                break;
+        }
+
+        const mag = Math.sqrt(Out_re * Out_re + Out_im * Out_im);
+        mags.push(mag);
+        if (mag > maxMag) maxMag = mag;
+    }
+
+    // 正規化
+    const denom = maxMag || 1;
+    for (let i = 0; i < mags.length; i++) {
+        mags[i] /= denom;
+    }
+
+    return { thetaArr, mags };
+}
+
+// 極座標プロット（0° = 下 = 南, 反時計回り）
+function drawPolar(thetaArr, mags) {
+    const w = canvas.width;
+    const h = canvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const maxR = Math.min(w, h) * 0.45;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // 背景
+    ctx.fillStyle = '#020617';
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    // グリッド（同心円）
+    ctx.strokeStyle = '#1f2937';
+    ctx.lineWidth = 1;
+    const rings = 4;
+    for (let i = 1; i <= rings; i++) {
+        const r = maxR * i / rings;
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, 2 * Math.PI);
+        ctx.stroke();
+    }
+
+    // 軸（0°, 90°, 180°, 270°）
+    // 0°: 下, 90°: 右, 180°: 上, 270°: 左
+    const anglesDeg = [0, 90, 180, 270];
+    ctx.strokeStyle = '#334155';
+    anglesDeg.forEach(deg => {
+        const rad = deg * Math.PI / 180;
+        const x = maxR * Math.sin(rad);
+        const y = maxR * Math.cos(rad);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    });
+
+    // 角度ラベル
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '12px system-ui';
+    function drawLabel(deg, textOffset = 12) {
+        const rad = deg * Math.PI / 180;
+        const r = maxR + textOffset;
+        const x = r * Math.sin(rad);
+        const y = r * Math.cos(rad);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(deg + '°', x, y);
+    }
+    drawLabel(0);
+    drawLabel(90);
+    drawLabel(180);
+    drawLabel(270);
+
+    // 指向性パターン
+    ctx.strokeStyle = '#f97316';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < thetaArr.length; i++) {
+        const theta = thetaArr[i];
+        const rNorm = mags[i];
+        const r = rNorm * maxR;
+
+        // θ: 0° = 下, 反時計回り
+        const x = r * Math.sin(theta);
+        const y = r * Math.cos(theta);
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function getCurrentMode() {
+    let mode = 'diff';
+    modeInputs.forEach(inp => {
+        if (inp.checked) mode = inp.value;
+    });
+    return mode;
+}
+
+function update() {
+    // リンク状態に応じて後マイクの入力を制御
+    let alpha1 = parseFloat(alpha1Input.value);
+    let beta1  = parseFloat(beta1Input.value);
+    let alpha2, beta2;
+
+    if (linkPatternInput.checked) {
+        alpha2 = alpha1;
+        beta2  = beta1;
+        alpha2Input.value = alpha1Input.value;
+        beta2Input.value  = beta1Input.value;
+        alpha2Input.disabled = true;
+        beta2Input.disabled  = true;
+    } else {
+        alpha2Input.disabled = false;
+        beta2Input.disabled  = false;
+        alpha2 = parseFloat(alpha2Input.value);
+        beta2  = parseFloat(beta2Input.value);
+    }
+
+    const D_mm  = parseFloat(DSlider.value);
+    const f     = parseFloat(FSlider.value);
+    const mode  = getCurrentMode();
+
+    const D_m = D_mm / 1000.0;
+    const lam = C_SOUND / f;
+
+    DValue.textContent =
+        `D = ${D_mm.toFixed(1)} mm  （D/λ = ${(D_m / lam).toFixed(3)}）`;
+    FValue.textContent =
+        `f = ${f.toFixed(0)} Hz   （λ ≒ ${lam.toFixed(3)} m）`;
+
+    const modeLabelMap = {
+        p1:  '前マイク単独 P₁',
+        p2:  '後マイク単独 P₂',
+        diff:'差動 P₁ − P₂',
+        sum: '和 P₁ + P₂'
+    };
+    const modeLabel = modeLabelMap[mode] || mode;
+
+    statusEl.innerHTML =
+        `前マイク: D₁(θ) = ${alpha1.toFixed(2)} + ${beta1.toFixed(2)} cosθ<br>` +
+        `後マイク: D₂(θ) = ${alpha2.toFixed(2)} + ${beta2.toFixed(2)} cosθ<br>` +
+        `2つのマイクは同じ向き（0° = 下 = 南）で、距離 D をあけて配置。<br>` +
+        `表示モード: <b>${modeLabel}</b>`;
+
+    const { thetaArr, mags } =
+        computePattern(D_m, f, alpha1, beta1, alpha2, beta2, mode);
+    drawPolar(thetaArr, mags);
+}
+
+update();
+</script>
+</body>
+</html>

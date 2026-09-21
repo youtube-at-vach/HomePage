@@ -22,6 +22,7 @@
             <nav>
                 <ul>
                     <li><a href="#home">ホーム</a></li>
+                    <li><a href="#latest-videos">最新動画</a></li>
                     <li><a href="#resources">リソース</a></li>
                     <li><a href="#tools">ツール</a></li>
                     <li><a href="#contact">お問い合わせ</a></li>
@@ -57,6 +58,16 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section id="latest-videos" class="neon-section">
+            <h2>最新動画からの情報</h2>
+            <p>公開動画のタイトルと概要欄を掲載しています。詳しい内容や訂正は各動画の概要欄もご確認ください。</p>
+            <p id="latest-videos-updated" class="video-updated"></p>
+            <div id="latest-videos-list" class="video-grid" aria-live="polite">
+                <p>動画情報を読み込み中…</p>
+            </div>
+            <p class="video-more"><a href="https://www.youtube.com/@va-ch/videos" target="_blank" rel="noopener noreferrer">YouTubeですべての動画を見る</a></p>
         </section>
 
         <section id="tools" class="neon-section">
@@ -231,5 +242,6 @@
         }
       });
     </script>
+    <script src="latest-videos.js" defer></script>
 </body>
 </html>

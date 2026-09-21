@@ -1,56 +1,31 @@
-# ようこそ！銀河ヒッチハイク・DIYオーディオガイド リポジトリへ！
+# バーチャ農ちゃんねるの技術サイト
 
-このリポジトリは、あなた自身の「銀河ヒッチハイク・DIYオーディオガイド」静的サイトを構築するための秘密基地です！YouTube Data APIを駆使して動画データを取得・管理する魔法のスクリプトや、記事インデックスを自動生成する便利なツールが揃っています。さあ、一緒に宇宙の果てまで届くような、魅力的なオーディオガイドを作り上げましょう！
+`public/` を Firebase Hosting で配信する静的サイトです。
 
-## Firebase Hosting での確認・公開
+## YouTube の新着情報
 
-このサイトは `public/` を Firebase Hosting で配信します。Node.js 20 以降と Firebase CLI が必要です。CLI をまだ入れていない場合は `npm install -g firebase-tools` を実行してください。
+トップページの「最新動画からの情報」は `public/data/latestVideos.json` を読み込みます。`scripts/fetchVideos.js` がチャンネル `@va-ch` の公開動画を新しい順に最大12件取得し、タイトル、公開日、サムネイル、現在の概要欄を保存します。概要欄を編集した場合も、次の取得で反映されます。APIキーは生成時にのみ使い、公開ファイルには含めません。
+
+YouTube Data API v3 を Google Cloud で有効にして、APIキーを環境変数に設定して実行します。チャンネルを変える場合は `YOUTUBE_CHANNEL_HANDLE` を指定できます。Node.js 20 以降が必要です。
 
 ```bash
-firebase login
-firebase projects:list
+YOUTUBE_API_KEY='（APIキー）' node scripts/fetchVideos.js
 firebase emulators:start --only hosting
 ```
 
-ログインには対象プロジェクト `youtube-at-vach` へアクセスできる Google アカウントを使います。ローカル確認用の URL はエミュレータの出力に表示されます。公開するときは次を実行します。
+生成結果は `public/data/latestVideos.json` です。取得に失敗したときは既存の JSON を上書きしません。動画が未取得の場合、サイトには YouTube チャンネルへの案内が表示されます。`public/data/videos.json.bak` は2025年時点の古い控えであり、新着表示には使いません。
 
-```bash
-firebase deploy --only hosting
-```
+### 定期更新と公開
 
-このリポジトリの `.firebaserc` に本番プロジェクトが設定されているため、公開前に変更内容を確認してください。アクセストークンをリポジトリへ保存する必要はありません。
+`.github/workflows/update-youtube.yml` は毎日 03:17 JST と手動実行で、動画データを取得して Firebase Hosting に公開します。利用するには GitHub リポジトリの Actions secrets に次の2つを登録してください。秘密情報をファイルやコミットに含めないでください。
 
-## 動画データの取得 (scripts/fetchVideos.js)
+- `YOUTUBE_API_KEY`: YouTube Data API v3 の APIキー。可能ならこのAPIのみに制限してください。
+- `FIREBASE_SERVICE_ACCOUNT_YOUTUBE_AT_VACH`: Firebase Hosting へのデプロイ権限を持つサービスアカウントの JSON。`firebase init hosting:github` で作成・登録できます。
 
-YouTube銀河から動画データをビームアップする準備はOK？ このスクリプトはあなたの頼れるトランスポーター！指定したチャンネルIDから動画の詳細情報をまるっと取得し、`public/data/videos.json` にきちんと整理整頓してくれます。これで、あなたのサイトに動画コンテンツをリッチに表示できますね！
+GitHub Actions の「Update YouTube information」から手動実行して初回の取得・公開を確認できます。定期実行は上記の secrets を設定し、ワークフローを `master` に反映してから動きます。サイトの JSON は最大5分キャッシュされます。スケジュール実行は GitHub 側の都合で遅れることがあります。
 
-1. 依存パッケージをインストール (初回のみ)
+ローカルから手動公開する場合は、生成されたデータと表示を確認してから `firebase deploy --only hosting` を実行してください。`.firebaserc` は本番プロジェクト `youtube-at-vach` を指しています。
 
-   ```bash
-   npm install googleapis
-   ```
+## 記事インデックス
 
-2. APIキーを環境変数に設定
-
-   ```bash
-   export YOUTUBE_API_KEY=YOUR_API_KEY
-   ```
-
-3. スクリプトを実行 (CHANNEL_ID は対象チャンネルのID)
-
-   ```bash
-   node scripts/fetchVideos.js CHANNEL_ID
-   ```
-
-4. public/data/videos.json に取得結果が出力されます。  
-   Webサイトからフェッチして表示に利用してください。準備万端！
-
-## 記事インデックスの魔法（scripts/generateIndex.js）
-
-あなたの素晴らしい記事たちを、魔法のようにインデックス化したいと思ったことはありませんか？ このスクリプトはあなたの専属司書です！`public/articles` フォルダ内をくまなくスキャンし、タイトルやメタデータを抽出して、便利な `public/data/index.json` ファイルをサッと作成してくれます。これで、訪問者はあなたの知識の海をスムーズに航海できるでしょう！
-
-### 使用方法
-
-```bash
-node scripts/generateIndex.js
-```
+`node scripts/generateIndex.js` で `public/articles` の Markdown から `public/data/index.json` を生成します。Marp CLI が必要です。

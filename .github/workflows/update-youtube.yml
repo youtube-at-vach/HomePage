@@ -1,0 +1,29 @@
+name: Update YouTube information
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 18 * * *' # 毎日 03:17 JST
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/fetchVideos.test.js
+      - name: Fetch public video information
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: node scripts/fetchVideos.js
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_YOUTUBE_AT_VACH }}
+          projectId: youtube-at-vach
+          channelId: live

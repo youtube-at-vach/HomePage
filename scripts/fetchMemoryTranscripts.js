@@ -42,7 +42,7 @@ async function collectOne(id, options) {
     if (data.rows) return { rows: normalize(data.rows), method: 'youtube-transcript-api', language: data.language, generated: data.generated };
     if (/Blocked|TooManyRequests|RateLimit/i.test(data.error || '')) throw new Error('caption-access-blocked');
   }
-  // A second method is attempted once, even if the first method is blocked.
+  // A second method is attempted once for ordinary failures; stop probing on access blocks.
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'memory-subs-'));
   try {
     const fallback = await run(options.ytdlp, [

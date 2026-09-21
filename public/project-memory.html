@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>プロジェクトの記憶 | バーチャ農ちゃんねる</title>
-  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="project-memory.css">
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="project-memory.css?v=2">
 </head>
 <body>
   <a class="skip-link" href="#main">本文へ</a>
@@ -17,11 +17,12 @@
       <section class="memory-content"><div class="memory-controls"><label>原文を検索<input id="memory-search" type="search" placeholder="LNA、ガードリング、測定…"></label>
         <label>記述<select id="memory-event"><option value="all">すべて</option><option value="plan">計画・希望</option><option value="performed">実施・進展</option><option value="completed">完成・解決</option><option value="problem">問題・保留</option></select></label>
         <label>順序<select id="memory-order"><option value="asc">古い順</option><option value="desc">新しい順</option></select></label></div>
+        <p class="memory-note">検索は選択中のプロジェクト内に適用されます。全件を探す場合は「すべての動画」を選んでください。</p>
         <section class="memory-graph-panel"><h2 id="map-title">プロジェクトと動画</h2><div id="memory-graph"></div></section>
         <div id="project-summary" class="memory-summary"></div><p id="memory-count" class="memory-note" aria-live="polite"></p>
         <div id="memory-timeline" class="memory-timeline"></div><button id="memory-more" type="button" hidden>さらに表示</button>
       </section></div>
     <p class="memory-note">日付は動画公開日です。古い概要欄は過去の控えに基づきます。字幕がない動画や解析していない動画があるため、続報なし・未完了・現在の完成状態は断定しません。</p>
   </main>
-  <script src="project-memory.js" defer></script>
+  <script src="project-memory.js?v=5" defer></script>
 </body></html>

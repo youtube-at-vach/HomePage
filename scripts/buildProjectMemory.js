@@ -82,6 +82,17 @@ function extract(video, units, keys, responses) {
 function inputHash(video, rows) {
   return crypto.createHash('sha256').update(JSON.stringify([ANALYSIS_VERSION, video.title, video.description, rows])).digest('hex');
 }
+function searchIndex(rows) {
+  let text = '';
+  const offsets = [];
+  for (const row of rows || []) {
+    if (text.length >= 150000) break;
+    if (text) text += ' ';
+    offsets.push([text.length, row.start]);
+    text += row.text;
+  }
+  return { searchText: text.slice(0, 150000), searchOffsets: offsets.filter(([position]) => position < 150000).map(([position, start]) => `${position},${start}`).join(';') };
+}
 async function build(catalog, analyses, transcriptDir) {
   const videos = [];
   let manifest = {};
@@ -93,9 +104,10 @@ async function build(catalog, analyses, transcriptDir) {
     try { rows = JSON.parse(await fs.readFile(path.join(transcriptDir, `${v.id}.json`))); } catch (e) { if (e.code !== 'ENOENT') throw e; }
     if (analysis && analysis.inputHash !== inputHash(v, rows)) analysis = null;
     const keys = analysis ? [...new Set(analysis.evidence.flatMap(e => Object.keys(e.projects)))] : [];
+    const search = searchIndex(rows);
     videos.push({ id: v.id, title: v.title, publishedAt: v.publishedAt, metadataSource: v.metadataSource,
       description: v.description, transcript: !!rows, analyzed: !!analysis,
-      searchText: rows?.map(r => r.text).join(' ').slice(0, 150000) || '', projects: keys, evidence: analysis?.evidence || [] });
+      ...search, projects: keys, evidence: analysis?.evidence || [] });
   }
   return { version: 1, generatedAt: new Date().toISOString(), projects: Object.fromEntries(Object.entries(PROJECTS).map(([k, v]) => [k, v.name])),
     videos, coverage: { catalog: videos.length, dated: videos.filter(v => v.publishedAt).length,
@@ -176,4 +188,4 @@ async function main() {
   console.log(JSON.stringify({ ...data.coverage, calls, reservedUsd: reserved, published: a.publish }));
 }
 if (require.main === module) main().catch(e => { console.error(e.message); process.exitCode = 1; });
-module.exports = { PROJECTS, candidates, requestFor, extract, build };
+module.exports = { PROJECTS, candidates, requestFor, extract, build, searchIndex };

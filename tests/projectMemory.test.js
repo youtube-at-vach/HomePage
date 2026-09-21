@@ -6,7 +6,7 @@ const path = require('node:path');
 const { collect, normalize } = require('../scripts/fetchMemoryTranscripts');
 const { buildCatalog } = require('../scripts/buildMemoryCatalog');
 const { enrich } = require('../scripts/enrichMemoryCatalog');
-const { candidates, requestFor, extract } = require('../scripts/buildProjectMemory');
+const { candidates, requestFor, extract, searchIndex } = require('../scripts/buildProjectMemory');
 
 const id = 'aaaaaaaaaaa';
 test('公開一覧と古い控えを照合し、日付のない動画を未取得とする', () => {
@@ -67,4 +67,10 @@ test('プロジェクトの根拠とイベントを同一区間に限定する',
   const result = extract(video, [units[0]], keys, [{ answers: { title_project_lna: { noul: .9 }, title_plan: { noul: .9 } } }]);
   assert.equal(result.evidence[0].events.plan, .9);
   assert.equal(result.evidence[0].events.completed, undefined);
+});
+test('字幕検索の文字位置を再生時刻に対応付ける', () => {
+  const index = searchIndex([{ start: 2, text: '最初の話' }, { start: 63, text: 'ガードリングを測定' }]);
+  const position = index.searchText.indexOf('ガードリング');
+  const offsets = index.searchOffsets.split(';').map(pair => pair.split(',').map(Number));
+  assert.equal(offsets.findLast(([offset]) => offset <= position)[1], 63);
 });

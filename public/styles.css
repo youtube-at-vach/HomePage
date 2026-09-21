@@ -202,6 +202,8 @@ section p {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   font-size: 0.92rem;
+  max-height: 22rem;
+  overflow-y: auto;
 }
 
 .video-more {

@@ -2,6 +2,24 @@
 
 このリポジトリは、あなた自身の「銀河ヒッチハイク・DIYオーディオガイド」静的サイトを構築するための秘密基地です！YouTube Data APIを駆使して動画データを取得・管理する魔法のスクリプトや、記事インデックスを自動生成する便利なツールが揃っています。さあ、一緒に宇宙の果てまで届くような、魅力的なオーディオガイドを作り上げましょう！
 
+## Firebase Hosting での確認・公開
+
+このサイトは `public/` を Firebase Hosting で配信します。Node.js 20 以降と Firebase CLI が必要です。CLI をまだ入れていない場合は `npm install -g firebase-tools` を実行してください。
+
+```bash
+firebase login
+firebase projects:list
+firebase emulators:start --only hosting
+```
+
+ログインには対象プロジェクト `youtube-at-vach` へアクセスできる Google アカウントを使います。ローカル確認用の URL はエミュレータの出力に表示されます。公開するときは次を実行します。
+
+```bash
+firebase deploy --only hosting
+```
+
+このリポジトリの `.firebaserc` に本番プロジェクトが設定されているため、公開前に変更内容を確認してください。アクセストークンをリポジトリへ保存する必要はありません。
+
 ## 動画データの取得 (scripts/fetchVideos.js)
 
 YouTube銀河から動画データをビームアップする準備はOK？ このスクリプトはあなたの頼れるトランスポーター！指定したチャンネルIDから動画の詳細情報をまるっと取得し、`public/data/videos.json` にきちんと整理整頓してくれます。これで、あなたのサイトに動画コンテンツをリッチに表示できますね！
@@ -36,4 +54,3 @@ YouTube銀河から動画データをビームアップする準備はOK？ こ�
 ```bash
 node scripts/generateIndex.js
 ```
-

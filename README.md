@@ -29,3 +29,9 @@ GitHub Actions の「Update YouTube information」から手動実行して初回
 ## 記事インデックス
 
 `node scripts/generateIndex.js` で `public/articles` の Markdown から `public/data/index.json` を生成します。Marp CLI が必要です。
+
+## プロジェクトの記憶・Jev試作
+
+`node --env-file=.env scripts/runJevPilot.js --compare` で、過去データから20本を分類してローカルの `.local/jev-pilot/report.html` にトピック別の年表と原文を生成します。`TYPESAFE_API_KEY` が必要です。同一入力はキャッシュを再利用します。SRT/VTTの字幕取り込みにも対応しています。
+
+現在の実測はタイトル・概要欄のみで、字幕による履歴復元や未完了判定は次の段階です。料金、実測結果、再実行、字幕の追加手順は [Jev試作メモ](docs/jev-pilot.md) を参照してください。

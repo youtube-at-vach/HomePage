@@ -1,0 +1,12 @@
+[
+  {"videoId":"G7asLPqioK0","field":"title","event":"plan","expected":true,"reason":"使いたい、という本人の意図が明示されている。"},
+  {"videoId":"EgJ1z8lIJTY","field":"title","event":"completed","expected":true,"reason":"完成しました、との記述。現在の状態や全活動の完成は意味しない。"},
+  {"videoId":"LhcPZzKHE8Y","field":"title","event":"completed","expected":true,"reason":"プロトタイプの完成が明示されている。"},
+  {"videoId":"LhcPZzKHE8Y","field":"description","contains":"今後調整して、楽器の音を録音してみたい","event":"plan","expected":true,"reason":"試作完成後にも別の希望が残る。"},
+  {"videoId":"qkvqfL3AXG4","field":"description","contains":"改良方法が見つかったら直そう","event":"plan","expected":true,"reason":"条件付きの改良意図。後段に解決の追記もあり、未完了とは判定しない。"},
+  {"videoId":"qkvqfL3AXG4","field":"description","contains":"ピンクノイズをちゃんと生成できるようにAIで改良できました","event":"completed","expected":true,"reason":"特定の問題が解決したと記載されている。"},
+  {"videoId":"4UHAWGvtR6Q","field":"description","contains":"振り出しに戻りました","event":"problem","expected":true,"reason":"基板のミスによる手戻りが明示されている。"},
+  {"videoId":"HXrNXpMIlqo","field":"description","contains":"そこでまずはシミュレーションをやってみました","event":"performed","expected":true,"reason":"本人がシミュレーションを実施したと記載。"},
+  {"videoId":"NykSwzu0ChI","field":"title","event":"completed","expected":false,"reason":"ゲーム配信の案内は製作物の完成報告ではない。"},
+  {"videoId":"w6mhMfC2vLE","field":"title","event":"completed","expected":false,"reason":"作ろうという提案だけでは完成していない。"}
+]

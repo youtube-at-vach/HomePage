@@ -26,9 +26,9 @@ GitHub Actions の「Update YouTube information」から手動実行して初回
 
 ローカルで同じ更新を行うには `node --env-file=.env scripts/fetchChannelArchive.js --reuse public/data/projectMemory.json`、`node scripts/publishChannelArchive.js` の順に実行します。`--reuse` を外すと全件詳細を更新します。後者は既存のJev判定を、タイトル・概要欄・公開日が変わらない動画に限って維持し、新規または変更された動画は未解析として扱います。生成データと表示を確認してから `firebase deploy --only hosting` を実行してください。`.firebaserc` は本番プロジェクト `youtube-at-vach` を指しています。
 
-## 記事インデックス
+## リソースと旧AI記事
 
-`node scripts/generateIndex.js` で `public/articles` の Markdown から `public/data/index.json` を生成します。Marp CLI が必要です。
+トップページとリソース一覧のダウンロード資源・参考リンクは、JSONを使わず各HTMLに固定記述しています。古いAI調査記事は公開対象から削除し、トップページの掲載とサイトマップへの登録も停止しています。
 
 ## プロジェクトの記憶・Jev試作
 

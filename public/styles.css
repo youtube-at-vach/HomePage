@@ -159,6 +159,62 @@ section p {
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
 }
 
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 20px;
+}
+
+.video-card {
+  min-width: 0;
+  padding: 18px;
+  background: rgba(5, 7, 13, 0.7);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+}
+
+.video-thumbnail {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+
+.video-card h3 {
+  line-height: 1.5;
+  font-size: 1.08rem;
+}
+
+.video-card .video-date {
+  font-size: 0.85rem;
+  margin: 8px 0;
+}
+
+.video-description summary {
+  cursor: pointer;
+  color: var(--accent-color);
+}
+
+.video-description p {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.92rem;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.video-more {
+  margin-top: 20px;
+}
+
+.neon-section .video-updated {
+  font-size: 0.85rem;
+  margin-top: -8px;
+}
+
 .button {
   display: inline-block;
   padding: 12px 25px;

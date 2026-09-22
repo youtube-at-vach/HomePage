@@ -4,6 +4,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { parseArgs } = require('node:util');
 const lib = require('./jev-memory');
+const { buildCollections } = require('./memoryCollections');
 const ROOT = path.resolve(__dirname, '..');
 const ANALYSIS_VERSION = 2;
 const PROJECTS = {
@@ -95,6 +96,12 @@ function searchIndex(rows) {
 }
 async function build(catalog, analyses, transcriptDir) {
   const videos = [];
+  const collections = buildCollections(catalog);
+  const memberships = new Map();
+  for (const group of collections) for (const id of group.videoIds) {
+    if (!memberships.has(id)) memberships.set(id, []);
+    memberships.get(id).push(group.id);
+  }
   let manifest = {};
   try { manifest = JSON.parse(await fs.readFile(path.join(transcriptDir, 'manifest.json'))); }
   catch (e) { if (e.code !== 'ENOENT') throw e; }
@@ -106,10 +113,10 @@ async function build(catalog, analyses, transcriptDir) {
     const keys = analysis ? [...new Set(analysis.evidence.flatMap(e => Object.keys(e.projects)))] : [];
     const search = searchIndex(rows);
     videos.push({ id: v.id, title: v.title, publishedAt: v.publishedAt, metadataSource: v.metadataSource,
-      description: v.description, transcript: !!rows, analyzed: !!analysis,
-      ...search, projects: keys, evidence: analysis?.evidence || [] });
+      description: v.description, transcript: !!rows, captionStatus: manifest[v.id]?.status || null, analyzed: !!analysis,
+      ...search, projects: keys, collections: memberships.get(v.id) || [], evidence: analysis?.evidence || [] });
   }
-  return { version: 1, generatedAt: new Date().toISOString(), projects: Object.fromEntries(Object.entries(PROJECTS).map(([k, v]) => [k, v.name])),
+  return { version: 2, channelId: catalog.channelId, generatedAt: new Date().toISOString(), projects: Object.fromEntries(Object.entries(PROJECTS).map(([k, v]) => [k, v.name])), collections,
     videos, coverage: { catalog: videos.length, dated: videos.filter(v => v.publishedAt).length,
       transcripts: videos.filter(v => v.transcript).length, analyzed: videos.filter(v => v.analyzed).length,
       captionAttempted: videos.filter(v => manifest[v.id]).length,
@@ -141,7 +148,10 @@ async function main() {
       catch (e) { if (e.code === 'ENOENT') throw new Error(`前回の応答が不明です。${pending.id} の ${pending.key} を確認して pending.json を手動で解除してください。`); throw e; }
     } catch (e) { if (e.code !== 'ENOENT') throw e; }
     const relevant = v => Object.values(PROJECTS).some(p => p.terms.test(`${v.title} ${v.description}`));
-    const priority = [...lib.PILOT_IDS,
+    const groups = buildCollections(catalog);
+    const series = groups.find(g => g.id === 'series:mems');
+    const music = groups.filter(g => /Producer\.AI|オリジナル曲/.test(g.title)).flatMap(g => g.videoIds);
+    const priority = [...(series?.videoIds || []), ...music, ...lib.PILOT_IDS,
       ...catalog.videos.filter(v => v.publishedAt && relevant(v)).map(v => v.id),
       ...catalog.videos.filter(v => v.publishedAt && !relevant(v)).map(v => v.id),
       ...catalog.videos.filter(v => !v.publishedAt).map(v => v.id)];

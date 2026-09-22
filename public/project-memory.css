@@ -13,3 +13,12 @@
 .skip-link{position:absolute;left:12px;top:-100px;z-index:1000;background:#fff;color:#10202b;padding:8px 12px}
 .skip-link:focus{top:8px}
 @media(max-width:600px){.memory-map{grid-template-columns:1fr;gap:10px}.memory-map-links{grid-template-columns:1fr;margin-left:18px}.memory-map-hub{text-align:left}}
+.memory-nav-title{font-size:.8rem;color:#93d6eb;margin:14px 0 3px;letter-spacing:.04em}
+.memory-technical{margin-top:12px}.memory-technical summary{color:#93d6eb;font-size:.83rem;cursor:pointer;padding:7px 0}.memory-technical-list{display:grid;gap:7px;margin-top:6px}
+.memory-milestones{columns:2;column-gap:28px;padding-left:25px}
+.memory-milestones li{break-inside:avoid;margin:7px 0}
+.memory-card .labels .collection-tag{background:#634b26;color:#fff0ce}
+@media(max-width:600px){.memory-milestones{columns:1}}
+@media(max-width:800px){.memory-projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}.memory-projects .memory-nav-title,.memory-projects .memory-technical{grid-column:1/-1}.memory-technical-list{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-projects button{min-width:0;white-space:normal}}
+@media(max-width:480px){.memory-projects{grid-template-columns:1fr}}
+@media(max-width:480px){.memory-technical-list{grid-template-columns:1fr}}

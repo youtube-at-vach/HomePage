@@ -2,8 +2,17 @@ name: Update YouTube information
 
 on:
   workflow_dispatch:
+    inputs:
+      full_refresh:
+        description: '古い動画も含めて全件のタイトル・概要欄を再取得する'
+        type: boolean
+        default: false
   schedule:
-    - cron: '17 18 * * *' # 毎日 03:17 JST
+    - cron: '17 18 * * 0' # 毎週月曜 03:17 JST（日曜 18:17 UTC）
+
+concurrency:
+  group: weekly-youtube-hosting
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -11,19 +20,40 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/fetchVideos.test.js
-      - name: Fetch public video information
+      - run: node --test tests/*.test.js
+      - name: Restore the last successfully published public snapshot
+        uses: actions/cache/restore@v4
+        with:
+          path: public/data/projectMemory.json
+          key: youtube-memory-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            youtube-memory-${{ github.ref_name }}-
+      - name: Fetch public uploads and channel playlists once
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-        run: node scripts/fetchVideos.js
+          ARCHIVE_REFRESH_MODE: ${{ inputs.full_refresh && 'full' || 'incremental' }}
+        run: |
+          if [ "$ARCHIVE_REFRESH_MODE" = full ]; then
+            node scripts/fetchChannelArchive.js
+          else
+            node scripts/fetchChannelArchive.js --reuse public/data/projectMemory.json
+          fi
+      - name: Publish latest videos and project history from the same archive
+        run: node scripts/publishChannelArchive.js
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_YOUTUBE_AT_VACH }}
           projectId: youtube-at-vach
           channelId: live
+      - name: Cache the deployed snapshot for next week
+        uses: actions/cache/save@v4
+        with:
+          path: public/data/projectMemory.json
+          key: youtube-memory-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}

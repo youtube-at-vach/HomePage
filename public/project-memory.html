@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>プロジェクトの記憶 | バーチャ農ちゃんねる</title>
-  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="project-memory.css?v=2">
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="project-memory.css?v=4">
 </head>
 <body>
   <a class="skip-link" href="#main">本文へ</a>
   <header><div class="container"><a href="index.html">← ホーム</a><span class="memory-label"> VA-CH / PROJECT MEMORY</span></div></header>
   <main id="main" class="container memory-main">
     <div class="memory-hero"><p class="memory-label">活動を、時系列と根拠からたどる</p><h1>プロジェクトの記憶</h1>
-      <p>動画で話した計画、製作、測定、問題、完成の記述をつなぎます。気になる言葉から動画の該当箇所へ進めます。</p>
+      <p>自作MEMSマイクの製作史、オリジナル曲、制作実験を公式プレイリストと公開日からたどります。取得できた範囲では、Jevによる計画・製作・測定などの原文判定も確認できます。</p>
       <p id="coverage" class="memory-coverage" aria-live="polite">データを読み込み中…</p></div>
-    <div class="memory-layout"><aside class="memory-side"><h2>プロジェクト</h2><div id="project-list" class="memory-projects"></div>
-      <p class="memory-note">候補は原文に対するJevの判定です。話題への関連と個々の計画の達成は、原文を開いて確認してください。</p></aside>
+    <div class="memory-layout"><aside class="memory-side"><h2>制作の道筋</h2><div id="project-list" class="memory-projects"></div>
+      <p class="memory-note">シリーズとプレイリストの所属はYouTube Data APIで確認しています。技術トピックはJevによる候補です。リストへの所属だけで、個々の計画の達成を意味しません。</p></aside>
       <section class="memory-content"><div class="memory-controls"><label>原文を検索<input id="memory-search" type="search" placeholder="LNA、ガードリング、測定…"></label>
         <label>記述<select id="memory-event"><option value="all">すべて</option><option value="plan">計画・希望</option><option value="performed">実施・進展</option><option value="completed">完成・解決</option><option value="problem">問題・保留</option></select></label>
         <label>順序<select id="memory-order"><option value="asc">古い順</option><option value="desc">新しい順</option></select></label></div>
-        <p class="memory-note">検索は選択中のプロジェクト内に適用されます。全件を探す場合は「すべての動画」を選んでください。</p>
+        <p class="memory-note">検索は選択中の分類内に適用されます。全件を探す場合は「すべての動画」を選んでください。字幕未取得の動画はタイトルと概要欄のみ検索できます。</p>
         <section class="memory-graph-panel"><h2 id="map-title">プロジェクトと動画</h2><div id="memory-graph"></div></section>
         <div id="project-summary" class="memory-summary"></div><p id="memory-count" class="memory-note" aria-live="polite"></p>
         <div id="memory-timeline" class="memory-timeline"></div><button id="memory-more" type="button" hidden>さらに表示</button>
       </section></div>
-    <p class="memory-note">日付は動画公開日です。古い概要欄は過去の控えに基づきます。字幕がない動画や解析していない動画があるため、続報なし・未完了・現在の完成状態は断定しません。</p>
+    <p class="memory-note">日付は動画公開日です。字幕がない動画や解析していない動画があるため、続報なし・未完了・現在の完成状態は断定しません。週次更新では公式APIの公開情報を更新し、Jevの追加解析は行いません。</p>
   </main>
-  <script src="project-memory.js?v=5" defer></script>
+  <script src="project-memory.js?v=8" defer></script>
 </body></html>

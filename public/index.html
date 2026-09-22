@@ -19,7 +19,11 @@
                 <p class="site-title">自作オーディオと電子回路設計のための技術ガイド＆ツール集</p>
                 <p class="site-tagline">Cybernetic Audio Engineering Hub</p>
             </div>
-            <nav>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+                <span class="nav-toggle-icon" aria-hidden="true"></span>
+                <span>メニュー</span>
+            </button>
+            <nav id="primary-navigation" aria-label="メインナビゲーション">
                 <ul>
                     <li><a href="#home">ホーム</a></li>
                     <li><a href="#latest-videos">最新動画</a></li>
@@ -217,5 +221,26 @@
         </div>
     </footer>
     <script src="latest-videos.js" defer></script>
+    <script>
+        (() => {
+            const toggle = document.querySelector('.nav-toggle');
+            const navigation = document.querySelector('#primary-navigation');
+
+            if (!toggle || !navigation) return;
+
+            toggle.addEventListener('click', () => {
+                const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+                toggle.setAttribute('aria-expanded', String(!isOpen));
+                navigation.classList.toggle('is-open', !isOpen);
+            });
+
+            navigation.addEventListener('click', (event) => {
+                if (event.target.closest('a') && window.matchMedia('(max-width: 900px)').matches) {
+                    toggle.setAttribute('aria-expanded', 'false');
+                    navigation.classList.remove('is-open');
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

@@ -22,3 +22,12 @@
 @media(max-width:800px){.memory-projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}.memory-projects .memory-nav-title,.memory-projects .memory-technical{grid-column:1/-1}.memory-technical-list{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-projects button{min-width:0;white-space:normal}}
 @media(max-width:480px){.memory-projects{grid-template-columns:1fr}}
 @media(max-width:480px){.memory-technical-list{grid-template-columns:1fr}}
+
+/* Each timeline entry has a compact visual anchor without making the history feel like a video grid. */
+.memory-card-main{display:flex;gap:16px;align-items:flex-start}
+.memory-thumbnail{display:block;flex:0 0 156px;border-radius:8px;overflow:hidden;background:#0a141d;line-height:0;box-shadow:0 2px 10px #0005}
+.memory-thumbnail img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;transition:transform .2s ease}
+.memory-thumbnail:hover img,.memory-thumbnail:focus-visible img{transform:scale(1.04)}
+.memory-thumbnail:focus-visible{outline:3px solid #79d7ef;outline-offset:3px}
+.memory-card-content{min-width:0;flex:1}
+@media(max-width:520px){.memory-card{padding:14px}.memory-card-main{gap:12px}.memory-thumbnail{flex-basis:112px}.memory-card h3{font-size:1rem;margin-top:5px}}

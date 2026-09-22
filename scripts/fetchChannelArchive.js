@@ -5,6 +5,7 @@ const path = require('node:path');
 const { parseArgs } = require('node:util');
 const ROOT = path.resolve(__dirname, '..');
 const API = 'https://www.googleapis.com/youtube/v3/';
+const thumbnailUrl = id => `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
 
 async function fetchArchive(apiKey, handle = 'va-ch', fetcher = fetch, previous = null) {
   if (!apiKey) throw new Error('YOUTUBE_API_KEY が必要です');
@@ -57,8 +58,10 @@ async function fetchArchive(apiKey, handle = 'va-ch', fetcher = fetch, previous 
   if (!details.size) throw new Error('公開動画を確認できません。既存データは保持します。');
   const generatedAt = new Date().toISOString();
   const videos = ids.filter(id => details.has(id) || previousVideos.has(id)).map(id => {
-    const s = details.get(id)?.snippet || previousVideos.get(id);
+    const current = details.get(id)?.snippet;
+    const s = current || previousVideos.get(id);
     return { id, title: s.title, description: s.description || '', publishedAt: s.publishedAt,
+      thumbnail: current?.thumbnails?.medium?.url || current?.thumbnails?.default?.url || s.thumbnail || thumbnailUrl(id),
       metadataSource: 'youtube-data-api', url: `https://www.youtube.com/watch?v=${id}` };
   });
   // A playlist may include another channel's video: retain its link, but never

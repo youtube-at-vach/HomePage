@@ -27,6 +27,7 @@ test('公式APIによる詳細更新はチャンネルと公開状態を検査�
   const result = await enrich({ videos: [{ id, title: '旧' }, { id: 'bbbbbbbbbbb' }] }, 'secret', fetcher);
   assert.equal(result.videos.length, 1);
   assert.equal(result.videos[0].description, '更新');
+  assert.equal(result.videos[0].thumbnail, `https://i.ytimg.com/vi/${id}/mqdefault.jpg`);
   assert.equal(urls.length, 2);
   assert.equal(urls[1].searchParams.get('part'), 'snippet,status');
   await assert.rejects(enrich({ videos: [{ id }] }, 'secret', async () => ({ ok: false, status: 403 })), e => !e.message.includes('secret'));

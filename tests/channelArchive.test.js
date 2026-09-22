@@ -24,6 +24,7 @@ test('公式APIのアップロード・公開リストを照合し、他チャ�
   };
   const catalog = await fetchArchive('secret', 'va-ch', fetcher);
   assert.deepEqual(catalog.videos.map(v => v.id), [a, b]);
+  assert.equal(catalog.videos[0].thumbnail, `https://i.ytimg.com/vi/${a}/mqdefault.jpg`);
   assert.deepEqual(catalog.playlists[0].videoIds, [a, b]);
   assert.equal(calls.filter(c => c.endpoint === 'playlistItems').length, 3);
   assert.equal(calls.filter(c => c.endpoint === 'videos').length, 1);
@@ -72,6 +73,7 @@ test('週次更新は同一メタデータだけJev根拠を再利用し、検�
     { id: a, title: '旧題', description: '更新', publishedAt: '2025-01-01', analyzed: true, transcript: true, searchText: '字幕', searchOffsets: '0,3', projects: ['mic'], evidence: [{ text: '旧題' }] },
     { id: b, title: 'そのまま', description: '', publishedAt: '2024-01-01', analyzed: true, projects: ['mic'], evidence: [{ text: '原文' }] }] };
   const { memory, latest } = publish(catalog, old);
+  assert.equal(memory.videos[0].thumbnail, `https://i.ytimg.com/vi/${a}/mqdefault.jpg`);
   assert.equal(memory.videos[0].analyzed, false);
   assert.deepEqual(memory.videos[0].evidence, []);
   assert.equal(memory.videos[0].searchText, '字幕');

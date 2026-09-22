@@ -7,6 +7,7 @@ const lib = require('./jev-memory');
 const { buildCollections } = require('./memoryCollections');
 const ROOT = path.resolve(__dirname, '..');
 const ANALYSIS_VERSION = 2;
+const thumbnailUrl = id => `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
 const PROJECTS = {
   lna: { name: 'LNA・低雑音アンプ', terms: /\bLNA\b|低雑音アンプ|低ノイズアンプ|プリアンプ|preamp/i, definition: 'The author’s own low noise amplifier or preamplifier design, build, measurement or improvement. Exclude unrelated commercial amplifier discussion.' },
   mic: { name: '自作マイク', terms: /自作マイク|マイク(?:ロフォン)?(?:を|の|回路|製作|作|試作|改良)|MEMS|ICS-40800|STV2/i, definition: 'The author’s microphone design, build, modification, measurement or concrete plan. Not generic microphone product reviews.' },
@@ -114,7 +115,8 @@ async function build(catalog, analyses, transcriptDir) {
     const search = searchIndex(rows);
     videos.push({ id: v.id, title: v.title, publishedAt: v.publishedAt, metadataSource: v.metadataSource,
       description: v.description, transcript: !!rows, captionStatus: manifest[v.id]?.status || null, analyzed: !!analysis,
-      ...search, projects: keys, collections: memberships.get(v.id) || [], evidence: analysis?.evidence || [] });
+      ...search, projects: keys, evidence: analysis?.evidence || [], collections: memberships.get(v.id) || [],
+      thumbnail: v.thumbnail || thumbnailUrl(v.id) });
   }
   return { version: 2, channelId: catalog.channelId, generatedAt: new Date().toISOString(), projects: Object.fromEntries(Object.entries(PROJECTS).map(([k, v]) => [k, v.name])), collections,
     videos, coverage: { catalog: videos.length, dated: videos.filter(v => v.publishedAt).length,

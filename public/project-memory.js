@@ -9,6 +9,7 @@
   const date = v => v.publishedAt ? v.publishedAt.slice(0, 10) : '公開日未取得';
   const query = () => $('memory-search').value.trim().toLocaleLowerCase();
   const videoUrl = (v, seconds) => 'https://www.youtube.com/watch?v=' + v.id + (seconds == null ? '' : '&t=' + Math.floor(seconds) + 's');
+  const thumbnailUrl = v => /^https:\/\//.test(v.thumbnail || '') ? v.thumbnail : `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
   const byDate = (a, b) => {
     if (!a.publishedAt) return b.publishedAt ? 1 : 0;
     if (!b.publishedAt) return -1;
@@ -81,8 +82,15 @@
   }
   function card(v) {
     const c = element('article', null, 'memory-card'); c.id = 'video-' + v.id;
-    c.append(element('p', `${date(v)} · ${v.transcript ? '字幕取得済み' : '字幕未取得'} · ${v.analyzed ? 'Jev解析済み' : '未解析'}`, 'date'));
-    const h = element('h3'), a = element('a', v.title); a.href = videoUrl(v); a.target = '_blank'; a.rel = 'noopener noreferrer'; h.append(a); c.append(h);
+    const main = element('div', null, 'memory-card-main');
+    const thumbnail = element('a', null, 'memory-thumbnail'); thumbnail.href = videoUrl(v); thumbnail.target = '_blank'; thumbnail.rel = 'noopener noreferrer'; thumbnail.setAttribute('aria-label', `${v.title}をYouTubeで開く`);
+    const image = element('img'); image.src = thumbnailUrl(v); image.alt = ''; image.width = 320; image.height = 180; image.loading = 'lazy'; image.decoding = 'async';
+    const fallback = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
+    image.addEventListener('error', () => { if (image.src !== fallback) image.src = fallback; });
+    thumbnail.append(image); main.append(thumbnail);
+    const content = element('div', null, 'memory-card-content');
+    content.append(element('p', `${date(v)} · ${v.transcript ? '字幕取得済み' : '字幕未取得'} · ${v.analyzed ? 'Jev解析済み' : '未解析'}`, 'date'));
+    const h = element('h3'), a = element('a', v.title); a.href = videoUrl(v); a.target = '_blank'; a.rel = 'noopener noreferrer'; h.append(a); content.append(h);
     const q = query(), searchAt = q ? (v.searchText || '').toLocaleLowerCase().indexOf(q) : -1;
     const descriptionAt = q ? (v.description || '').toLocaleLowerCase().indexOf(q) : -1;
     if (searchAt >= 0 || descriptionAt >= 0) {
@@ -94,7 +102,7 @@
       const box = element('div', null, 'memory-search-hit');
       box.append(element('strong', searchAt >= 0 ? '字幕内の一致箇所' : '概要欄の一致箇所'), element('p', `${at > 70 ? '…' : ''}${excerpt}${at + q.length + 100 < source.length ? '…' : ''}`));
       if (hit) { const jump = element('a', 'この付近から再生'); jump.href = videoUrl(v, hit[1]); jump.target = '_blank'; jump.rel = 'noopener noreferrer'; box.append(jump); }
-      c.append(box);
+      content.append(box);
     }
     const tags = element('div', null, 'labels');
     if (collection()) tags.append(element('span', collection().kind === 'series' ? '本編・前史' : '公式プレイリスト', 'collection-tag'));
@@ -104,7 +112,7 @@
     }
     const ev = evidence(v);
     for (const [key, name] of Object.entries(labels)) if (ev.some(e => e.events[key] >= .8)) tags.append(element('span', name, key));
-    c.append(tags);
+    content.append(tags); main.append(content); c.append(main);
     if (ev.length) {
       const d = element('details'); d.append(element('summary', `根拠を確認（${ev.length}区間）`));
       for (const e of ev) {
@@ -125,7 +133,7 @@
     if (!selectedVideos.length) $('memory-timeline').append(element('p', '該当する動画はありません。プロジェクトや検索語、記述の条件を変えてください。', 'memory-empty'));
     $('memory-more').hidden = shown >= selectedVideos.length;
   }
-  fetch('data/projectMemory.json?v=3').then(r => { if (!r.ok) throw Error('data unavailable'); return r.json(); }).then(value => {
+  fetch('data/projectMemory.json?v=4').then(r => { if (!r.ok) throw Error('data unavailable'); return r.json(); }).then(value => {
     data = value;
     const requested = new URLSearchParams(location.search).get('collection');
     if (requested && data.collections.some(g => g.id === requested)) selected = requested;

@@ -27,7 +27,9 @@ async function enrich(catalog, apiKey, fetcher = fetch) {
   if (!details.size) throw new Error('公開動画が確認できず、旧データを維持します');
   return { generatedAt: new Date().toISOString(), videos: catalog.videos.filter(v => details.has(v.id)).map(v => {
     const item = details.get(v.id), s = item.snippet;
-    return { ...v, title: s.title, description: s.description || '', publishedAt: s.publishedAt, metadataSource: 'youtube-data-api' };
+    return { ...v, title: s.title, description: s.description || '', publishedAt: s.publishedAt,
+      thumbnail: s.thumbnails?.medium?.url || s.thumbnails?.default?.url || v.thumbnail || `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`,
+      metadataSource: 'youtube-data-api' };
   }) };
 }
 async function main() {

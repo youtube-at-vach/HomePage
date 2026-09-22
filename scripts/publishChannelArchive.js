@@ -4,6 +4,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const { buildCollections } = require('./memoryCollections');
 const ROOT = path.resolve(__dirname, '..');
+const thumbnailUrl = id => `https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
 
 function publish(catalog, previous) {
   if (!Array.isArray(catalog.videos) || !catalog.videos.length || !Array.isArray(catalog.playlists)) throw new Error('公式APIの収集結果が不正です');
@@ -22,7 +23,8 @@ function publish(catalog, previous) {
     return { id: v.id, title: v.title, publishedAt: v.publishedAt, metadataSource: 'youtube-data-api',
       description: v.description, transcript: !!old?.transcript, captionStatus: old?.captionStatus || null,
       analyzed: !!(same && old.analyzed), searchText: old?.searchText || '', searchOffsets: old?.searchOffsets || '',
-      projects: same ? old.projects || [] : [], evidence: same ? old.evidence || [] : [], collections: memberships.get(v.id) || [] };
+      projects: same ? old.projects || [] : [], evidence: same ? old.evidence || [] : [], collections: memberships.get(v.id) || [],
+      thumbnail: v.thumbnail || old?.thumbnail || thumbnailUrl(v.id) };
   });
   const generatedAt = new Date().toISOString();
   const memory = { version: 2, channelId: catalog.channelId, generatedAt, projects: previous.projects || {}, collections, videos,
@@ -33,7 +35,7 @@ function publish(catalog, previous) {
   const latest = { channelId: catalog.channelId, channelUrl: 'https://www.youtube.com/@va-ch', fetchedAt: generatedAt,
     videos: [...catalog.videos].sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt)).slice(0, 12).map(v => ({
       id: v.id, title: v.title, description: v.description, publishedAt: v.publishedAt,
-      thumbnail: `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`, url: v.url })) };
+      thumbnail: v.thumbnail || thumbnailUrl(v.id), url: v.url })) };
   return { memory, latest };
 }
 async function main() {

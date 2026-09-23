@@ -31,9 +31,10 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: public/data/projectMemory.json
-          key: youtube-memory-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          # v2 ignores snapshots cached before richer committed captions and Jev data.
+          key: youtube-memory-v2-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
-            youtube-memory-${{ github.ref_name }}-
+            youtube-memory-v2-${{ github.ref_name }}-
       - name: Fetch public uploads and channel playlists once
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -56,4 +57,4 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: public/data/projectMemory.json
-          key: youtube-memory-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: youtube-memory-v2-${{ github.ref_name }}-${{ github.run_id }}-${{ github.run_attempt }}

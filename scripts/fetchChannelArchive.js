@@ -16,7 +16,17 @@ async function fetchArchive(apiKey, handle = 'va-ch', fetcher = fetch, previous 
     let response;
     try { response = await fetcher(url, { redirect: 'error', signal: AbortSignal.timeout(20000) }); }
     catch { throw new Error(`YouTube ${endpoint}: 通信失敗。既存データは保持します。`); }
-    if (!response.ok) throw new Error(`YouTube ${endpoint}: HTTP ${response.status}。既存データは保持します。`);
+    if (!response.ok) {
+      let reason = '';
+      try {
+        const body = await response.json();
+        const reasons = [...new Set((body.error?.errors || [])
+          .map(error => error.reason)
+          .filter(value => typeof value === 'string' && /^[\w.-]+$/.test(value)))];
+        if (reasons.length) reason = ` (${reasons.join(', ')})`;
+      } catch { /* Keep the HTTP status when the response has no JSON error body. */ }
+      throw new Error(`YouTube ${endpoint}: HTTP ${response.status}${reason}。既存データは保持します。`);
+    }
     return response.json();
   }
   async function pages(endpoint, params, maxPages) {

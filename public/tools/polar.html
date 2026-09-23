@@ -474,11 +474,22 @@ function update() {
     };
     const modeLabel = modeLabelMap[mode] || mode;
 
-    statusEl.innerHTML =
-        `前マイク: D₁(θ) = ${alpha1.toFixed(2)} + ${beta1.toFixed(2)} cosθ<br>` +
-        `後マイク: D₂(θ) = ${alpha2.toFixed(2)} + ${beta2.toFixed(2)} cosθ<br>` +
-        `2つのマイクは同じ向き（0° = 下 = 南）で、距離 D をあけて配置。<br>` +
-        `表示モード: <b>${modeLabel}</b>`;
+    const statusLines = [
+        `前マイク: D₁(θ) = ${alpha1.toFixed(2)} + ${beta1.toFixed(2)} cosθ`,
+        `後マイク: D₂(θ) = ${alpha2.toFixed(2)} + ${beta2.toFixed(2)} cosθ`,
+        '2つのマイクは同じ向き（0° = 下 = 南）で、距離 D をあけて配置。'
+    ];
+    const statusContent = [];
+    statusLines.forEach((line, index) => {
+        if (index > 0) statusContent.push(document.createElement('br'));
+        statusContent.push(document.createTextNode(line));
+    });
+    statusContent.push(document.createElement('br'));
+    statusContent.push(document.createTextNode('表示モード: '));
+    const modeLabelElement = document.createElement('b');
+    modeLabelElement.textContent = modeLabel;
+    statusContent.push(modeLabelElement);
+    statusEl.replaceChildren(...statusContent);
 
     const { thetaArr, mags } =
         computePattern(D_m, f, alpha1, beta1, alpha2, beta2, mode);

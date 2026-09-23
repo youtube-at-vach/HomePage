@@ -7,6 +7,7 @@
   const collection = () => data.collections.find(g => g.id === selected);
   const selectionName = () => collection()?.title || data.projects[selected];
   const date = v => v.publishedAt ? v.publishedAt.slice(0, 10) : '公開日未取得';
+  const mediaTime = seconds => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
   const query = () => $('memory-search').value.trim().toLocaleLowerCase();
   const videoUrl = (v, seconds) => 'https://www.youtube.com/watch?v=' + v.id + (seconds == null ? '' : '&t=' + Math.floor(seconds) + 's');
   const thumbnailUrl = v => /^https:\/\//.test(v.thumbnail || '') ? v.thumbnail : `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
@@ -61,6 +62,27 @@
           li.append(a); ul.append(li);
         }
         root.append(ul, element('p', '節目の見出しは動画タイトルに基づきます。試作品の完成とプロジェクト全体の完了は同義ではありません。', 'memory-note'));
+      }
+      if (group.history?.length) {
+        root.append(element('h3', 'STV自作マイク製作史'));
+        root.append(element('p', '技術動画の字幕をたどり、構想・回路設計・実装・測定を整理しました。各リンクは根拠となる字幕の時刻から再生します。歌詞中心の動画は年表の根拠に含めていません。', 'memory-note'));
+        const history = element('ol', null, 'memory-history');
+        for (const item of group.history) {
+          const li = element('li', null, 'memory-history-item');
+          const source = data.videos.find(v => v.id === item.sources[0]?.id);
+          li.append(element('p', source ? date(source) : '日付未取得', 'memory-history-date'));
+          li.append(element('h4', item.title), element('p', item.text, 'memory-history-text'));
+          const links = element('div', null, 'memory-history-links');
+          for (const ref of item.sources) {
+            const video = data.videos.find(v => v.id === ref.id);
+            if (!video) continue;
+            const link = element('a', `${video.title} · 字幕 ${mediaTime(ref.start)} ↗`);
+            link.href = videoUrl(video, ref.start); link.target = '_blank'; link.rel = 'noopener noreferrer';
+            links.append(link);
+          }
+          li.append(links); history.append(li);
+        }
+        root.append(history);
       }
       return;
     }

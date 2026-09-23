@@ -17,8 +17,12 @@ function parseSubtitles(text){
     const match=lines[i].match(/^(\S+)\s+-->\s+(\S+)(?:\s.*)?$/);
     if(!match)throw new Error('字幕の区間形式が不正です。');
     const start=timeSeconds(match[1]),end=timeSeconds(match[2]);
-    // Retain original wording; remove WebVTT formatting/timestamp tags only.
-    const content=lines.slice(i+1).join('\n').replace(/<[^>]*>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&').trim();
+    // Remove WebVTT formatting/timestamp tags only; other text is retained as plain text.
+    const content=lines.slice(i+1).join('\n')
+      .replace(/<\d{2}:\d{2}(?::\d{2})?\.\d{3}>/g,'')
+      .replace(/<\/?(?:b|i|u|ruby|rt|c(?:\.[\w-]+)*|v(?:\s+[^<>]*)?|lang(?:\s+[^<>]*)?)>/gi,'')
+      .replace(/&(lt|gt|amp);/gi,(_,entity)=>({lt:'<',gt:'>',amp:'&'}[entity.toLowerCase()]))
+      .trim();
     if(end<=start||result.length&&start<result.at(-1).start)throw new Error('字幕の時刻が逆順です。');
     if(content)result.push({start,end,text:content});
   }

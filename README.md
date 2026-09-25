@@ -58,3 +58,5 @@ python3 -m http.server 8767 --bind 127.0.0.1 --directory public
 `node --env-file=.env scripts/runJevPilot.js --compare` で、過去データから20本を分類してローカルの `.local/jev-pilot/report.html` にトピック別の年表と原文を生成します。`TYPESAFE_API_KEY` が必要です。同一入力はキャッシュを再利用します。SRT/VTTの字幕取り込みにも対応しています。
 
 最初のJev試作の実測はタイトル・概要欄のみです。現在の知識マップは取得できた字幕も解析していますが、全動画の字幕収集と続報の照合は未完了です。料金、最初の実測結果、再実行、字幕の追加手順は [Jev試作メモ](docs/jev-pilot.md) を参照してください。
+
+字幕を読める概要とテーマ間のつながりに育てる手順は [動画アーカイブの整理方針](docs/memory-roadmap.md) にまとめています。

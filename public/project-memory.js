@@ -45,6 +45,8 @@
     const group = collection();
     if (group) {
       root.append(element('h2', group.title), element('p', group.description || 'チャンネルが公開しているプレイリストです。'));
+      const members = data.videos.filter(v => v.collections.includes(group.id));
+      root.append(element('p', `この入口の動画 ${members.length}本 ／ 字幕取得 ${members.filter(v => v.transcript).length}本 ／ Jev解析 ${members.filter(v => v.analyzed).length}本。概要は確認済みの資料に限ります。`, 'memory-note'));
       root.append(element('p', `${videos.length}本が現在の検索条件に一致。プレイリスト内の順番ではなく、公開日順に表示します。`));
       if (group.kind === 'playlist') {
         const link = element('a', 'YouTubeでプレイリストを開く ↗'); link.href = group.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; root.append(link);
@@ -52,8 +54,27 @@
         const playlist = data.collections.find(g => g.id === group.playlistId);
         if (playlist) { const link = element('a', `関連プレイリスト全体（${playlist.videoIds.length}本）を見る`); link.href = '#'; link.addEventListener('click', e => { e.preventDefault(); select(playlist.id); }); root.append(link); }
       }
+      if (group.overview?.length) {
+        root.append(element('h3', 'まず読む概要'));
+        const overview = element('ol', null, 'memory-overview');
+        for (const item of group.overview) {
+          const li = element('li');
+          li.append(element('p', item.text));
+          const refs = element('div', null, 'memory-overview-links');
+          for (const ref of item.sources) {
+            const video = data.videos.find(v => v.id === ref.id);
+            if (!video) continue;
+            const link = element('a', `${video.title} · ${mediaTime(ref.start)} ↗`);
+            link.href = videoUrl(video, ref.start); link.target = '_blank'; link.rel = 'noopener noreferrer';
+            refs.append(link);
+          }
+          li.append(refs); overview.append(li);
+        }
+        root.append(overview, element('p', '字幕で確認できた動画の記録を要約しています。プロジェクト全体の現在の完成状態は示しません。', 'memory-note'));
+      }
       if (group.milestones?.length) {
-        root.append(element('h3', 'タイトルからたどる節目'));
+        const details = element('details', null, 'memory-summary-details');
+        details.append(element('summary', `タイトルからたどる節目（${group.milestones.length}件）`));
         const ul = element('ol'); ul.className = 'memory-milestones';
         for (const item of group.milestones) {
           const v = data.videos.find(x => x.id === item.id);
@@ -61,11 +82,13 @@
           const li = element('li'), a = element('a', `${date(v)}｜${item.caption}`); a.href = '#video-' + v.id;
           li.append(a); ul.append(li);
         }
-        root.append(ul, element('p', '節目の見出しは動画タイトルに基づきます。試作品の完成とプロジェクト全体の完了は同義ではありません。', 'memory-note'));
+        details.append(ul, element('p', '節目の見出しは動画タイトルに基づきます。試作品の完成とプロジェクト全体の完了は同義ではありません。', 'memory-note'));
+        root.append(details);
       }
       if (group.history?.length) {
-        root.append(element('h3', 'STV自作マイク製作史'));
-        root.append(element('p', '技術動画の字幕をたどり、構想・回路設計・実装・測定を整理しました。各リンクは根拠となる字幕の時刻から再生します。歌詞中心の動画は年表の根拠に含めていません。', 'memory-note'));
+        const details = element('details', null, 'memory-summary-details');
+        details.append(element('summary', `字幕を根拠にしたSTV自作マイク製作史（${group.history.length}件）`));
+        details.append(element('p', '構想・回路設計・実装・測定を時系列で整理しました。各リンクは根拠となる字幕の時刻から再生します。', 'memory-note'));
         const history = element('ol', null, 'memory-history');
         for (const item of group.history) {
           const li = element('li', null, 'memory-history-item');
@@ -82,7 +105,7 @@
           }
           li.append(links); history.append(li);
         }
-        root.append(history);
+        details.append(history); root.append(details);
       }
       return;
     }
@@ -90,7 +113,7 @@
     const ordered = [...videos].sort((a, b) => (a.publishedAt || '9999').localeCompare(b.publishedAt || '9999'));
     const plans = ordered.flatMap(v => evidence(v).filter(e => e.events.plan >= .8).map(e => ({ v, e })));
     const done = ordered.flatMap(v => evidence(v).filter(e => e.events.completed >= .8).map(e => ({ v, e })));
-    const p = element('p', `${videos.length}本が関連候補。計画の記述 ${plans.length}件、完成・解決の記述 ${done.length}件。対象動画と字幕の取得・解析範囲に限った数字です。`);
+    const p = element('p', `${videos.length}本が関連候補。計画の記述 ${plans.length}件、完成・解決の記述 ${done.length}件。関連判定と出来事判定はいずれも候補であり、対象動画と解析済み区間に限った数字です。`);
     root.append(p);
     if (plans.length) {
       root.append(element('h3', '続報を確認したい計画の記述'));
@@ -155,7 +178,7 @@
     if (!selectedVideos.length) $('memory-timeline').append(element('p', '該当する動画はありません。プロジェクトや検索語、記述の条件を変えてください。', 'memory-empty'));
     $('memory-more').hidden = shown >= selectedVideos.length;
   }
-  fetch('data/projectMemory.json?v=4').then(r => { if (!r.ok) throw Error('data unavailable'); return r.json(); }).then(value => {
+  fetch('data/projectMemory.json?v=5').then(r => { if (!r.ok) throw Error('data unavailable'); return r.json(); }).then(value => {
     data = value;
     const requested = new URLSearchParams(location.search).get('collection');
     if (requested && data.collections.some(g => g.id === requested)) selected = requested;

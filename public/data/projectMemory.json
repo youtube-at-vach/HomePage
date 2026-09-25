@@ -1,7 +1,7 @@
 {
   "version": 2,
   "channelId": "UC9pN_lmozUXr2qsB3orCvyg",
-  "generatedAt": "2026-09-25T08:49:54.142Z",
+  "generatedAt": "2026-09-25T09:01:33.790Z",
   "projects": {
     "lna": "LNA・低雑音アンプ",
     "mic": "自作マイク",
@@ -116,6 +116,63 @@
         {
           "id": "4-UjO1Ce3IQ",
           "caption": "DC MEMSマイクでステレオ録音を検証"
+        }
+      ],
+      "overview": [
+        {
+          "text": "STV1の目標を振り返った後、ICS-40800を使うSTV2の仕様、基板、マイクモジュールへと製作を進めています。",
+          "sources": [
+            {
+              "id": "4DQODE8Cr60",
+              "start": 14
+            },
+            {
+              "id": "7yIoNDGwvyw",
+              "start": 897
+            },
+            {
+              "id": "egpsUx9G9NU",
+              "start": 167
+            }
+          ]
+        },
+        {
+          "text": "指向性マイクのEQ補正、ケースのシールド、ノイズフィルターを、それぞれ設計・試験の課題として扱っています。",
+          "sources": [
+            {
+              "id": "HXrNXpMIlqo",
+              "start": 24
+            },
+            {
+              "id": "x4DxEjURTss",
+              "start": 792
+            },
+            {
+              "id": "d1S4WAG8VtA",
+              "start": 555
+            }
+          ]
+        },
+        {
+          "text": "DC結合版の試作を進め、STV2 DC版はREWで、AC版は高調波測定で検証しています。後の振り返りでは、自動オフセットを含む次の試作を検討しています。",
+          "sources": [
+            {
+              "id": "4ge13jgTUjM",
+              "start": 147
+            },
+            {
+              "id": "0tLL-NH_Ae8",
+              "start": 453
+            },
+            {
+              "id": "VRprwYMcrAk",
+              "start": 396
+            },
+            {
+              "id": "jYn1c9SyDhg",
+              "start": 621
+            }
+          ]
         }
       ],
       "history": [

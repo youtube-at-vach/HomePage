@@ -32,6 +32,13 @@ const STV_HISTORY = [
   { title: '後日談：STV2 DCと自動オフセットの検討', text: '2025年の振り返りでは、STV2 DC系統と自動オフセットを含む次の試作を説明しています。', sources: [{ id: 'jYn1c9SyDhg', start: 621 }] },
   { title: '関連するLNAの発振対策でSTV2の検討を再訪', text: '後年のLNA動画で、以前STV2入力にフェライトビーズを入れる案を検討したことに触れています。これは両作業の技術的な接点を示す記録です。', sources: [{ id: 'yQ5fsI_TKy4', start: 142 }] }
 ];
+// Short editorial reading guide. Keep each statement tied to caption timestamps;
+// this describes recorded work, not the current completion state of a project.
+const STV_OVERVIEW = [
+  { text: 'STV1の目標を振り返った後、ICS-40800を使うSTV2の仕様、基板、マイクモジュールへと製作を進めています。', sources: [{ id: '4DQODE8Cr60', start: 14 }, { id: '7yIoNDGwvyw', start: 897 }, { id: 'egpsUx9G9NU', start: 167 }] },
+  { text: '指向性マイクのEQ補正、ケースのシールド、ノイズフィルターを、それぞれ設計・試験の課題として扱っています。', sources: [{ id: 'HXrNXpMIlqo', start: 24 }, { id: 'x4DxEjURTss', start: 792 }, { id: 'd1S4WAG8VtA', start: 555 }] },
+  { text: 'DC結合版の試作を進め、STV2 DC版はREWで、AC版は高調波測定で検証しています。後の振り返りでは、自動オフセットを含む次の試作を検討しています。', sources: [{ id: '4ge13jgTUjM', start: 147 }, { id: '0tLL-NH_Ae8', start: 453 }, { id: 'VRprwYMcrAk', start: 396 }, { id: 'jYn1c9SyDhg', start: 621 }] }
+];
 function buildCollections(catalog) {
   const byId = new Map(catalog.videos.map(v => [v.id, v]));
   const descriptionFor = title => {
@@ -54,6 +61,7 @@ function buildCollections(catalog) {
     description: 'タイトルに「自作MEMSマイクへの道」とある動画と、同じ公式プレイリストに入る製作前史3本・後続の録音検証1本を時系列でたどります。プレイリスト全体には周辺活動も含まれます。',
     videoIds, playlistId: mems.id,
     milestones: MILESTONES.filter(([id]) => videoIds.includes(id)).map(([id, caption]) => ({ id, caption })),
+    overview: STV_OVERVIEW.filter(item => item.sources.every(source => byId.has(source.id))),
     history: STV_HISTORY.filter(item => item.sources.every(source => byId.has(source.id)))
   }] : [];
   const priority = ['series:mems', ...playlists.filter(p => /オリジナル曲/.test(p.title)).map(p => p.id),

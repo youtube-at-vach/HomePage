@@ -39,3 +39,14 @@
 .memory-thumbnail:focus-visible{outline:3px solid #79d7ef;outline-offset:3px}
 .memory-card-content{min-width:0;flex:1}
 @media(max-width:520px){.memory-card{padding:14px}.memory-card-main{gap:12px}.memory-thumbnail{flex-basis:112px}.memory-card h3{font-size:1rem;margin-top:5px}}
+
+/* Lead with a short, source-linked reading guide; keep the full chronology available. */
+.memory-overview{padding-left:22px;margin:12px 0;display:grid;gap:12px}
+.memory-overview li{padding-left:4px}
+.memory-overview p{margin:0 0 6px;line-height:1.65}
+.memory-overview-links{display:flex;flex-wrap:wrap;gap:5px 13px;font-size:.78rem;line-height:1.5}
+.memory-overview-links a{overflow-wrap:anywhere}
+.memory-summary-details{border-top:1px solid #2e475a;padding:12px 0}
+.memory-summary-details>summary{color:#9dd6f2;font-weight:700;cursor:pointer}
+.memory-overview-jump{display:inline-block;margin-top:4px;font-weight:700}
+#project-summary{scroll-margin-top:75px}
